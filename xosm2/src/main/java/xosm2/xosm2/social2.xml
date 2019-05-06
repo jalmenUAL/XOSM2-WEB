@@ -1,0 +1,15 @@
+<social>
+<twitter name="Royal Academy" number="0">
+  <oneway name="Royal Academy" type="polygon">
+    <node id="1115501055" lon="-0.14072046043662" lat="51.509691367425" version="99">
+      <tag k="building" v="yes"/>
+      <tag k="tourism" v="museum"/>
+      <tag k="amenity" v="college"/>
+      <tag k="name" v="Royal Academy"/>
+    </node>
+  </oneway>
+  <tweets>
+  
+  </tweets>
+</twitter>
+</social>
