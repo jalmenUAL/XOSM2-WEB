@@ -1,9 +1,0 @@
-(: ./social/twitter/tweets/_/user :)
-(:./social/twitter/tweets/_/user/profile__image__url:)
-(:./social/twitter/tweets/_/user/name:)
-(:./social/twitter/tweets/_/user/screen__name:)
-(:./social/twitter/tweets/_/created__at:)
-(:./social/twitter/tweets/_/retweet__count:)
-(:./social/twitter/tweets/_/favorite__count:)
-./social/twitter/tweets/_/retweeted
-(:./social/twitter/tweets/_/text:)
