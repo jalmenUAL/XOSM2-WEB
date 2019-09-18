@@ -311,6 +311,8 @@ public class XOSM2 extends UI {
 		MenuItem op5 = open.addItem("Wikipedia information", null, null);
 
 		
+		
+		
 
 		
 		 
