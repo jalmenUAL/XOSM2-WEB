@@ -68,6 +68,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.JavaScriptFunction;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PopupView;
@@ -76,6 +77,8 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 
 import elemental.json.JsonArray;
 
@@ -231,50 +234,93 @@ public class XOSM2 extends UI {
 		map.setCenter(41.90219, 12.49580);
 		map.setCenter(36.838030858833, -2.4522979583778);
 		q = new Query(this, "xosm_pbd:getElementsByKeyword(.,\"shop\")");
-		/*q = new Query(this, "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getElementsByKeyword(., \"tourism\") \r\n" + 
-				"let $name := web:encode-url(replace($museum//tag[@k=\"name\"]/@v,\"( )+\", \"\"))\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",data($name)),\"?count=15\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets :=\r\n" + 
-				"(for $tweet in $json/json/statuses/_\r\n" + 
-				"return $tweet)\r\n" + 
-				"return \r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($museum,\r\n" + 
-				"<tweets>{\r\n" + 
-				"$tweets}</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
-				"}</social>");*/
 		
-		/*q = new Query(this,"<social>{\r\n" + 
-				"for $tourism in xosm_pbd:getElementsByKeyword(.,\"tourism\")\r\n" + 
-				"let $name := web:encode-url($tourism/@name)\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $address := concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",$user),\"?count=15\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_ where $tweet/retweet__count > 3\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($tourism,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
-				"}</social>");*/
+		
+		MenuBar barmenu = new MenuBar();
+		barmenu.setWidth("100%");
+		 
+		barmenu.addItem("Menu");
+		
+		
+		// Define a common menu command for all the menu items.
+				MenuBar.Command mycommand = new MenuBar.Command() {
+				    public void menuSelected(MenuItem selectedItem) {
+				        
+				    }
+				};
+		
+		MenuItem examples = barmenu.addItem("Examples",null,null);
+		MenuItem helpi = barmenu.addItem("Help",null,null);
+		MenuItem Info = barmenu.addItem("Info",null,null);
+		MenuItem indexing = examples.addItem("Indexing Examples", null, null);
+		MenuItem osm = examples.addItem("Layers Examples", null, null);
+		MenuItem spatial = examples.addItem("Spatial Examples", null, null);
+		MenuItem keyword = examples.addItem("Keyword Examples", null, null);
+		MenuItem aggregation = examples.addItem("Aggregation Examples", null, null);
+		MenuItem open = examples.addItem("Open Data Examples", null, null);
+		MenuItem social = examples.addItem("Social Network Examples", null, null);
+		MenuItem twitter = social.addItem("Twitter Examples",null,null);
+		MenuItem youtube = social.addItem("Youtube Examples",null,null);
+		
+		
+		MenuItem open1 = open.addItem("Retrieve the streets in the bounding box intersecting Haymarket street", null, null);
+		MenuItem open2 = open.addItem("Retrieve the restaurants in Roma further north to Miami hotel", null, null);
+		MenuItem open3 = open.addItem("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars and restaurants bigger than 10)", null, null);
+		MenuItem open4 = open.addItem("Retrieve the hotels of Munich with the greatest number of churches nearby", null, null);
+		MenuItem open5 =open.addItem("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin", null, null);
+		MenuItem open6 = open.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, null);
+		MenuItem open7 = open.addItem("Request taxi stops close (500 m) to Bruxelles Central Station in Bruxelles", null, null);
+		MenuItem open8 = open.addItem("Retrieves free events of Madrid", null, null);
+		MenuItem open9 = open.addItem("Retrieve Wikipedia information about places nearby to the intersection point of Calle Mayor and Calle de Esparteros in Madrid", null, null);
+		
+		MenuItem twitter1 = twitter.addItem("Get Tweets sent by people about touristic places with more than 3 retweets", null, null);
+		MenuItem twitter2 = twitter.addItem("Get Tweets sent by official accounts of touristic places", null, null);
+		MenuItem twitter3 = twitter.addItem("Get Tweets sent by people in close areas (1km) to touristic places with more than 1 likes", null, null);
+		MenuItem twitter4 = twitter.addItem("Get Tweets sent by people about amenity places with more than 3 retweets", null, null);
+		MenuItem twitter5 = twitter.addItem("Get Tweets sent by official accounts of museums", null, null);
+		MenuItem twitter6 = twitter.addItem("Get Tweets sent by people in close areas (1km) to restaurants", null, null);
+
+		 
+		MenuItem ind1 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, null);
+		MenuItem ind2 = indexing.addItem("Retrieve the shops of the bounding box", null, null);
+		MenuItem ind3 = indexing.addItem("Retrieve an element of the bounding box", null, null);
+		MenuItem ind4 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, null);
+		MenuItem osm1 = osm.addItem("Retrieve the ways of the bounding box", null, null);
+		MenuItem osm2 = osm.addItem("Retrieve the points of the bounding box", null, null);
+		MenuItem osm3 = osm.addItem("Rebuild the points of the bounding box close (500 m) to an street", null, null);
+		MenuItem osm4 = osm.addItem("Rebuild the ways of the bounding box close (500 m) to an street", null, null);
+		MenuItem spa1 = spatial.addItem("Retrieve the points of the bounding box within (300 m) to an street", null, null);
+		MenuItem spa2 = spatial.addItem("Retrieve the points of the bounding box further west to a point", null, null);
+		MenuItem spa3 = spatial.addItem("Retrieve the streets crossing an street", null, null);
+		MenuItem spa4 = spatial.addItem("Retrieve the streets disjoint with an street", null, null);
+		MenuItem key1 = keyword.addItem("Retrieve the amenity bars of the bounding box", null, null);
+		MenuItem key2 = keyword.addItem("Retrieve the amenities of the bounding box", null, null);
+		MenuItem key3 = keyword.addItem("Retrieve the bars and restaurants of the bounding box", null, null);
+		MenuItem agg1 = aggregation.addItem("Retrieve the number of streets crossing an street", null, null);
+		MenuItem agg2 = aggregation.addItem("Retrieve the buildings with maximum area close (500m) to an street", null, null);
+		MenuItem agg3 = aggregation.addItem("Retrieve the sum of the length of highways close (500m) to an street", null, null);
+		MenuItem agg4 = aggregation.addItem("Retrieve the average area of buildings close (500m) to an street", null, null);
+		MenuItem agg5 = aggregation.addItem("Retrieve the 5 longest elements", null, null);
+		MenuItem agg6 = aggregation.addItem("Retrieve the median of the area of elements close (500m) to an street", null, null);
+		MenuItem agg7 = aggregation.addItem("Retrieve the mode of the area of elements close (500m) to an street", null, null);
+		MenuItem agg8 = aggregation.addItem("Retrieve the biggest element close (500m) to an street", null, null);
+		MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, null);
+		MenuItem op1 = open.addItem("Import geojson data", null, null);
+		MenuItem op2 = open.addItem("Import kml data", null, null);
+		MenuItem op4 = open.addItem("Import csv data", null, null);
+		MenuItem op5 = open.addItem("Wikipedia information", null, null);
+
+		
+
+		
+		 
+
+		 
+		
+		
+
+		
+		
 				
 
 		popup.setResizable(false);
@@ -1511,6 +1557,7 @@ public class XOSM2 extends UI {
 
 		TextField searchtf = new TextField();
 		searchtf.setWidth("100%");
+		searchtf.setPlaceholder("Type a Place to Query");
 
 		PopupButton examplesPBD = new PopupButton("More");
 		examplesPBD.setWidth("100%");
@@ -1530,7 +1577,8 @@ public class XOSM2 extends UI {
 		info.setWidth("100%");
 		info.setIcon(VaadinIcons.INFO);
 
-		HorizontalLayout buttons = new HorizontalLayout();
+		//HorizontalLayout buttons = new HorizontalLayout();
+		 
 
 		searchb.addClickListener(new Button.ClickListener() {
 			@Override
@@ -1662,16 +1710,21 @@ public class XOSM2 extends UI {
 		search.addComponent(searchtf);
 		search.addComponent(searchb);
 		search.setWidth("100%");
-		search.setExpandRatio(searchtf, 2f);
-		search.setExpandRatio(searchb, 0.5f);
-		buttons.addComponent(examplesSIMPLES);
-		buttons.addComponent(examplesPBD);
-		buttons.addComponent(restart);
-		buttons.addComponent(help);
-		buttons.addComponent(info);
-		buttons.setWidth("100%");
+		search.setExpandRatio(searchtf, 2.25f);
+		search.setExpandRatio(searchb, 0.25f);
+		//buttons.addComponent(examplesSIMPLES);
+		//buttons.addComponent(examplesPBD);
+		//buttons.addComponent(restart);
+		//buttons.addComponent(help);
+		//buttons.addComponent(info);
+		//buttons.setWidth("100%");
+		all.addComponent(barmenu);
+		all.addComponent(restart);
 		all.addComponent(search);
-		all.addComponent(buttons);
+		all.setExpandRatio(barmenu,0.1f);
+		all.setExpandRatio(restart,0.1f);
+		all.setExpandRatio(search,0.8f);
+		//all.addComponent(buttons);
 		MVerticalLayout vl = new MVerticalLayout(all).expand(map);
 		vl.setMargin(false);
 		q.setSizeFull();
@@ -2148,9 +2201,17 @@ public class XOSM2 extends UI {
 	public String api(Double minLon, Double minLat, Double maxLon, Double maxLat, String query) {
 		String xml = "";
 
+		String call_query = 
+				"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
+				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
+				"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
+				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
+				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" + query;
+		
 		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			params.add(new BasicNameValuePair("query", query));
+			params.add(new BasicNameValuePair("query", call_query));
 			HttpGet request = new HttpGet("http://xosm.ual.es/xosmapiV2/XOSM/minLon/" + minLon + "/minLat/" + minLat
 					+ "/maxLon/" + maxLon + "/maxLat/" + maxLat + "?" + URLEncodedUtils.format(params, "utf-8"));
 			request.addHeader("content-type", "application/xml");

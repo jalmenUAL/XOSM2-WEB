@@ -58,7 +58,7 @@ public class Query extends VerticalLayout {
 	String cfill;
 	String icon = "i1007.png";
 	Button ex = new Button("Run");
-	TextField layer = new TextField("Layer Name");
+	TextField layer = new TextField();
 	AceEditor editor = new AceEditor();
 	List<NameValuePair> params = new ArrayList<NameValuePair>();
 	List<NameValuePair> params2 = new ArrayList<NameValuePair>();
@@ -74,12 +74,13 @@ public class Query extends VerticalLayout {
 		editor.setTheme(AceTheme.textmate);
 		editor.setHeight(150, Unit.PIXELS);
 		editor.setWordWrap(true);
-		editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+		/*editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
 				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
 				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
 				"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
 				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
-				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" + query);
+				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" + query);*/
+		editor.setValue(query);
 
 		editor.setFontSize("14pt");
 		editor.setShowPrintMargin(false);
@@ -94,6 +95,15 @@ public class Query extends VerticalLayout {
 		editor.addValueChangeListener(new com.vaadin.data.HasValue.ValueChangeListener<String>() {
 			@Override
 			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {
+				
+				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" + 		
+						"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+								"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
+								"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
+								"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
+								"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
+								"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" +
+						editor.getValue();
 				api.setVisible(false);
 				see_link.setVisible(true);
 				main.nelat = main.map.getBounds().getNorthEastLat();
@@ -101,7 +111,7 @@ public class Query extends VerticalLayout {
 				main.swlat = main.map.getBounds().getSouthWestLat();
 				main.swlon = main.map.getBounds().getSouthWestLon();
 				params2.clear();
-				params2.add(new BasicNameValuePair("query", editor.getValue()));
+				params2.add(new BasicNameValuePair("query", call_query));
 				api.setCaption("API Restful Link");
 				opener.setResource(new ExternalResource("http://xosm.ual.es/xosmapiV2/XOSM/minLon/" + main.swlon
 						+ "/minLat/" + main.swlat + "/maxLon/" + main.nelon + "/maxLat/" + main.nelat + "?"
@@ -115,7 +125,7 @@ public class Query extends VerticalLayout {
 		ColorPicker ncpicker = new ColorPicker();
 		ncpicker.setPosition(Page.getCurrent().getBrowserWindowWidth() / 2 - 246 / 2,
 				Page.getCurrent().getBrowserWindowHeight() / 2 - 507 / 2);
-		ncpicker.setCaption("Open Ways");
+		ncpicker.setCaption("Select Color of Open Ways");
 		ncpicker.setSwatchesVisibility(false);
 		ncpicker.setHistoryVisibility(false);
 		ncpicker.setTextfieldVisibility(false);
@@ -124,7 +134,7 @@ public class Query extends VerticalLayout {
 			nccolor = event.getValue().getCSS();
 		});
 		ColorPicker cpicker = new ColorPicker();
-		cpicker.setCaption("Border Closed Ways");
+		cpicker.setCaption("Select Border Color of Closed Ways");
 		cpicker.setPosition(Page.getCurrent().getBrowserWindowWidth() / 2 - 246 / 2,
 				Page.getCurrent().getBrowserWindowHeight() / 2 - 507 / 2);
 		cpicker.setSwatchesVisibility(false);
@@ -136,7 +146,7 @@ public class Query extends VerticalLayout {
 		});
 
 		ColorPicker cfpicker = new ColorPicker();
-		cfpicker.setCaption("Filling Closed Ways");
+		cfpicker.setCaption("Select Filling Color of Closed Ways");
 		cfpicker.setPosition(Page.getCurrent().getBrowserWindowWidth() / 2 - 246 / 2,
 				Page.getCurrent().getBrowserWindowHeight() / 2 - 507 / 2);
 		cfpicker.setSwatchesVisibility(false);
@@ -146,8 +156,10 @@ public class Query extends VerticalLayout {
 		cfpicker.addValueChangeListener(event -> {
 			cfill = event.getValue().getCSS();
 		});
-		ComboBox<Integer> eidos = new ComboBox<Integer>("Icon for Nodes");
-		eidos.setWidth("80px");
+		ComboBox<Integer> eidos = new ComboBox<Integer>();
+		eidos.setPlaceholder("Select the Icon for Nodes");
+		
+		eidos.setWidth("100%");
 		eidos.setItemCaptionGenerator(item -> "");
 		eidos.setItems(IntStream.range(0, 383).boxed().collect(Collectors.toList()));
 		eidos.setItemIconGenerator(item -> new ThemeResource("i" + Integer.toString((1000 + item)) + ".png"));
@@ -157,6 +169,7 @@ public class Query extends VerticalLayout {
 			icon = "i" + Integer.toString(1000 + eidos.getValue()) + ".png";
 		});
 		layer.setValue("default");
+		layer.setWidth("100%");
 		layer.addValueChangeListener(event -> {
 			save_layer.setEnabled(true);
 		});
@@ -278,8 +291,16 @@ public class Query extends VerticalLayout {
 		see_link.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
+				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" + 		
+						"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+								"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
+								"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
+								"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
+								"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
+								"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" +
+						editor.getValue();
 				params3.clear();
-				params3.add(new BasicNameValuePair("query", editor.getValue()));
+				params3.add(new BasicNameValuePair("query", call_query));
 				api.setCaption("API Restful Link");
 				opener.setResource(new ExternalResource("http://xosm.ual.es/xosmapiV2/XOSM/minLon/" + main.swlon
 						+ "/minLat/" + main.swlat + "/maxLon/" + main.nelon + "/maxLat/" + main.nelat + "?"
@@ -323,62 +344,51 @@ public class Query extends VerticalLayout {
 		opener.setWindowName("_blank");
 		opener.extend(api);
 		VerticalLayout optionslayout = new VerticalLayout();
-		HorizontalLayout execution = new HorizontalLayout();
-		HorizontalLayout layers = new HorizontalLayout();
-		execution.setSpacing(true);
-		execution.setMargin(true);
-		execution.setWidth("100%");
-		layers.setWidth("100%");
-		layers.setSpacing(true);
-		layers.setMargin(true);
-		execution.addComponent(ex);
+		optionslayout.addComponent(ex);
 		ex.setWidth("100%");
 		ex.setIcon(VaadinIcons.PLAY);
-		execution.addComponent(see_link);
+		optionslayout.addComponent(see_link);
 		see_link.setWidth("100%");
 		see_link.setIcon(VaadinIcons.LINK);
-		execution.addComponent(api);
+		optionslayout.addComponent(api);
 		api.setWidth("100%");
-		layers.addComponent(save_layer);
+		Button lb = new Button("Select name for the layer");
+		lb.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+		lb.setEnabled(false);
+		lb.setWidth("100%");
+		optionslayout.addComponent(lb);
+		optionslayout.addComponent(layer);
+		optionslayout.addComponent(save_layer);
 		save_layer.setWidth("100%");
 		save_layer.setIcon(VaadinIcons.ARCHIVE);
-		layers.addComponent(delete_layer);
+		optionslayout.addComponent(delete_layer);
 		delete_layer.setWidth("100%");
 		delete_layer.setIcon(VaadinIcons.CROSS_CUTLERY);
-		optionslayout.addComponent(execution);
-		optionslayout.addComponent(layers);
 		optionslayout.setHeight("100%");
 		optionslayout.setWidth("100%");
 		optionslayout.setSpacing(false);
 		optionslayout.setMargin(false);
-		HorizontalLayout layer_eidos = new HorizontalLayout();
-		layer_eidos.setWidth("100%");
-		layer_eidos.addComponent(layer);
-		layer.setWidth("100%");
-		layer_eidos.addComponent(eidos);
+		optionslayout.addComponent(eidos);
 		eidos.setWidth("100%");
-		optionslayout.addComponent(layer_eidos);
-		HorizontalLayout pickers = new HorizontalLayout();
-		pickers.setWidth("100%");
-		pickers.addComponent(ncpicker);
+	    optionslayout.addComponent(ncpicker);
 		ncpicker.setWidth("100%");
-		pickers.addComponent(cpicker);
+		optionslayout.addComponent(cpicker);
 		cpicker.setWidth("100%");
-		pickers.addComponent(cfpicker);
+		optionslayout.addComponent(cfpicker);
 		cfpicker.setWidth("100%");
-		optionslayout.addComponent(pickers);
-		Label title = new Label("XOSM: XQuery-based query language for OSM. Version 2."
+
+		/*Label title = new Label("XOSM: XQuery-based query language for OSM. Version 2."
 				+ "Jesús M. Almendros-Jiménez, Antonio Becerra-Terón and Manuel Torres."
-				+ "University of Almería. 2018. "
+				+ "University of Almería. 2019. "
 				+ "<a href='http://indalog.ual.es/WWW_pages/JesusAlmendros/Publications.html'>Information Systems Group Publications</a>",
 				ContentMode.HTML);
 		title.setWidth("100%");
-		title.setStyleName(ValoTheme.LABEL_COLORED);
-		optionslayout.addComponent(title);
+		title.setStyleName(ValoTheme.LABEL_COLORED);*/
 		optionslayout.setSpacing(false);
 		VerticalSplitPanel split = new VerticalSplitPanel();
-		split.setSizeFull();
-		split.setSplitPosition(60);
+		split.setHeight("100%");
+		split.setWidth("100%");
+		split.setSplitPosition(50);
 		split.setFirstComponent(editor);
 		split.setSecondComponent(optionslayout);
 		addComponent(split);
@@ -386,11 +396,12 @@ public class Query extends VerticalLayout {
 	}
 
 	public void setQuery(String query) {
-		editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+		/*editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
 				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
 				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
 				"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
 				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
-				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n\n" + query);
+				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n\n" + query);*/
+		editor.setValue(query);
 	}
 }
