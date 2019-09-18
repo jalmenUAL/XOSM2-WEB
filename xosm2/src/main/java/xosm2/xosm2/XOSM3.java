@@ -83,7 +83,7 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import elemental.json.JsonArray;
 
 @Theme("mytheme")
-public class XOSM2 extends UI {
+public class XOSM3 extends UI {
 
 	HorizontalSplitPanel accordion = new HorizontalSplitPanel();
 	HorizontalSplitPanel accordion2 = new HorizontalSplitPanel();
@@ -91,7 +91,7 @@ public class XOSM2 extends UI {
 	Query q = null;
 	Info_Node in = new Info_Node(this);
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
-	XOSM2 this_ = this;
+	XOSM3 this_ = this;
 	String osm_team = "<h1 style=\"color:DodgerBlue;\">Aim of the Project</h1>"
 			+ "<p>Volunteered geographic information (VGI) makes available a very large resource of geographic data.</p>"
 			+ "<p>The exploitation of data coming from such resources requires an additional effort in the form of tools</p>"
@@ -2227,7 +2227,7 @@ public class XOSM2 extends UI {
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "XOSM2Servlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = XOSM2.class, productionMode = false)
+	@VaadinServletConfiguration(ui = XOSM3.class, productionMode = false)
 	public static class XOSM2Servlet extends VaadinServlet {
 	}
 }
