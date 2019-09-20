@@ -219,7 +219,7 @@ public class XOSM2 extends UI {
 		LTileLayer osmTiles = new LOpenStreetMapLayer();
 		osmTiles.setAttributionString("© OpenStreetMap Contributors");
 		map.addBaseLayer(osmTiles, "OSM");
-		map.setZoomLevel(17);
+		map.setZoomLevel(18);
         popup.center();
         popup.setHeightUndefined();
         popup.setResizable(false);
@@ -249,7 +249,7 @@ public class XOSM2 extends UI {
 
 		// INDEXING
 
-		String exq1 = "xosm_pbd:getLayerByName(.,\"Calle Calzada de Castro\",500)";
+		String exq1 = "xosm_pbd:getLayerByName(.,\"Calle Calzada de Castro\",100)";
 
 		String exq2 = "xosm_pbd:getElementsByKeyword(.,\"shop\")";
 
@@ -277,7 +277,7 @@ public class XOSM2 extends UI {
 
 		String exq9 = "let $layer := xosm_pbd:getLayerByBB(.)\r\n"
 				+ "let $e := xosm_pbd:getElementByName(.,'Calle Calzada de Castro')\r\n" + "return\r\n"
-				+ "filter($layer,xosm_sp:DWithIn(?,$e,300))\r\n";
+				+ "filter($layer,xosm_sp:DWithIn(?,$e,100))\r\n";
 
 		String exq10 = "let $layer := xosm_pbd:getLayerByBB(.)\r\n"
 				+ "let $p := xosm_pbd:getElementByName(.,\"ACUYO IRIARTE\")\r\n" + "return\r\n"
@@ -289,12 +289,12 @@ public class XOSM2 extends UI {
 
 		String exq12 = "let $layer:= xosm_pbd:getLayerByBB(.)\r\n"
 				+ "let $cc := xosm_pbd:getElementByName(.,\"Calle Calzada de Castro\")\r\n" + "return\r\n"
-				+ "filter($layer[@type=\"way\"],xosm_sp:disjoint(?,$cc)) ";
+				+ "filter($layer[@type=\"way\"],xosm_sp:intersecting(?,$cc)) ";
 
 		// KEYWORD
 
 		String exq13 = "let $layer:= xosm_pbd:getLayerByBB(.)\r\n" + "return\r\n"
-				+ "filter($layer,xosm_kw:searchTag(?,\"amenity\",\"bar\"))";
+				+ "filter($layer,xosm_kw:searchTag(?,\"tourism\",\"hotel\"))";
 
 		String exq14 = "let $layer:= xosm_pbd:getLayerByBB(.)\r\n" + "return\r\n"
 				+ "filter($layer,xosm_kw:searchKeyword(?,\"amenity\"))";
@@ -321,13 +321,13 @@ public class XOSM2 extends UI {
 				+ "return xosm_ag:metricAvgG($buildings,function($x){xosm_item:area($x)})";
 
 		String exq20 = "let $layer :=\r\n" + "xosm_pbd:getLayerByBB(.)\r\n"
-				+ "return xosm_ag:metricTopCountG($layer,function($x){xosm_item:length($x)},5)";
+				+ "return xosm_ag:metricTopCountG($layer,function($x){xosm_item:area($x)},5)";
 
 		String exq21 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
 				+ "return xosm_ag:metricMedianG($layer[@type=\"way\"],function($x){xosm_item:length($x)})";
 
 		String exq22 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
-				+ "return xosm_ag:metricModeG($layer,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricRangeG($layer,function($x){xosm_item:area($x)})";
 
 		String exq23 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
 				+ "return xosm_ag:metricRankG($layer,function($x){xosm_item:area($x)},1)";
@@ -382,7 +382,7 @@ public class XOSM2 extends UI {
 				"'https://opendata.bruxelles.be/explore/dataset/test-geojson-station-de-taxi/download/?format=geojson&amp;timezone=UTC'\r\n" + 
 				"let $taxis := xosm_open:geojson2osm($open,'')\r\n" + 
 				"let $building := xosm_pbd:getElementByName(. ,'Bruxelles-Central - Brussel-Centraal') \r\n" + 
-				"return fn:filter($taxis,xosm_sp:DWithIn($building,?,500))";
+				"return fn:filter($taxis,xosm_sp:DWithIn($building,?,100))";
 		
 		String q8 = "let $open :=\r\n"
 				+ "'http://data2.esrism.opendata.arcgis.com/datasets/51900577e33a4ba4ab59a691247aeee9_0.geojson'\r\n"
@@ -395,18 +395,23 @@ public class XOSM2 extends UI {
 
 		 
 		String q10 ="<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n " + 
+				"let $city := xosm_social:city($hotels)\r\n " + 
+				"for $hotel in $hotels\r\n " + 
 				"let $name := data($hotel/@name)\r\n" + 
-				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
-				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
-				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
-				"           then data($hotel/@name)\r\n" + 
-				"           else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $q := (if (contains(data($hotel/@name), \"Hotel\"))\r\n "+ 
+				"then data($hotel/@name)\r\n" + 
+				"else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n " + 
+				"data($hotel/@name) else\r\n " +
+				"if (contains(data($hotel/@name), \"Apartament\"))\r\n " + 
+				"then data($hotel/@name)\r\n" + 
+				"else \"Hotel \" || data($hotel/@name))\r\n " + 
 				"let $q := $q || \" \" || $city\r\n" + 
-				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n" + 
-				"return xosm_social:twitterResult($hotel, $tweets, \"twitterSearchTweets\")\r\n" + 
+				"let $tweets :=\r\n "
+				+"xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n "
+				+"map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n" + 
+				"return xosm_social:twitterResult($hotel, \r\n"
+				+"$tweets, \"twitterSearchTweets\")\r\n " + 
 				"}</social>";
 		
 		String q11="<social>{\r\n" + 
@@ -688,7 +693,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -704,7 +709,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -719,7 +724,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -734,7 +739,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -749,7 +754,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -764,7 +769,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -779,7 +784,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -794,7 +799,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -809,7 +814,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -823,7 +828,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -838,7 +843,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -853,7 +858,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -868,7 +873,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -883,7 +888,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -898,7 +903,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -913,7 +918,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -928,7 +933,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -943,7 +948,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -958,7 +963,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -973,7 +978,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -988,7 +993,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1003,7 +1008,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1018,7 +1023,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1033,7 +1038,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1048,13 +1053,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq25);
-				 
+				map.setZoomLevel(10);
 			}
 
 		};
@@ -1063,12 +1068,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq26);
+				map.setZoomLevel(10);
 				
 			}
 
@@ -1078,12 +1084,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq27);
+				map.setZoomLevel(10);
 				 
 			}
 
@@ -1093,12 +1100,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq28);
+				map.setZoomLevel(15);
 				 
 			}
 
@@ -1108,7 +1116,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(51.50884, -0.13201);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1123,13 +1131,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(41.90219, 12.49580);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q2);
-				 
+				  
 			}
 
 		};
@@ -1138,13 +1146,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(48.20817, 16.37382);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q3);
-				 
+				  
 			}
 
 		};
@@ -1153,13 +1161,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(48.13513, 11.58198);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q4);
-				 
+				  
 			}
 
 		};
@@ -1167,8 +1175,8 @@ public class XOSM2 extends UI {
 		MenuBar.Command copen5 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setCenter(52.52250, 13.40952);
-				map.setZoomLevel(17);
+				map.setCenter(36.838030858833, -2.4522979583778);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1183,7 +1191,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(45.465820637638, 9.1893592282028);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1193,12 +1201,14 @@ public class XOSM2 extends UI {
 			}
 
 		};
+		
+		//ADDED
 
 		MenuBar.Command copen7 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(50.8445, 4.3537);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
@@ -1208,19 +1218,21 @@ public class XOSM2 extends UI {
 			}
 
 		};
+		
+		
 
 		MenuBar.Command copen8 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(40.42, -3.68);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q8);
-				 
+				map.setZoomLevel(10);
 			}
 
 		};
@@ -1229,12 +1241,13 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(40.4164, -3.70501);
-				map.setZoomLevel(17);
+				map.setZoomLevel(18);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q9);
+				 
 				 
 			}
 
@@ -1250,7 +1263,7 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q10);
-				 
+				
 			}
 
 		};
@@ -1554,13 +1567,14 @@ public class XOSM2 extends UI {
 		
 		
 		 
-		MenuItem open1 = open.addItem("Retrieve the streets in the bounding box intersecting Haymarket street", null, copen1);		
-		MenuItem open2 = open.addItem("Retrieve the restaurants in Roma further north to Miami hotel", null, copen2);
-		MenuItem open3 = open.addItem("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars and restaurants bigger than 10)", null, copen3);
-		MenuItem open4 = open.addItem("Retrieve the hotels of Munich with the greatest number of churches nearby", null, copen4);
-		MenuItem open5 = open.addItem("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin", null, copen5);
-		MenuItem open6 = open.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, copen6);
-		MenuItem open7 = open.addItem("Request taxi stops close (500 m) to Bruxelles Central Station in Bruxelles", null, copen7);
+		//MenuItem open1 = open.addItem("Retrieve the streets in the bounding box intersecting Haymarket street", null, copen1);		
+		//MenuItem open2 = open.addItem("Retrieve the restaurants in Roma further north to Miami hotel", null, copen2);
+		//MenuItem open3 = open.addItem("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars and restaurants bigger than 10)", null, copen3);
+		//MenuItem open4 = open.addItem("Retrieve the hotels of Munich with the greatest number of churches nearby", null, copen4);
+		//MenuItem open5 = open.addItem("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin", null, copen5);
+		//MenuItem open6 = open.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, copen6);
+		
+		MenuItem open7 = open.addItem("Request taxi stops close (100 m) to Bruxelles Central Station in Bruxelles", null, copen7);
 		MenuItem open8 = open.addItem("Retrieves free events of Madrid", null, copen8);
 		MenuItem open9 = open.addItem("Retrieve Wikipedia information about places nearby to the intersection point of Calle Mayor and Calle de Esparteros in Madrid", null, copen9);
 		
@@ -1587,34 +1601,34 @@ public class XOSM2 extends UI {
 
 
 		 
-		MenuItem ind1 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, cind1);
+		MenuItem ind1 = indexing.addItem("Retrieve the elements of the bounding box close (100 m) to an street", null, cind1);
 		MenuItem ind2 = indexing.addItem("Retrieve the shops of the bounding box", null, cind2);
 		MenuItem ind3 = indexing.addItem("Retrieve an element of the bounding box", null, cind3);
-		MenuItem ind4 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, cind4);
-		MenuItem osm1 = osm.addItem("Retrieve the ways of the bounding box", null, cosm1);
+		MenuItem ind4 = indexing.addItem("Retrieve the elements of the bounding box close (100 m) to an street", null, cind4);
+		//MenuItem osm1 = osm.addItem("Retrieve the ways of the bounding box", null, cosm1);
 		MenuItem osm2 = osm.addItem("Retrieve the points of the bounding box", null, cosm2);
-		MenuItem osm3 = osm.addItem("Rebuild the points of the bounding box close (500 m) to an street", null, cosm3);
-		MenuItem osm4 = osm.addItem("Rebuild the ways of the bounding box close (500 m) to an street", null, cosm4);
-		MenuItem spa1 = spatial.addItem("Retrieve the points of the bounding box within (300 m) to an street", null, cspa1);
+		MenuItem osm3 = osm.addItem("Rebuild the points of the bounding box close (100 m) to an street", null, cosm3);
+		MenuItem osm4 = osm.addItem("Rebuild the ways of the bounding box close (100 m) to an street", null, cosm4);
+		MenuItem spa1 = spatial.addItem("Retrieve the points of the bounding box within (100 m) to an street", null, cspa1);
 		MenuItem spa2 = spatial.addItem("Retrieve the points of the bounding box further west to a point", null, cspa2);
 		MenuItem spa3 = spatial.addItem("Retrieve the streets crossing an street", null, cspa3);
-		MenuItem spa4 = spatial.addItem("Retrieve the streets disjoint with an street", null, cspa4);
-		MenuItem key1 = keyword.addItem("Retrieve the amenity bars of the bounding box", null, ckey1);
+		MenuItem spa4 = spatial.addItem("Retrieve the streets intersecting with an street", null, cspa4);
+		MenuItem key1 = keyword.addItem("Retrieve the hotels of the bounding box", null, ckey1);
 		MenuItem key2 = keyword.addItem("Retrieve the amenities of the bounding box", null, ckey2);
 		MenuItem key3 = keyword.addItem("Retrieve the bars and restaurants of the bounding box", null, ckey3);
 		MenuItem agg1 = aggregation.addItem("Retrieve the number of streets crossing an street", null, cagg1);
 		MenuItem agg2 = aggregation.addItem("Retrieve the buildings with maximum area close (500m) to an street", null, cagg2);
 		MenuItem agg3 = aggregation.addItem("Retrieve the sum of the length of highways close (500m) to an street", null, cagg3);
 		MenuItem agg4 = aggregation.addItem("Retrieve the average area of buildings close (500m) to an street", null, cagg4);
-		MenuItem agg5 = aggregation.addItem("Retrieve the 5 longest elements", null, cagg5);
+		MenuItem agg5 = aggregation.addItem("Retrieve the 5 biggest elements", null, cagg5);
 		MenuItem agg6 = aggregation.addItem("Retrieve the median of the area of elements close (500m) to an street", null, cagg6);
-		MenuItem agg7 = aggregation.addItem("Retrieve the mode of the area of elements close (500m) to an street", null, cagg7);
+		MenuItem agg7 = aggregation.addItem("Retrieve the range of the area of elements close (500m) to an street", null, cagg7);
 		MenuItem agg8 = aggregation.addItem("Retrieve the biggest element close (500m) to an street", null, cagg8);
-		MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, cagg9);
+		//MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, cagg9);
 		MenuItem op1 = open.addItem("Import geojson data", null, cop1);
 		MenuItem op2 = open.addItem("Import kml data", null, cop2);
-		MenuItem op4 = open.addItem("Import csv data", null, cop3);
-		MenuItem op5 = open.addItem("Wikipedia information", null, cop4);
+		MenuItem op3 = open.addItem("Import csv data", null, cop3);
+		MenuItem op4 = open.addItem("Wikipedia information", null, cop4);
 		 
 
 		Button searchb = new Button();
