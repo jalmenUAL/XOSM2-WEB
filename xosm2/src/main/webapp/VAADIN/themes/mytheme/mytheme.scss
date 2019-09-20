@@ -86,6 +86,18 @@ $v-component-group-spacing: 6px;
         border: 8px solid rgb( 0, 172, 237);
     }
     
+    .youtube {
+        -moz-border-radius: 4;
+        -webkit-border-radius: 4;
+        border-radius: 4;
+        background: white;
+        padding: 4px;
+        opacity: 1.0;
+        border-width: thick;
+        border-color: black;
+        border: 8px solid rgb( 255, 0, 0);
+    }
+    
     .kp-info {
         -moz-border-radius: 4;
         -webkit-border-radius: 4;

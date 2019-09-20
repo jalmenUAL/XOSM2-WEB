@@ -19,7 +19,7 @@ public class Info_Node extends VerticalLayout {
 
 	VerticalLayout l = new VerticalLayout();
 	XOSM2 _main;
-	Button t = new Button("See Tweets");
+	Button t = new Button("See Details");
 
 	Info_Node(XOSM2 main) {
 		super();
@@ -35,7 +35,7 @@ public class Info_Node extends VerticalLayout {
 		b.setIcon(VaadinIcons.CLOSE);
 		t.setWidth("100%");
 		t.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		t.setIcon(VaadinIcons.TWITTER);
+		 
 		addComponent(b);
 		addComponent(t);
 		addComponent(l);
@@ -46,22 +46,106 @@ public class Info_Node extends VerticalLayout {
 				main.accordion.setSplitPosition(35);
 				t.setEnabled(false);
 				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
 			}
 		});
 	}
 
-	public void setInfoTwitter(NodeList Tweets) {
+	public void setInfoTwitterTweets(NodeList Tweets) {
 		t.setEnabled(true);
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
+				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
 				if (!_main.popup.isAttached()) {
 					_main.addWindow(_main.popup);
 					_main.popup.center();
 					
 				}	
-				_main.popup.showInfoTwitter(Tweets);
+				
+				_main.popup.showInfoTwitterTweets(Tweets);
+				
+			}
+		});
+	}
+	
+	public void setInfoTwitterUsers(NodeList Tweets) {
+		t.setEnabled(true);
+		t.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
+				if (!_main.popup.isAttached()) {
+					_main.addWindow(_main.popup);
+					_main.popup.center();
+					
+				}	
+				
+				_main.popup.showInfoTwitterUsers(Tweets);
+				
+			}
+		});
+	}
+	
+	public void setInfoYoutubeVideos(NodeList Tweets) {
+		t.setEnabled(true);
+		t.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
+				if (!_main.popup2.isAttached()) {
+					_main.addWindow(_main.popup2);
+					_main.popup2.center();
+					
+				}	
+				
+				_main.popup2.showInfoYoutubeVideos(Tweets);
+				
+			}
+		});
+	}
+	
+	public void setInfoYoutubePlayLists(NodeList Tweets) {
+		t.setEnabled(true);
+		t.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
+				if (!_main.popup2.isAttached()) {
+					_main.addWindow(_main.popup2);
+					_main.popup2.center();
+					
+				}	
+				
+				_main.popup2.showInfoYoutubePlayLists(Tweets);
+				
+			}
+		});
+	}
+	
+	public void setInfoYoutubeChannels(NodeList Tweets) {
+		t.setEnabled(true);
+		t.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				_main.removeWindow(_main.popup);
+				_main.removeWindow(_main.popup2);
+				if (!_main.popup2.isAttached()) {
+					_main.addWindow(_main.popup2);
+					_main.popup2.center();
+					
+				}	
+				
+				_main.popup2.showInfoYoutubeChannels(Tweets);
 				
 			}
 		});

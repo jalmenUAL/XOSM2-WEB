@@ -215,10 +215,16 @@ public class Query extends VerticalLayout {
 
 							XPath xPath = XPathFactory.newInstance().newXPath();
 
-							NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument,
+							NodeList twitter = (NodeList) xPath.compile("/social/twitter").evaluate(xmlDocument,
 									XPathConstants.NODESET);
 
-							if (social.getLength() > 0) {
+							NodeList youtube = (NodeList) xPath.compile("/social/youtube").evaluate(xmlDocument,
+									XPathConstants.NODESET);
+							
+							NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument,
+									XPathConstants.NODESET);
+							
+							if (twitter.getLength() > 0) {
 								Draw d = new Draw();
 								main.Draw_xml_twitter(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
 								NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node")
@@ -229,7 +235,26 @@ public class Query extends VerticalLayout {
 										Double.parseDouble(
 												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
 								 
-							} else {
+							   } 
+							
+							else {
+							if (youtube.getLength() > 0) {
+								Draw d = new Draw();
+								main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+								NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
+										.evaluate(xmlDocument, XPathConstants.NODESET);
+								main.map.setCenter(
+										Double.parseDouble(
+												center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+										Double.parseDouble(
+												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+								 
+							   } 
+							
+							    else {
+							    	
+							    if (social.getLength()>0)	{Notification.show("The result of the query is empty");}
+							    else {
 								NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
 										XPathConstants.NODESET);
 
@@ -271,7 +296,8 @@ public class Query extends VerticalLayout {
 									}
 								}
 							}
-
+							}
+							}
 						} catch (SAXException | IOException e) {
 							Notification.show("The result of the query is non valid: " + address);
 						} catch (XPathExpressionException e) {
@@ -280,8 +306,8 @@ public class Query extends VerticalLayout {
 						}
 					}
 				}
-			}
 			
+		}
 
 		});
 

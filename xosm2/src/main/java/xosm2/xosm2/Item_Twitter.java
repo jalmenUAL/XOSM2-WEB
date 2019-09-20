@@ -28,9 +28,17 @@ import com.vaadin.ui.themes.ValoTheme;
 public class Item_Twitter extends VerticalLayout {
 
 	VerticalLayout l = new VerticalLayout();
-
-	Item_Twitter(Node n) {
+	
+	Item_Twitter(Node n,String type){
 		super();
+		 
+		if (type=="tweets") { Item_Twitter_Tweets(n);}
+		else { Item_Twitter_Users(n);}
+		
+	}
+
+	void Item_Twitter_Tweets(Node n) {
+		
 		HorizontalLayout tweet = new HorizontalLayout();
 		NodeList childs = n.getChildNodes();
 		String stext = "";
@@ -122,14 +130,7 @@ public class Item_Twitter extends VerticalLayout {
 
 		Label text = new Label(etext, ContentMode.HTML);
 		text.setWidth("240pt");
-		/*
-		 * Embedded e = new Embedded(null, new ExternalResource(
-		 * "http://www.youtube.com/v/wBCOFv-Clsc&hl=en_US&fs=1&"));
-		 * 
-		 * e.setMimeType("application/x-shockwave-flash");
-		 * e.setParameter("allowFullScreen", "true"); e.setWidth("240pt");
-		 * e.setHeight("180pt");
-		 */
+		 
 		Label nlikes = new Label(sfavorite__count);
 		Label likes = new Label();
 		likes.setIcon(VaadinIcons.HEART);
@@ -146,7 +147,7 @@ public class Item_Twitter extends VerticalLayout {
 		user.setMargin(false);
 		content.addComponent(user);
 		content.addComponent(text);
-		/* content.addComponent(e); */
+		 
 		content.addComponent(info);
 		content.setMargin(false);
 		tweet.addComponent(image);
@@ -156,7 +157,102 @@ public class Item_Twitter extends VerticalLayout {
 		l.addComponent(tweet);
 		l.setSpacing(false);
 		l.setMargin(false);
-		addComponent(l);
+ 		addComponent(l);
+	}
+	
+void Item_Twitter_Users(Node n) {
+		
+		HorizontalLayout tweet = new HorizontalLayout();
+		NodeList childs = n.getChildNodes();
+		String sname = "";
+		String sdescription = "";
+		String sfollowers__count = "";
+		String sfriends__count = "";
+		String sfavourites__count = "";
+		String sprofile__image__url = "";
+		 
+
+		 
+		for (int i = 0; i < childs.getLength(); i++) {
+
+			if (childs.item(i).getNodeName() == "name") {
+				sname = childs.item(i).getTextContent();
+			}
+			if (childs.item(i).getNodeName() == "description") {
+				sdescription = childs.item(i).getTextContent();
+			}
+			if (childs.item(i).getNodeName() == "followers__count") {
+				sfollowers__count = childs.item(i).getTextContent();
+			}
+			if (childs.item(i).getNodeName() == "friends__count") {
+				sfriends__count= childs.item(i).getTextContent();
+			}
+			if (childs.item(i).getNodeName() == "favourites__count") {
+				sfavourites__count= childs.item(i).getTextContent();
+			}
+			if (childs.item(i).getNodeName() == "profile__image__url") {
+				sprofile__image__url= childs.item(i).getTextContent();
+			}
+
+		}
+
+		 
+		Image image = new Image();
+		image.setSource(new ExternalResource(sprofile__image__url));
+		image.setWidth("60pt");
+		image.setHeight("60pt");
+		Label userl = new Label(
+				"<a href='http://twitter.com/search?q=" + sname + "'  target=\"_blank\">" + sname + "</a>",
+				ContentMode.HTML);
+		userl.setStyleName(ValoTheme.LABEL_BOLD);
+		
+		VerticalLayout content = new VerticalLayout();
+		HorizontalLayout user = new HorizontalLayout();
+		HorizontalLayout info = new HorizontalLayout();
+		 
+		
+		String edescription = parse(sdescription);
+
+		Label description = new Label(edescription, ContentMode.HTML);
+		description.setWidth("240pt");
+		 
+		Label nlikes = new Label(sfavourites__count);
+		Label likes = new Label();
+		likes.setIcon(VaadinIcons.HEART);
+		Label nfollowers = new Label(sfollowers__count);
+		Label followers = new Label("Followers");	 
+		Label nfriends = new Label(sfriends__count);
+		Label friends = new Label("Friends");
+
+		 
+		 
+		info.addComponent(likes);
+		info.addComponent(nlikes);
+		
+		info.addComponent(followers);
+		info.addComponent(nfollowers);
+		
+		info.addComponent(friends);
+		info.addComponent(nfriends);
+		 
+		info.setMargin(false);
+		 
+		 
+		user.setMargin(false);
+		content.addComponent(user);
+		content.addComponent(userl);
+		content.addComponent(description);
+		 
+		content.addComponent(info);
+		content.setMargin(false);
+		tweet.addComponent(image);
+		tweet.addComponent(content);
+		setHeight("100%");
+		setWidth("100%");
+		l.addComponent(tweet);
+		l.setSpacing(false);
+		l.setMargin(false);
+ 		addComponent(l);
 	}
 
 	String parse(String tweetText) {

@@ -85,9 +85,13 @@ import elemental.json.JsonArray;
 @Theme("mytheme")
 public class XOSM2 extends UI {
 
+	String type ="";
+	String type2 = "";
 	HorizontalSplitPanel accordion = new HorizontalSplitPanel();
 	HorizontalSplitPanel accordion2 = new HorizontalSplitPanel();
 	Twitter popup = new Twitter();
+	Youtube popup2 = new Youtube();
+
 	Query q = null;
 	Info_Node in = new Info_Node(this);
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
@@ -217,6 +221,11 @@ public class XOSM2 extends UI {
 		map.addBaseLayer(osmTiles, "OSM");
 		map.setZoomLevel(17);
         popup.center();
+        popup.setHeightUndefined();
+        popup.setResizable(false);
+        popup2.center();
+        popup2.setHeightUndefined();
+        popup2.setResizable(false);
 		
 		map.addMoveEndListener(new LeafletMoveEndListener() {
 			@Override
@@ -236,291 +245,7 @@ public class XOSM2 extends UI {
 		q = new Query(this, "xosm_pbd:getElementsByKeyword(.,\"shop\")");
 		
 		
-		MenuBar barmenu = new MenuBar();
-		barmenu.setWidth("100%"); 
-		barmenu.addItem("Menu");
-		
-		MenuItem examples = barmenu.addItem("Examples",null,null);
-		MenuItem helpi = barmenu.addItem("Help",null,null);
-		MenuItem Info = barmenu.addItem("Info",null,null);
-		MenuItem indexing = examples.addItem("Indexing Examples", null, null);
-		MenuItem osm = examples.addItem("Layers Examples", null, null);
-		MenuItem spatial = examples.addItem("Spatial Examples", null, null);
-		MenuItem keyword = examples.addItem("Keyword Examples", null, null);
-		MenuItem aggregation = examples.addItem("Aggregation Examples", null, null);
-		MenuItem open = examples.addItem("Open Data Examples", null, null);
-		MenuItem social = examples.addItem("Social Network Examples", null, null);
-		MenuItem twitter = social.addItem("Twitter Examples",null,null);
-		MenuItem youtube = social.addItem("Youtube Examples",null,null);
-		
-		
-		MenuBar.Command copen1 = new MenuBar.Command() {
-			public void menuSelected(MenuItem selectedItem) {
-			        
-			}
-			};
-		MenuItem open1 = open.addItem("Retrieve the streets in the bounding box intersecting Haymarket street", null, copen1);		
-		MenuItem open2 = open.addItem("Retrieve the restaurants in Roma further north to Miami hotel", null, null);
-		MenuItem open3 = open.addItem("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars and restaurants bigger than 10)", null, null);
-		MenuItem open4 = open.addItem("Retrieve the hotels of Munich with the greatest number of churches nearby", null, null);
-		MenuItem open5 =open.addItem("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin", null, null);
-		MenuItem open6 = open.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, null);
-		MenuItem open7 = open.addItem("Request taxi stops close (500 m) to Bruxelles Central Station in Bruxelles", null, null);
-		MenuItem open8 = open.addItem("Retrieves free events of Madrid", null, null);
-		MenuItem open9 = open.addItem("Retrieve Wikipedia information about places nearby to the intersection point of Calle Mayor and Calle de Esparteros in Madrid", null, null);
-		
-		MenuItem twitter1 = twitter.addItem("Get Tweets sent by people about touristic places with more than 3 retweets", null, null);
-		MenuItem twitter2 = twitter.addItem("Get Tweets sent by official accounts of touristic places", null, null);
-		MenuItem twitter3 = twitter.addItem("Get Tweets sent by people in close areas (1km) to touristic places with more than 1 likes", null, null);
-		MenuItem twitter4 = twitter.addItem("Get Tweets sent by people about amenity places with more than 3 retweets", null, null);
-		MenuItem twitter5 = twitter.addItem("Get Tweets sent by official accounts of museums", null, null);
-		MenuItem twitter6 = twitter.addItem("Get Tweets sent by people in close areas (1km) to restaurants", null, null);
-
 		 
-		MenuItem ind1 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, null);
-		MenuItem ind2 = indexing.addItem("Retrieve the shops of the bounding box", null, null);
-		MenuItem ind3 = indexing.addItem("Retrieve an element of the bounding box", null, null);
-		MenuItem ind4 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, null);
-		MenuItem osm1 = osm.addItem("Retrieve the ways of the bounding box", null, null);
-		MenuItem osm2 = osm.addItem("Retrieve the points of the bounding box", null, null);
-		MenuItem osm3 = osm.addItem("Rebuild the points of the bounding box close (500 m) to an street", null, null);
-		MenuItem osm4 = osm.addItem("Rebuild the ways of the bounding box close (500 m) to an street", null, null);
-		MenuItem spa1 = spatial.addItem("Retrieve the points of the bounding box within (300 m) to an street", null, null);
-		MenuItem spa2 = spatial.addItem("Retrieve the points of the bounding box further west to a point", null, null);
-		MenuItem spa3 = spatial.addItem("Retrieve the streets crossing an street", null, null);
-		MenuItem spa4 = spatial.addItem("Retrieve the streets disjoint with an street", null, null);
-		MenuItem key1 = keyword.addItem("Retrieve the amenity bars of the bounding box", null, null);
-		MenuItem key2 = keyword.addItem("Retrieve the amenities of the bounding box", null, null);
-		MenuItem key3 = keyword.addItem("Retrieve the bars and restaurants of the bounding box", null, null);
-		MenuItem agg1 = aggregation.addItem("Retrieve the number of streets crossing an street", null, null);
-		MenuItem agg2 = aggregation.addItem("Retrieve the buildings with maximum area close (500m) to an street", null, null);
-		MenuItem agg3 = aggregation.addItem("Retrieve the sum of the length of highways close (500m) to an street", null, null);
-		MenuItem agg4 = aggregation.addItem("Retrieve the average area of buildings close (500m) to an street", null, null);
-		MenuItem agg5 = aggregation.addItem("Retrieve the 5 longest elements", null, null);
-		MenuItem agg6 = aggregation.addItem("Retrieve the median of the area of elements close (500m) to an street", null, null);
-		MenuItem agg7 = aggregation.addItem("Retrieve the mode of the area of elements close (500m) to an street", null, null);
-		MenuItem agg8 = aggregation.addItem("Retrieve the biggest element close (500m) to an street", null, null);
-		MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, null);
-		MenuItem op1 = open.addItem("Import geojson data", null, null);
-		MenuItem op2 = open.addItem("Import kml data", null, null);
-		MenuItem op4 = open.addItem("Import csv data", null, null);
-		MenuItem op5 = open.addItem("Wikipedia information", null, null);
-		
-		popup.setResizable(false);
-		Window examples_pbd = new Window();
-		Window examples_simples = new Window();
-		Button ex1 = new Button("Retrieve the streets in the bounding box intersecting Haymarket street");
-		ex1.setWidth("100%");
-		ex1.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex2 = new Button("Retrieve the restaurants in Roma further north to Miami hotel");
-		ex2.setWidth("100%");
-		ex2.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex3 = new Button("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars "
-				+ "and restaurants bigger than 10)");
-		ex3.setWidth("100%");
-		ex3.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex4 = new Button("Retrieve the hotels of Munich with the greatest number of churches nearby");
-		ex4.setWidth("100%");
-		ex4.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex5 = new Button("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin");
-		ex5.setWidth("100%");
-		ex5.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex6 = new Button("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan");
-		ex6.setWidth("100%");
-		ex6.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex7 = new Button("Request taxi stops close (500 m) to Bruxelles Central Station in Bruxelles");
-		ex7.setWidth("100%");
-		ex7.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex8 = new Button("Retrieves free events of Madrid");
-		ex8.setWidth("100%");
-		ex8.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex9 = new Button("Retrieve Wikipedia information about places nearby to the intersection "
-				+ "point of Calle Mayor and Calle de Esparteros in Madrid");
-		ex9.setWidth("100%");
-		ex9.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex10 = new Button("Get Tweets sent by people about touristic places with more than 3 retweets");
-		ex10.setWidth("100%");
-		ex10.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex11 = new Button("Get Tweets sent by official accounts of touristic places");
-		ex11.setWidth("100%");
-		ex11.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex12 = new Button("Get Tweets sent by people in close areas (1km) to touristic places with more than 1 likes");
-		ex12.setWidth("100%");
-		ex12.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex13 = new Button("Get Tweets sent by people about amenity places with more than 3 retweets");
-		ex13.setWidth("100%");
-		ex13.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex14 = new Button("Get Tweets sent by official accounts of museums");
-		ex14.setWidth("100%");
-		ex14.setStyleName(ValoTheme.BUTTON_LINK);
-		Button ex15 = new Button("Get Tweets sent by people in close areas (1km) to restaurants");
-		ex15.setWidth("100%");
-		ex15.setStyleName(ValoTheme.BUTTON_LINK);
-
-		VerticalLayout hl = new VerticalLayout();
-		hl.setSizeUndefined();
-		hl.addComponent(ex1);
-		hl.addComponent(ex2);
-		hl.addComponent(ex3);
-		hl.addComponent(ex4);
-		hl.addComponent(ex5);
-		hl.addComponent(ex6);
-		hl.addComponent(ex7);
-		hl.addComponent(ex8);
-		hl.addComponent(ex9);
-		hl.addComponent(ex10);
-		hl.addComponent(ex11);
-		hl.addComponent(ex12);
-		hl.addComponent(ex13);
-		hl.addComponent(ex14);
-		hl.addComponent(ex15);
-
-		examples_pbd.setContent(hl);
-
-		Button exam1 = new Button("Retrieve the elements of the bounding box close (500 m) to an street");
-		exam1.setWidth("100%");
-		exam1.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam2 = new Button("Retrieve the shops of the bounding box");
-		exam2.setWidth("100%");
-		exam2.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam3 = new Button("Retrieve an element of the bounding box");
-		exam3.setWidth("100%");
-		exam3.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam4 = new Button("Retrieve the elements of the bounding box close (500 m) to an street");
-		exam4.setWidth("100%");
-		exam4.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam5 = new Button("Retrieve the ways of the bounding box");
-		exam5.setWidth("100%");
-		exam5.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam6 = new Button("Retrieve the points of the bounding box");
-		exam6.setWidth("100%");
-		exam6.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam7 = new Button("Rebuild the points of the bounding box close (500 m) to an street");
-		exam7.setWidth("100%");
-		exam7.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam8 = new Button("Rebuild the ways of the bounding box close (500 m) to an street");
-		exam8.setWidth("100%");
-		exam8.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam9 = new Button("Retrieve the points of the bounding box within (300 m) to an street");
-		exam9.setWidth("100%");
-		exam9.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam10 = new Button("Retrieve the points of the bounding box further west to a point");
-		exam10.setWidth("100%");
-		exam10.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam11 = new Button("Retrieve the streets crossing an street");
-		exam11.setWidth("100%");
-		exam11.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam12 = new Button("Retrieve the streets disjoint with an street");
-		exam12.setWidth("100%");
-		exam12.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam13 = new Button("Retrieve the amenity bars of the bounding box");
-		exam13.setWidth("100%");
-		exam13.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam14 = new Button("Retrieve the amenities of the bounding box");
-		exam14.setWidth("100%");
-		exam14.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam15 = new Button("Retrieve the bars and restaurants of the bounding box");
-		exam15.setWidth("100%");
-		exam15.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam16 = new Button("Retrieve the number of streets crossing an street");
-		exam16.setWidth("100%");
-		exam16.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam17 = new Button("Retrieve the buildings with maximum area close (500m) to an street");
-		exam17.setWidth("100%");
-		exam17.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam18 = new Button("Retrieve the sum of the length of highways close (500m) to an street");
-		exam18.setWidth("100%");
-		exam18.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam19 = new Button("Retrieve the average area of buildings close (500m) to an street");
-		exam19.setWidth("100%");
-		exam19.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam20 = new Button("Retrieve the 5 longest elements");
-		exam20.setWidth("100%");
-		exam20.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam21 = new Button("Retrieve the median of the area of elements close (500m) to an street");
-		exam21.setWidth("100%");
-		exam21.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam22 = new Button("Retrieve the mode of the area of elements close (500m) to an street");
-		exam22.setWidth("100%");
-		exam22.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam23 = new Button("Retrieve the biggest element close (500m) to an street");
-		exam23.setWidth("100%");
-		exam23.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam24 = new Button("Retrieve the range of area of elements close (500m) to an street");
-		exam24.setWidth("100%");
-		exam24.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam25 = new Button("Import geojson data");
-		exam25.setWidth("100%");
-		exam25.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam26 = new Button("Import kml data");
-		exam26.setWidth("100%");
-		exam26.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam27 = new Button("Import csv data");
-		exam27.setWidth("100%");
-		exam27.setStyleName(ValoTheme.BUTTON_LINK);
-
-		Button exam28 = new Button("Wikipedia information");
-		exam28.setWidth("100%");
-		exam28.setStyleName(ValoTheme.BUTTON_LINK);
-
-		VerticalLayout hlp = new VerticalLayout();
-		hlp.setSizeUndefined();
-		hlp.addComponent(exam1);
-		hlp.addComponent(exam2);
-		hlp.addComponent(exam3);
-		hlp.addComponent(exam4);
-		hlp.addComponent(exam5);
-		hlp.addComponent(exam6);
-		hlp.addComponent(exam7);
-		hlp.addComponent(exam8);
-		hlp.addComponent(exam9);
-		hlp.addComponent(exam10);
-		hlp.addComponent(exam11);
-		hlp.addComponent(exam12);
-		hlp.addComponent(exam13);
-		hlp.addComponent(exam14);
-		hlp.addComponent(exam15);
-		hlp.addComponent(exam16);
-		hlp.addComponent(exam17);
-		hlp.addComponent(exam18);
-		hlp.addComponent(exam19);
-		hlp.addComponent(exam20);
-		hlp.addComponent(exam21);
-		hlp.addComponent(exam22);
-		hlp.addComponent(exam23);
-		hlp.addComponent(exam24);
-		hlp.addComponent(exam25);
-		hlp.addComponent(exam26);
-		hlp.addComponent(exam27);
-		hlp.addComponent(exam28);
-
-		examples_simples.setContent(hlp);
 
 		// INDEXING
 
@@ -633,13 +358,17 @@ public class XOSM2 extends UI {
 				+ "fn:filter($layer,xosm_kw:searchKeyword(?,'restaurant')),\r\n"
 				+ "xosm_sp:furtherNorthPoints($hotel,?)) ";
 
-		String q3 = "for $hotel in xosm_pbd:getElementsByKeyword(.,'hotel')\r\n"
-				+ "let $layer := xosm_pbd:getLayerByElement(., $hotel ,500)\r\n" + "where count(fn:filter\r\n"
-				+ "($layer,xosm_kw:searchKeywordSet(?,('bar','restaurant')))) >= 10\r\n" + "return $hotel";
+		String q3 = "for $hotel in xosm_pbd:getElementsByKV(.,'tourism','hotel')\r\n" + 
+				"let $layer := xosm_pbd:getLayerByElement(., $hotel ,500)\r\n" + 
+				"where count(fn:filter\r\n" + 
+				"($layer,xosm_kw:searchKeywordSet(?,('bar','restaurant')))) >= 10\r\n" + 
+				"return $hotel";
 
-		String q4 = "let $hotel := xosm_pbd:getElementsByKeyword(.,'hotel')\r\n" + "let $f := function($hotel)\r\n"
-				+ "{-(count(fn:filter(\r\n" + "xosm_pbd:getLayerByElement(.,$hotel,500),\r\n"
-				+ "xosm_kw:searchKeyword(?,'church'))))}\r\n" + "return fn:sort($hotel,$f)[1]";
+		String q4 = "let $hotel := xosm_pbd:getElementsByKV(.,'tourism','hotel')\r\n" + 
+				"let $f := function($hotel)\r\n" + 
+				"{-(count(fn:filter(xosm_pbd:getLayerByElement(.,$hotel,500),\r\n" + 
+				"xosm_kw:searchKeyword(?,'church'))))}\r\n" + 
+				"return fn:sort($hotel,(),$f)[1]";
 
 		String q5 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Karl-Liebknecht-Straße' ,500)\r\n"
 				+ "let $buildings := fn:filter($layer,\r\n" + "xosm_kw:searchKeyword(?,'building'))\r\n"
@@ -649,13 +378,12 @@ public class XOSM2 extends UI {
 				+ "xosm_ag:metricMaxG(\r\n"
 				+ "filter($layer,xosm_kw:searchKeyword(?,'church')),function($x){xosm_item:area($x)})\r\n";
 
-		// CAMBIAR
-
-		String q7 = "let $open :=\r\n"
-				+ "'https://opendata.bruxelles.be/explore/dataset/test-geojson-station-de-taxi/download/?format=geojson&amp;timezone=UTC'\r\n"
-				+ "let $taxis :=\r\n" + "xosm_open:geojson2osm($open,'')\r\n" + "let $building :=\r\n"
-				+ "xosm_pbd:getElementByName (.,'Bruxelles-Central - Brussel-Centraal') \r\n"
-				+ "return fn:filter($taxis,xosm_sp:DWithIn($building,?,500))";
+		String q7 = "let $open :=\r\n" + 
+				"'https://opendata.bruxelles.be/explore/dataset/test-geojson-station-de-taxi/download/?format=geojson&amp;timezone=UTC'\r\n" + 
+				"let $taxis := xosm_open:geojson2osm($open,'')\r\n" + 
+				"let $building := xosm_pbd:getElementByName(. ,'Bruxelles-Central - Brussel-Centraal') \r\n" + 
+				"return fn:filter($taxis,xosm_sp:DWithIn($building,?,500))";
+		
 		String q8 = "let $open :=\r\n"
 				+ "'http://data2.esrism.opendata.arcgis.com/datasets/51900577e33a4ba4ab59a691247aeee9_0.geojson'\r\n"
 				+ "let $events :=\r\n " + "xosm_open:geojson2osm($open,'') \r\n" + "return fn:filter($events,\r\n"
@@ -667,181 +395,297 @@ public class XOSM2 extends UI {
 
 		 
 		String q10 ="<social>{\r\n" + 
-				"for $tourism in xosm_pbd:getElementsByKeyword(.,\r\n" + 
-				"\"tourism\")\r\n" + 
-				"let $name := web:encode-url($tourism/@name)\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",$user),\"?count=15\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_ where $tweet/retweet__count > 3\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($tourism,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)\r\n" + 
+				"           else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $q := $q || \" \" || $city\r\n" + 
+				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n" + 
+				"return xosm_social:twitterResult($hotel, $tweets, \"twitterSearchTweets\")\r\n" + 
 				"}</social>";
 		
 		String q11="<social>{\r\n" + 
-				"for $tourism in xosm_pbd:getElementsByKeyword(.,\r\n" + 
-				"\"tourism\")\r\n" + 
-				"let $name := web:encode-url($tourism/@name)\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterUserTimeLine/screen_name/\",\r\n" + 
-				"$each),\"?count=10\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/_\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($tourism,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $q := replace($q,\" \", \"\")\r\n" + 
+				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", map { 'q' : $q}, map { 'count' : 10, 'option' : 'hashtag' })/json/*\r\n" + 
+				"return xosm_social:twitterResult($museum, $tweets, \"twitterSearchTweets\")\r\n" + 
+				"else ()\r\n" + 
 				"}</social>";
 		
 		String q12="<social>{\r\n" + 
-				"for $tourism in xosm_pbd:getElementsByKeyword(.,\r\n" + 
-				"\"tourism\")\r\n" + 
-				"let $name := web:encode-url($tourism/@name)\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $lon := data($tourism/node[1]/@lon), $lat := data($tourism/node[1]/@lat)\r\n" + 
-				"let $geocode := concat(\"?geocode=\", concat(concat(concat(concat($lat, \",\"), $lon), \",\" ), \"1km\"))\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",data($name)),\r\n" + 
-				"$geocode)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_ where $tweet/favorite__count > 1\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($tourism,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
-				"}</social> ";
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if ($hotel//tag[@k=\"operator\"]) then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + 
+				"          else  \r\n" + 
+				"           if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)           \r\n" + 
+				"          else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $users := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", map { 'q' : $q,  'city' : $city }, map { 'count' : 10 })/json/*\r\n" + 
+				"return xosm_social:twitterResult($hotel, $users, \"twitterSearchUser\")\r\n" + 
+				"}</social>";
 		
 		String q13="<social>{\r\n" + 
-				"for $amenity in xosm_pbd:getElementsByKeyword(.,\r\n" + 
-				"\"amenity\")\r\n" + 
-				"let $name := web:encode-url(replace($amenity/@name, \"/\", \"\"))\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",$user),\"?count=15\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_ where $tweet/retweet__count > 3\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($amenity,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := data($museum/@name)\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $lon := data($museum/node[1]/@lon)\r\n" + 
+				"let $lat := data($museum/node[1]/@lat)\r\n" + 
+				"let $geocode := $lat ||  \",\" || $lon || \",\" || \"5km\" \r\n" + 
+				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
+				"               map { 'q' : $q }, map { 'count' : 10, 'geocode' : $geocode})/json/*\r\n" + 
+				"return xosm_social:twitterResult($museum, $tweets, \"twitterSearchTweets\") \r\n" + 
+				"else ()\r\n" + 
 				"}</social>";
 		
 		String q14="<social>{\r\n" + 
-				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\",\r\n" + 
-				"\"museum\")\r\n" + 
-				"let $name := web:encode-url($museum/@name)\r\n" + 
-				"\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",$user),\"?count=15\")\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($museum,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := data($museum/@name)\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $tweets :=  (for $tweet in xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
+				"                 map { 'q' : $q }, map { 'count' : 10 })/json/*\r\n" + 
+				"                 where $tweet/favorite__count > 2 return $tweet) \r\n" + 
+				"return xosm_social:twitterResult($museum, $tweets, \"twitterSearchTweets\") \r\n" + 
+				"else ()\r\n" + 
 				"}</social>";
 		
 		String q15="<social>{\r\n" + 
-				"for $restaurant in xosm_pbd:getElementsByKV(.,\r\n" + 
-				"\"amenity\", \"restaurant\")\r\n" + 
-				"let $name := web:encode-url($restaurant/@name)\r\n" + 
-				"where $name\r\n" + 
-				"let $address := concat(\"http://minerva.ual.es:8080/api.social/twitterSearchUser/q/\", $name)\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $user := data($json/json/_/screen__name)\r\n" + 
-				"for $each in $user\r\n" + 
-				"let $lon := data($restaurant/node[1]/@lon), $lat := data($restaurant/node[1]/@lat)\r\n" + 
-				"let $geocode := concat(\"?geocode=\", concat(concat(concat(concat($lat, \",\"), $lon), \",\" ), \"1km\"))\r\n" + 
-				"let $address :=\r\n" + 
-				"concat(concat(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets/q/\",data($name)),\r\n" + 
-				"$geocode)\r\n" + 
-				"\r\n" + 
-				"let $text := fetch:text($address)\r\n" + 
-				"let $json := json:parse($text)\r\n" + 
-				"let $tweets := for $tweet in $json/json/statuses/_\r\n" + 
-				"return $tweet\r\n" + 
-				"return\r\n" + 
-				"<twitter number=\"{count($tweets)}\">{\r\n" + 
-				"($restaurant,\r\n" + 
-				"<tweets>{$tweets\r\n" + 
-				"}\r\n" + 
-				"</tweets>\r\n" + 
-				")\r\n" + 
-				"}\r\n" + 
-				"</twitter>\r\n" + 
+				"let $restaurants := xosm_pbd:getElementsByKV(., \"amenity\", \"restaurant\") \r\n" + 
+				"let $city := xosm_social:city($restaurants)\r\n" + 
+				"for $restaurant in $restaurants\r\n" + 
+				"let $q := data($restaurant/@name) || \" \" || $city\r\n" + 
+				"let $tweets := (for $tweet in xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
+				"                              map { 'q' : $q }, map { 'count' : 15})/json/* \r\n" + 
+				"                where $tweet/user/friends__count > 100 return $tweet)\r\n" + 
+				"return xosm_social:twitterResult($restaurant, $tweets, \"twitterSearchTweets\") \r\n" + 
 				"}</social>";
 		
-		exam1.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		String q16="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if ($hotel//tag[@k=\"operator\"]) then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + 
+				"          else  \r\n" + 
+				"           if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)           \r\n" + 
+				"          else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $user := (for $user in xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", \r\n" + 
+				"                         map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json\r\n" + 
+				"                         where $user/followers__count > 2000 return $user)\r\n" + 
+				"return xosm_social:twitterResult($hotel, $users, \"twitterSearchUser\")\r\n" + 
+				"}</social>";
+		
+		String q17="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
+				"let $city := xosm_social:city($hotels) \r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $q := (if ($hotel//tag[@k=\"operator\"]) then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + 
+				"          else  \r\n" + 
+				"           if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)           \r\n" + 
+				"          else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $screen_name := data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", \r\n" + 
+				"   map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
+				"let $tweets := (for $tweet in xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterUserTimeLine\",\r\n" + 
+				"                              map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/* \r\n" + 
+				"                where $tweet/favorite__count > 5 return $tweet)\r\n" + 
+				"return xosm_social:twitterResult($hotel,  $tweets, \"twitterUserTimeLine\")\r\n" + 
+				"}</social>";
+		
+		String q18="<social>{\r\n" + 
+				"let $museums := xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $city := xosm_social:city($museums) \r\n" + 
+				"for $museum in $museums\r\n" + 
+				"let $mention := data($museum/@name)\r\n" + 
+				"return if (string-length($mention) > 0) then\r\n" + 
+				"let $screen__name := data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", map { 'q' : $mention,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
+				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n" + 
+				"               map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + 
+				"return xosm_social:twitterResult($museum, $tweets, \"twitterSearchTweets\")\r\n" + 
+				"else ()\r\n" + 
+				"}</social>";
+		
+		String q19="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if ($hotel//tag[@k=\"operator\"]) then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + 
+				"          else  \r\n" + 
+				"           if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)           \r\n" + 
+				"          else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $tweets :=  (\r\n" + 
+				"                 for $q in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", \r\n" + 
+				"                                     map { 'q' :$q,  'city' : $city }, map { 'count' : 10 })/json/_/screen__name)\r\n" + 
+				"                 return xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n" + 
+				"                        map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + 
+				"                )\r\n" + 
+				"return xosm_social:twitterResult($hotel,$tweets, \"twitterSearchTweets\")\r\n" + 
+				"}</social>";
+		
+		String q20="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)\r\n" + 
+				"           else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $q := $q || \" \" || $city  \r\n" + 
+				"let $videos:= xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoSearch\", map { 'q' : $q }, map { 'maxResults' : 5 })/json/_\r\n" + 
+				"return xosm_social:youtubeResult($hotel, $videos, \"youtubeVideoSearch\")  \r\n" + 
+				"} </social>";
+		
+		String q21="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $channels := xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelSearch\", map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
+				"return xosm_social:youtubeResult($museum, $channels, \"youtubeChannelSearch\") \r\n" + 
+				"else () \r\n" + 
+				"} </social>";
+		
+		String q22="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $playlists := \r\n" + 
+				"       xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistSearch\", map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
+				"return xosm_social:youtubeResult($museum, $playlists, \"youtubePlaylistSearch\")\r\n" + 
+				"else ()  \r\n" + 
+				"} </social>";
+		
+		String q23="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)\r\n" + 
+				"           else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $q := $q || \" \" || $city\r\n" + 
+				"let $videos := (for $id in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoSearch\", \r\n" + 
+				"                map { 'q' : $q }, map { })/json/_/id/videoId)\r\n" + 
+				"                return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\", \r\n" + 
+				"                map { 'id' : $id }, map { })/json/items/_[statistics/viewCount > 10])\r\n" + 
+				"return xosm_social:youtubeResult($hotel, $videos, \"youtubeVideoInfo\")  \r\n" + 
+				"} </social>";
+		
+		String q24="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $channels := (for $id in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelSearch\", map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId)\r\n" + 
+				"                 return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelInfo\", \r\n" + 
+				"                        map {'id' : $id }, map {})/json/items/_[statistics/subscriberCount > 100])\r\n" + 
+				"return xosm_social:youtubeResult($museum, $channels, \"youtubeChannelInfo\")\r\n" + 
+				"else ()  \r\n" + 
+				"} </social>";
+		
+		String q25="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $playlists := (for $id in data (xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistSearch\", map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + 
+				"                 return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistInfo\", \r\n" + 
+				"                        map {'id' : $id }, map {})/json/items/_)\r\n" + 
+				"return xosm_social:youtubeResult($museum, $playlists, \"youtubePlaylistInfo\")\r\n" + 
+				"else ()  \r\n" + 
+				"} </social>";
+		
+		String q26="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $playlists := (for $id in data (xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistSearch\", map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + 
+				"                 return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistItems\", map {'playlistId' : $id }, map {})/json/items/_)\r\n" + 
+				"return xosm_social:youtubeResult($museum, $playlists, \"youtubePlaylistItems\")\r\n" + 
+				"else ()  \r\n" + 
+				"} </social>";
+		
+		String q27="<social>{\r\n" + 
+				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
+				"let $city := xosm_social:city($hotels)\r\n" + 
+				"for $hotel in $hotels\r\n" + 
+				"let $name := data($hotel/@name)\r\n" + 
+				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
+				"           else  if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + 
+				"           data($hotel/@name) else if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
+				"           then data($hotel/@name)\r\n" + 
+				"           else \"Hotel \" || data($hotel/@name))\r\n" + 
+				"let $q := $q || \" \" || $city\r\n" + 
+				"let $videos := (\r\n" + 
+				"                for $playId in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistSearch\", map { 'q' : $q}, map {  })/json/_/id/playlistId)\r\n" + 
+				"                for $videoId in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistItems\", \r\n" + 
+				"                           map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)              \r\n" + 
+				"                return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\", map { 'id' : $videoId}, \r\n" + 
+				"                       map { })/json/items/_\r\n" + 
+				"               )\r\n" + 
+				"return xosm_social:youtubeResult($hotel, $videos, \"youtubeVideoInfo\")  \r\n" + 
+				"} </social>";
+		
+		String q28="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\") \r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $channelId := data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelSearch\", map { 'q' : $q}, \r\n" + 
+				"           map { 'maxResults' : 1})/json/_/id/channelId)\r\n" + 
+				"let $videos := (\r\n" + 
+				"                let $playId := data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelInfo\", \r\n" + 
+				"                           map {'id' : $channelId }, map {})/json/items/_/contentDetails/relatedPlaylists/uploads)\r\n" + 
+				"                for $videoId in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistItems\", \r\n" + 
+				"                                map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + 
+				"                return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\",\r\n" + 
+				"                       map { 'id' : $videoId}, map { })/json/items/_\r\n" + 
+				"                )\r\n" + 
+				"return xosm_social:youtubeResult($museum, $videos, \"youtubeVideoInfo\")\r\n" + 
+				"else ()\r\n" + 
+				"} </social>";
+		
+		String q29="<social>{\r\n" + 
+				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
+				"let $q := $museum/@name\r\n" + 
+				"return if (string-length($q) > 0) then\r\n" + 
+				"let $videos := (for $channelId in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelSearch\", \r\n" + 
+				"                           map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId) \r\n" + 
+				"                let $json :=  xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelInfo\", \r\n" + 
+				"                             map { 'id' : $channelId }, map { })\r\n" + 
+				"                where $json/json/items/_/statistics/subscriberCount > 2000\r\n" + 
+				"                for $playId in data($json/json/items/_/contentDetails/relatedPlaylists/uploads) \r\n" + 
+				"                for $videoId in data(xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistItems\", \r\n" + 
+				"                               map { 'playlistId' : $playId} , map { })/json/items/_/snippet/resourceId/videoId)\r\n" + 
+				"                return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\", map { 'id' : $videoId }, \r\n" + 
+				"                       map { })/json/items/_)\r\n" + 
+				"return \r\n" + 
+				"xosm_social:youtubeResult($museum,$videos, \"youtubeVideoInfo\") \r\n" + 
+				"else ()\r\n" + 
+				"}\r\n" + 
+				"</social> ";
+		
+		MenuBar.Command cind1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -850,15 +694,14 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq1);
-				removeWindow(examples_simples);
+				 
 				
 			}
 
-		});
+		};
 
-		exam2.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cind2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -867,14 +710,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq2);
-				removeWindow(examples_simples);
+				
 			}
 
-		});
+		};
 
-		exam3.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cind3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -883,14 +725,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq3);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam4.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cind4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -899,14 +740,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq4);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam5.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cosm1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -915,14 +755,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq5);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam6.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cosm2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -931,14 +770,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq6);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam7.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cosm3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -947,14 +785,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq7);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam8.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cosm4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -963,14 +800,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq8);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam9.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cspa1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -979,13 +815,12 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq9);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
-		exam10.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		};
+		MenuBar.Command cspa2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -994,14 +829,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq10);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam11.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cspa3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1010,14 +844,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq11);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam12.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cspa4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1026,14 +859,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq12);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam13.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command ckey1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1042,14 +874,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq13);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam14.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command ckey2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1058,14 +889,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq14);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam15.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command ckey3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1074,14 +904,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq15);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam16.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1090,14 +919,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq16);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam17.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1106,14 +934,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq17);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam18.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1122,14 +949,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq18);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam19.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1138,14 +964,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq19);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam20.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg5 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1154,14 +979,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq20);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam21.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg6 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1170,14 +994,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq21);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam22.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg7 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1186,14 +1009,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq22);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam23.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg8 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1202,14 +1024,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq23);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam24.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cagg9 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1218,14 +1039,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq24);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam25.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cop1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1234,14 +1054,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq25);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam26.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cop2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1250,14 +1069,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq26);
-				removeWindow(examples_simples);
+				
 			}
 
-		});
+		};
 
-		exam27.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cop3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1266,14 +1084,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq27);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		exam28.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cop4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(17);
@@ -1282,14 +1099,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(exq28);
-				removeWindow(examples_simples);
+				 
 			}
 
-		});
+		};
 
-		ex1.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(51.50884, -0.13201);
 				map.setZoomLevel(17);
@@ -1298,14 +1114,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q1);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex2.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(41.90219, 12.49580);
 				map.setZoomLevel(17);
@@ -1314,14 +1129,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q2);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex3.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(48.20817, 16.37382);
 				map.setZoomLevel(17);
@@ -1330,14 +1144,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q3);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex4.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(48.13513, 11.58198);
 				map.setZoomLevel(17);
@@ -1346,14 +1159,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q4);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex5.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen5 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(52.52250, 13.40952);
 				map.setZoomLevel(17);
@@ -1362,14 +1174,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q5);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex6.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen6 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(45.465820637638, 9.1893592282028);
 				map.setZoomLevel(17);
@@ -1378,14 +1189,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q6);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex7.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen7 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(50.8445, 4.3537);
 				map.setZoomLevel(17);
@@ -1394,14 +1204,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q7);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex8.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen8 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(40.42, -3.68);
@@ -1411,14 +1220,13 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q8);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 
-		ex9.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command copen9 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setCenter(40.4164, -3.70501);
 				map.setZoomLevel(17);
@@ -1427,111 +1235,386 @@ public class XOSM2 extends UI {
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q9);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex10.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command ctwitter1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(36.838030858833, -2.4522979583778);		
-				map.setCenter((40.4096+40.4206)/2,(-3.7022+-3.688)/2);
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q10);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex11.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				map.setCenter(36.838030858833, -2.4522979583778);
-				
-				map.setCenter((40.4096+40.4206)/2,(-3.7022+-3.688)/2);
+		MenuBar.Command ctwitter2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q11);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex12.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				map.setCenter(36.838030858833, -2.4522979583778);
-				
-				map.setCenter((40.4096+40.4206)/2,(-3.7022+-3.688)/2);
+		MenuBar.Command ctwitter3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q12);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex13.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				map.setCenter(36.838030858833, -2.4522979583778);
-				map.setCenter((36.83616+36.83906)/2,(-2.46659+-2.46074)/2);
+		MenuBar.Command ctwitter4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q13);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex14.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				map.setCenter(36.838030858833, -2.4522979583778);
-				
-				map.setCenter((40.4096+40.4206)/2,(-3.7022+-3.688)/2);
+		MenuBar.Command ctwitter5 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q14);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
-		ex15.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				map.setCenter(36.838030858833, -2.4522979583778);
-				
-				map.setCenter((40.4504+40.45933)/2,(-3.69032+-3.67885)/2);
+		MenuBar.Command ctwitter6 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
 				map.setZoomLevel(19);
 				nelat = map.getBounds().getNorthEastLat();
 				nelon = map.getBounds().getNorthEastLon();
 				swlat = map.getBounds().getSouthWestLat();
 				swlon = map.getBounds().getSouthWestLon();
 				q.setQuery(q15);
-				removeWindow(examples_pbd);
+				 
 			}
 
-		});
+		};
 		
+		MenuBar.Command ctwitter7 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q16);
+				 
+			}
+
+		};
+		
+		MenuBar.Command ctwitter8 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q17);
+				 
+			}
+
+		};
+		
+		MenuBar.Command ctwitter9 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q18);
+				 
+			}
+
+		};
+		
+		MenuBar.Command ctwitter10 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q19);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube1 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q20);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube2 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q21);
+				 
+			}
+
+		};
+		MenuBar.Command cyoutube3 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q22);
+				 
+			}
+
+		};
+		MenuBar.Command cyoutube4 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q23);
+				 
+			}
+
+		};
+		MenuBar.Command cyoutube5 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q24);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube6 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q25);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube7 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q26);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube8 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q27);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube9 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q28);
+				 
+			}
+
+		};
+		
+		MenuBar.Command cyoutube10 = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
+				map.setCenter(36.838030858833, -2.4522979583778);		
+				map.setCenter((40.4126+40.4168)/2,(-3.6961+-3.6887)/2);
+				map.setZoomLevel(19);
+				nelat = map.getBounds().getNorthEastLat();
+				nelon = map.getBounds().getNorthEastLon();
+				swlat = map.getBounds().getSouthWestLat();
+				swlon = map.getBounds().getSouthWestLon();
+				q.setQuery(q29);
+				 
+			}
+
+		};
+		
+		MenuBar barmenu = new MenuBar();
+		barmenu.setWidth("100%"); 
+		barmenu.addItem("Menu");
+		
+		MenuItem examples = barmenu.addItem("Examples",null,null);
+		MenuItem indexing = examples.addItem("Indexing Examples", null, null);
+		MenuItem osm = examples.addItem("Layers Examples", null, null);
+		MenuItem spatial = examples.addItem("Spatial Examples", null, null);
+		MenuItem keyword = examples.addItem("Keyword Examples", null, null);
+		MenuItem aggregation = examples.addItem("Aggregation Examples", null, null);
+		MenuItem open = examples.addItem("Open Data Examples", null, null);
+		MenuItem social = examples.addItem("Social Network Examples", null, null);
+		MenuItem twitter = social.addItem("Twitter Examples",null,null);
+		MenuItem youtube = social.addItem("Youtube Examples",null,null);
+		
+		
+		 
+		MenuItem open1 = open.addItem("Retrieve the streets in the bounding box intersecting Haymarket street", null, copen1);		
+		MenuItem open2 = open.addItem("Retrieve the restaurants in Roma further north to Miami hotel", null, copen2);
+		MenuItem open3 = open.addItem("Retrieve hotels of Vienna close (500 m) to food venues (food venues = number of bars and restaurants bigger than 10)", null, copen3);
+		MenuItem open4 = open.addItem("Retrieve the hotels of Munich with the greatest number of churches nearby", null, copen4);
+		MenuItem open5 = open.addItem("Retrieve the size of buidings close (500 m) to Karl-Liebknecht-Straße in Berlin", null, copen5);
+		MenuItem open6 = open.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, copen6);
+		MenuItem open7 = open.addItem("Request taxi stops close (500 m) to Bruxelles Central Station in Bruxelles", null, copen7);
+		MenuItem open8 = open.addItem("Retrieves free events of Madrid", null, copen8);
+		MenuItem open9 = open.addItem("Retrieve Wikipedia information about places nearby to the intersection point of Calle Mayor and Calle de Esparteros in Madrid", null, copen9);
+		
+		MenuItem twitter1 = twitter.addItem("Get tweets (max 5) about hotels around Fuente de Neptuno, Madrid", null, ctwitter1);
+		MenuItem twitter2 = twitter.addItem("Get tweets (max 10) with #museum in Madrid cultural mile", null, ctwitter2);
+		MenuItem twitter3 = twitter.addItem("Get relevant twitter accounts (max 10) for hotels around Fuente de Neptuno, Madrid", null, ctwitter3);
+		MenuItem twitter4 = twitter.addItem("Get tweets (max 10) about museums in Madrid cultural mile geolocated within a radius of 5 km", null, ctwitter4);
+		MenuItem twitter5 = twitter.addItem("Get tweets (max 10) about museums in Madrid cultural mile with more than 3 favorites", null, ctwitter5);
+		MenuItem twitter6 = twitter.addItem("Get tweets (max 15) about restaurants around Plaza de Castilla, Madrid where the tweet user has more than 100 friends", null, ctwitter6);
+		MenuItem twitter7 = twitter.addItem("Get the most relevant twitter account for hotels around Fuente de Neptuno, Madrid with more than 2000 followers", null, ctwitter7);
+		MenuItem twitter8 = twitter.addItem("Get tweets (max 10) from the most relevant twitter account of the hotels around Fuente de Neptuno, Madrid", null, ctwitter8);
+		MenuItem twitter9 = twitter.addItem("Get twwets (max 10) which include mentions to the most relevant twitter account for the museums in Madrid cultural mile", null, ctwitter9);
+		MenuItem twitter10 = twitter.addItem("Get twwets (max 10) which include mentions to the most relevant twitter accounts (max 10) for the hotels around Fuente Neptuno, Madrid", null, ctwitter10);
+		MenuItem youtube1 = youtube.addItem("Get yotube videos (max 5) about hotels around Fuente de Neptuno, Madrid", null, cyoutube1);
+		MenuItem youtube2 = youtube.addItem("Get the three most relevant youtube channels for the museums in Madrid cultural mile", null, cyoutube2);
+		MenuItem youtube3 = youtube.addItem("Get the three most relevant youtube playlists for the museums in Madrid cultural mile", null, cyoutube3);
+		MenuItem youtube4 = youtube.addItem("Get the youtube video information (max 5, default value) for the hotels around Fuente de Neptuno, Madrid with more than 10 visualizations", null, cyoutube4);
+		MenuItem youtube5 = youtube.addItem("Get the information for the three most relevant youtube channels for the museums in Madrid cultural mile with more than 100 subscribers", null, cyoutube5);
+		MenuItem youtube6 = youtube.addItem("Get the information for the most relevant (max 5, default value) youtube playslists for the museums in Madrid cultural mile with more than 100 subscribers", null, cyoutube6);
+		MenuItem youtube7 = youtube.addItem("Get the youtube video list including in the most relevant youtube playlists (max 5) for the museums in Madrid cultural mile", null, cyoutube7);
+		MenuItem youtube8 = youtube.addItem("Get the youtube video information for the videos including in the most relevant (max 5) youtube playlists for the hotels around Fuente de Neptuno, Madrid", null, cyoutube8);
+		MenuItem youtube9 = youtube.addItem("Get the youtube video information for the videos uploading in the most relevant youtube channel for the museums in Madrir cultural mile ", null, cyoutube9);
+		MenuItem youtube10 = youtube.addItem("Get the youtube video information for the videos uploading in the three most relevant youtube channels with more than 2000 subscribers for the museums in Madrir cultural mile", null, cyoutube10);
+
+
+		 
+		MenuItem ind1 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, cind1);
+		MenuItem ind2 = indexing.addItem("Retrieve the shops of the bounding box", null, cind2);
+		MenuItem ind3 = indexing.addItem("Retrieve an element of the bounding box", null, cind3);
+		MenuItem ind4 = indexing.addItem("Retrieve the elements of the bounding box close (500 m) to an street", null, cind4);
+		MenuItem osm1 = osm.addItem("Retrieve the ways of the bounding box", null, cosm1);
+		MenuItem osm2 = osm.addItem("Retrieve the points of the bounding box", null, cosm2);
+		MenuItem osm3 = osm.addItem("Rebuild the points of the bounding box close (500 m) to an street", null, cosm3);
+		MenuItem osm4 = osm.addItem("Rebuild the ways of the bounding box close (500 m) to an street", null, cosm4);
+		MenuItem spa1 = spatial.addItem("Retrieve the points of the bounding box within (300 m) to an street", null, cspa1);
+		MenuItem spa2 = spatial.addItem("Retrieve the points of the bounding box further west to a point", null, cspa2);
+		MenuItem spa3 = spatial.addItem("Retrieve the streets crossing an street", null, cspa3);
+		MenuItem spa4 = spatial.addItem("Retrieve the streets disjoint with an street", null, cspa4);
+		MenuItem key1 = keyword.addItem("Retrieve the amenity bars of the bounding box", null, ckey1);
+		MenuItem key2 = keyword.addItem("Retrieve the amenities of the bounding box", null, ckey2);
+		MenuItem key3 = keyword.addItem("Retrieve the bars and restaurants of the bounding box", null, ckey3);
+		MenuItem agg1 = aggregation.addItem("Retrieve the number of streets crossing an street", null, cagg1);
+		MenuItem agg2 = aggregation.addItem("Retrieve the buildings with maximum area close (500m) to an street", null, cagg2);
+		MenuItem agg3 = aggregation.addItem("Retrieve the sum of the length of highways close (500m) to an street", null, cagg3);
+		MenuItem agg4 = aggregation.addItem("Retrieve the average area of buildings close (500m) to an street", null, cagg4);
+		MenuItem agg5 = aggregation.addItem("Retrieve the 5 longest elements", null, cagg5);
+		MenuItem agg6 = aggregation.addItem("Retrieve the median of the area of elements close (500m) to an street", null, cagg6);
+		MenuItem agg7 = aggregation.addItem("Retrieve the mode of the area of elements close (500m) to an street", null, cagg7);
+		MenuItem agg8 = aggregation.addItem("Retrieve the biggest element close (500m) to an street", null, cagg8);
+		MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, cagg9);
+		MenuItem op1 = open.addItem("Import geojson data", null, cop1);
+		MenuItem op2 = open.addItem("Import kml data", null, cop2);
+		MenuItem op4 = open.addItem("Import csv data", null, cop3);
+		MenuItem op5 = open.addItem("Wikipedia information", null, cop4);
 		 
 
 		Button searchb = new Button();
@@ -1542,25 +1625,15 @@ public class XOSM2 extends UI {
 		searchtf.setWidth("100%");
 		searchtf.setPlaceholder("Type a Place to Query");
 
-		PopupButton examplesPBD = new PopupButton("More");
-		examplesPBD.setWidth("100%");
-
-		PopupButton examplesSIMPLES = new PopupButton("Examples");
-		examplesSIMPLES.setWidth("100%");
+		 
 
 		Button restart = new Button("Clear");
 		restart.setIcon(VaadinIcons.REFRESH);
 		restart.setWidth("100%");
 
-		Button help = new Button("Help");
-		help.setWidth("100%");
-		help.setIcon(VaadinIcons.QUESTION);
+		 
 
-		Button info = new Button("Info");
-		info.setWidth("100%");
-		info.setIcon(VaadinIcons.INFO);
-
-		//HorizontalLayout buttons = new HorizontalLayout();
+		 
 		 
 
 		searchb.addClickListener(new Button.ClickListener() {
@@ -1622,28 +1695,9 @@ public class XOSM2 extends UI {
 
 		});
 
-		examplesPBD.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				removeWindow(examples_pbd);
-				accordion2.setSplitPosition(100);
-				accordion.setSplitPosition(35);
-				addWindow(examples_pbd);
-			}
+		 
 
-		});
-
-		examplesSIMPLES.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				removeWindow(examples_simples);
-				accordion2.setSplitPosition(100);
-				accordion.setSplitPosition(35);
-				addWindow(examples_simples);
-			}
-
-		});
-
+	
 		restart.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -1663,9 +1717,8 @@ public class XOSM2 extends UI {
 
 		});
 
-		help.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command chelp = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_tool);
 				accordion2.setSplitPosition(100);
 				accordion.setSplitPosition(35);
@@ -1673,11 +1726,10 @@ public class XOSM2 extends UI {
 				addWindow(info_tool);
 			}
 
-		});
+		};
 
-		info.addClickListener(new Button.ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
+		MenuBar.Command cinfo = new MenuBar.Command() {
+			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_team);
 				accordion2.setSplitPosition(100);
 				accordion.setSplitPosition(35);
@@ -1685,7 +1737,10 @@ public class XOSM2 extends UI {
 				addWindow(info_team);
 			}
 
-		});
+		};
+		
+		MenuItem helpi = barmenu.addItem("Help",null,chelp);
+		MenuItem Info = barmenu.addItem("Info",null,cinfo);
 
 		HorizontalLayout all = new HorizontalLayout();
 		all.setWidth("100%");
@@ -1695,19 +1750,12 @@ public class XOSM2 extends UI {
 		search.setWidth("100%");
 		search.setExpandRatio(searchtf, 2.25f);
 		search.setExpandRatio(searchb, 0.25f);
-		//buttons.addComponent(examplesSIMPLES);
-		//buttons.addComponent(examplesPBD);
-		//buttons.addComponent(restart);
-		//buttons.addComponent(help);
-		//buttons.addComponent(info);
-		//buttons.setWidth("100%");
 		all.addComponent(barmenu);
 		all.addComponent(restart);
 		all.addComponent(search);
-		all.setExpandRatio(barmenu,0.1f);
+		all.setExpandRatio(barmenu,0.3f);
 		all.setExpandRatio(restart,0.1f);
-		all.setExpandRatio(search,0.8f);
-		//all.addComponent(buttons);
+		all.setExpandRatio(search,0.6f);
 		MVerticalLayout vl = new MVerticalLayout(all).expand(map);
 		vl.setMargin(false);
 		q.setSizeFull();
@@ -1809,17 +1857,11 @@ public class XOSM2 extends UI {
 					List<Point> p = new ArrayList<Point>();
 					NodeList lat2 = null;
 					NodeList lon2 = null;
-					/*
-					 * String lat2 = ""; String lon2 = "";
-					 */
+					 
 					for (int j = 0; j < children.getLength(); j++) {
 						if (children.item(j).getNodeName() == "nd") {
 							try {
-								/*
-								 * lat2 =
-								 * lat_position_node(children,children.item(j).getAttributes().getNamedItem(
-								 * "ref") .getNodeValue());
-								 */
+								 
 								lat2 = (NodeList) xPath.compile("/osm/node[@id="
 										+ children.item(j).getAttributes().getNamedItem("ref").getNodeValue()
 										+ "]/@lat").evaluate(xmlDocument, XPathConstants.NODESET);
@@ -1828,11 +1870,7 @@ public class XOSM2 extends UI {
 								e.printStackTrace();
 							}
 							try {
-								/*
-								 * lon2 =
-								 * lon_position_node(children,children.item(j).getAttributes().getNamedItem(
-								 * "ref") .getNodeValue());
-								 */
+								 
 								lon2 = (NodeList) xPath.compile("/osm/node[@id="
 										+ children.item(j).getAttributes().getNamedItem("ref").getNodeValue()
 										+ "]/@lon").evaluate(xmlDocument, XPathConstants.NODESET);
@@ -1849,9 +1887,7 @@ public class XOSM2 extends UI {
 								e.printStackTrace();
 							}
 
-							/*
-							 * p.add(new Point(Double.parseDouble(lat2), Double.parseDouble(lon2)));
-							 */
+							 
 
 						}
 
@@ -1888,28 +1924,7 @@ public class XOSM2 extends UI {
 
 	}
 
-	/*
-	 * public String lon_position_node(NodeList children,String ref) {
-	 * 
-	 * String result = "";
-	 * 
-	 * for (int i=0; i<children.getLength();i++) { if
-	 * (children.item(i).getNodeName()=="node" &&
-	 * children.item(i).getAttributes().getNamedItem("id").getNodeValue()==ref) {
-	 * result=children.item(i).getAttributes().getNamedItem("lon").getNodeValue();}
-	 * } return result; };
-	 * 
-	 * public String lat_position_node(NodeList children,String ref) { String result
-	 * = "";
-	 * 
-	 * for (int i=0; i<children.getLength();i++) { if
-	 * (children.item(i).getNodeName()=="node" &&
-	 * children.item(i).getAttributes().getNamedItem("id").getNodeValue()==ref) {
-	 * result=children.item(i).getAttributes().getNamedItem("lat").getNodeValue();}
-	 * } return result;
-	 * 
-	 * };
-	 */
+	 
 
 	public void Draw_xml_twitter(Draw d, XPath xPath, LMap map, Document xmlDocument, String nccolor, String ccolor,
 			String cfill, String icon) {
@@ -1917,6 +1932,341 @@ public class XOSM2 extends UI {
 		Draw_xml_nodes_twitter(lanswer, d, xPath, map, xmlDocument, icon);
 		Draw_xml_ways_twitter_marks(lanswer, d, xPath, map, xmlDocument, icon);
 		Draw_xml_ways_twitter(lanswer, d, xPath, map, xmlDocument, nccolor, ccolor, cfill);
+		map.addOverlay(lanswer, q.layer.getValue());
+	}
+
+	public void Draw_xml_nodes_youtube(LLayerGroup lanswer, Draw d, XPath xPath, LMap map, Document xmlDocument,
+			String Icon) {
+		if (xmlDocument == null) {
+		} else {
+			NodeList nodes_list = null;
+			try {
+				nodes_list = (NodeList) xPath.compile("/social/youtube[oneway/node[tag]]").evaluate(xmlDocument,
+						XPathConstants.NODESET);
+			} catch (XPathExpressionException e) {
+				e.printStackTrace();
+			}
+			if (nodes_list == null) {
+			} else {
+				NodeList oneway = null;
+				NodeList ytbs = null;
+				Node node = null;
+				int ok = -1;
+				int tk = -1;
+				
+				for (int i = 0; i < nodes_list.getLength(); i++) {
+					if (nodes_list.item(i).hasChildNodes()) {
+						NamedNodeMap atts = nodes_list.item(i).getAttributes();
+						String number = atts.getNamedItem("number").getNodeValue();
+						NodeList sobjects = nodes_list.item(i).getChildNodes();
+						for (int ch = 0; ch < sobjects.getLength(); ch++) {
+							if (sobjects.item(ch).getNodeName() == "oneway") {
+								oneway = sobjects.item(ch).getChildNodes();
+								for (int n = 0; n < oneway.getLength(); n++) {
+									if (oneway.item(n).getNodeName() == "node") {
+										ok++;
+										node = oneway.item(n);
+										if (twp.containsKey(q.layer.getValue())) {
+											List<Node> current = twp.get(q.layer.getValue());
+											current.add(node);
+											twp.put(q.layer.getValue(), current);
+										} else {
+											List<Node> current = new ArrayList<Node>();
+											current.add(node);
+											twp.put(q.layer.getValue(), current);
+										}
+									}
+								}
+							}
+							if (sobjects.item(ch).getNodeName() == "videos") {
+								type2 = "videos";
+								tk++;
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfop.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfop.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								}
+							}
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "playlists") {
+								type2 ="playlists";
+								tk++;
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfop.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfop.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "channels") {
+								type2 ="channels";
+								tk++;
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfop.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfop.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfop.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
+						}
+
+						if ((!(node.getAttributes().getNamedItem("lat").getNodeValue().equals("")))
+								& (!(node.getAttributes().getNamedItem("lon").getNodeValue().equals("")))) {
+							LMarker leafletMarker = d.Draw_Node(
+									Double.parseDouble(node.getAttributes().getNamedItem("lat").getNodeValue()),
+									Double.parseDouble(node.getAttributes().getNamedItem("lon").getNodeValue()));
+							String svgCode = "<svg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg' version='1.1' >\r\n"
+									+ "<circle cx=\"32\" cy=\"32\" r=\"31\" fill=\"rgb( 255, 0, 0)\" stroke=\"white\" stroke-width=\"2\"/>\r\n"
+									+ "<text text-anchor=\"middle\" x=\"50%\" y=\"50%\" dy=\".35em\" font-family=\"sans-serif\" font-size=\"32px\" fill=\"white\">"
+									+ number + "</text>\r\n" + "</svg>";
+							leafletMarker.setDivIcon(svgCode);
+							lanswer.addComponent(leafletMarker);
+							int j = ok;
+							int s = tk;
+							leafletMarker.addClickListener(new LeafletClickListener() {
+								@Override
+								public void onClick(LeafletClickEvent event) {
+									in.setInfo(twp.get(q.layer.getValue()).get(j));
+									if (type2=="videos") {in.setInfoYoutubeVideos(twinfop.get(q.layer.getValue()).get(s));}
+									else
+									if (type2=="playlists") {in.setInfoYoutubePlayLists(twinfop.get(q.layer.getValue()).get(s));}
+									else {in.setInfoYoutubeChannels(twinfop.get(q.layer.getValue()).get(s));}
+									accordion2.setSplitPosition(65);
+									accordion.setSplitPosition(0);
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void Draw_xml_ways_youtube_marks(LLayerGroup lanswer, Draw d, XPath xPath, LMap map, Document xmlDocument,
+			String Icon) {
+		if (xmlDocument == null) {
+		} else {
+			NodeList nodes_list = null;
+			try {
+				nodes_list = (NodeList) xPath.compile("/social/youtube[oneway/way]").evaluate(xmlDocument,
+						XPathConstants.NODESET);
+			} catch (XPathExpressionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (nodes_list == null) {
+			} else {
+				NodeList oneway = null;
+				NodeList ytbs = null;
+				Node node = null;
+				Node way = null;
+				int owc = -1;
+				for (int i = 0; i < nodes_list.getLength(); i++) {
+					if (nodes_list.item(i).hasChildNodes()) {
+						NamedNodeMap atts = nodes_list.item(i).getAttributes();
+						String number = atts.getNamedItem("number").getNodeValue();
+						NodeList sobjects = nodes_list.item(i).getChildNodes();
+						
+						for (int ch = 0; ch < sobjects.getLength(); ch++) {
+							if (sobjects.item(ch).getNodeName() == "oneway") {
+								owc++;
+								oneway = sobjects.item(ch).getChildNodes();
+								Boolean first_node = false;
+								Boolean first_way = false;
+								for (int n = 0; n < oneway.getLength(); n++) {
+									
+									if (oneway.item(n).getNodeName() == "way" && !first_way) {	
+										first_way = true;
+										 
+										way = oneway.item(n);
+										if (tww.containsKey(q.layer.getValue())) {
+											List<Node> current = tww.get(q.layer.getValue());
+											current.add(way);
+											tww.put(q.layer.getValue(), current);
+										} else {
+											List<Node> current = new ArrayList<Node>();
+											current.add(way);
+											tww.put(q.layer.getValue(), current);
+										}
+									}
+									if (oneway.item(n).getNodeName() == "node" && !first_node ) {
+										first_node = true;
+										node = oneway.item(n);									
+									}
+								}
+							}
+							
+							 
+							
+							if (sobjects.item(ch).getNodeName() == "videos") {
+								type2 = "videos";
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfow.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfow.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								}
+							}
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "playlists") {
+								type2 = "playlists";
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfow.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfow.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "channels") {
+								type2 = "channels";
+								ytbs = sobjects.item(ch).getChildNodes();
+								if (twinfow.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfow.get(q.layer.getValue());
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(ytbs);
+									twinfow.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
+						}
+						if ((!(node.getAttributes().getNamedItem("lat").getNodeValue().equals("")))
+								& (!(node.getAttributes().getNamedItem("lon").getNodeValue().equals("")))) {
+							LMarker leafletMarker = d.Draw_Node(
+									Double.parseDouble(node.getAttributes().getNamedItem("lat").getNodeValue()),
+									Double.parseDouble(node.getAttributes().getNamedItem("lon").getNodeValue()));
+							String svgCode = "<svg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg' version='1.1' >\r\n"
+									+ "<circle cx=\"32\" cy=\"32\" r=\"31\" fill=\"rgb( 255, 0, 0)\" stroke=\"white\" stroke-width=\"2\"/>\r\n"
+									+ "<text text-anchor=\"middle\" x=\"50%\" y=\"50%\" dy=\".35em\" font-family=\"sans-serif\" font-size=\"32px\" fill=\"white\">"
+									+ number + "</text>\r\n" + "</svg>";
+							leafletMarker.setDivIcon(svgCode);
+							lanswer.addComponent(leafletMarker);
+							 
+							 
+							int r = owc;
+							leafletMarker.addClickListener(new LeafletClickListener() {
+								@Override
+								public void onClick(LeafletClickEvent event) {								 
+									in.setInfo(tww.get(q.layer.getValue()).get(r));
+									if (type2=="videos") {in.setInfoYoutubeVideos(twinfow.get(q.layer.getValue()).get(r));}
+									else if (type2=="playlists") {in.setInfoYoutubePlayLists(twinfow.get(q.layer.getValue()).get(r));}
+									else {in.setInfoYoutubeChannels(twinfow.get(q.layer.getValue()).get(r));}
+									accordion2.setSplitPosition(65);
+									accordion.setSplitPosition(0);
+								}
+							});
+							
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void Draw_xml_ways_youtube(LLayerGroup lanswer, Draw d, XPath xPath, LMap map, Document xmlDocument,
+			String nccolor, String ccolor, String cfill) {
+		if (xmlDocument == null) {
+		} else {
+			try {
+				way.put(q.layer.getValue(), (NodeList) xPath.compile("/social/youtube/oneway/way").evaluate(xmlDocument,
+						XPathConstants.NODESET));
+			} catch (XPathExpressionException e) {
+				e.printStackTrace();
+			}
+			if (way == null) {
+			} else
+			{
+				for (int i = 0; i < way.get(q.layer.getValue()).getLength(); i++) {
+					NodeList children = way.get(q.layer.getValue()).item(i).getChildNodes();
+					List<Point> p = new ArrayList<Point>();
+					NodeList lat2 = null;
+					NodeList lon2 = null;
+					 
+					for (int j = 0; j < children.getLength(); j++) {
+						if (children.item(j).getNodeName() == "nd") {
+							try {
+								lat2 = (NodeList) xPath.compile("/social/youtube/oneway/node[@id="
+										+ children.item(j).getAttributes().getNamedItem("ref").getNodeValue()
+										+ "]/@lat").evaluate(xmlDocument, XPathConstants.NODESET);
+
+							} catch (XPathExpressionException e) {
+								e.printStackTrace();
+							}
+							 
+							try {
+								lon2 = (NodeList) xPath.compile("/social/youtube/oneway/node[@id="
+										+ children.item(j).getAttributes().getNamedItem("ref").getNodeValue()
+										+ "]/@lon").evaluate(xmlDocument, XPathConstants.NODESET);
+							} catch (XPathExpressionException e) {
+								e.printStackTrace();
+							}
+							 
+							try {
+								p.add(new Point(Double.parseDouble(lat2.item(0).getNodeValue()),
+										Double.parseDouble(lon2.item(0).getNodeValue())));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							 
+						}
+					}
+					Point[] points = p.toArray(new Point[p.size()]);
+					if (points[0].getLat().equals(points[points.length - 1].getLat())
+							& points[0].getLon().equals(points[points.length - 1].getLon())) {
+						LPolygon pl = d.Draw_Polygon(ccolor, cfill, points);
+						lanswer.addComponent(pl); 
+						
+					} else {
+						LPolyline pl = d.Draw_Polyline(nccolor, points);
+						lanswer.addComponent(pl); 
+					 
+					}
+				}
+			}
+		}
+	}
+
+	
+	//YOUTUBE
+	
+	public void Draw_xml_youtube(Draw d, XPath xPath, LMap map, Document xmlDocument, String nccolor, String ccolor,
+			String cfill, String icon) {
+		LLayerGroup lanswer = new LLayerGroup();
+		Draw_xml_nodes_youtube(lanswer, d, xPath, map, xmlDocument, icon);
+		Draw_xml_ways_youtube_marks(lanswer, d, xPath, map, xmlDocument, icon);
+		Draw_xml_ways_youtube(lanswer, d, xPath, map, xmlDocument, nccolor, ccolor, cfill);
 		map.addOverlay(lanswer, q.layer.getValue());
 	}
 
@@ -1938,6 +2288,7 @@ public class XOSM2 extends UI {
 				Node node = null;
 				int ok = -1;
 				int tk = -1;
+				
 				for (int i = 0; i < nodes_list.getLength(); i++) {
 					if (nodes_list.item(i).hasChildNodes()) {
 						NamedNodeMap atts = nodes_list.item(i).getAttributes();
@@ -1963,6 +2314,7 @@ public class XOSM2 extends UI {
 								}
 							}
 							if (sobjects.item(ch).getNodeName() == "tweets") {
+								type = "tweets";
 								tk++;
 								tweets = sobjects.item(ch).getChildNodes();
 								if (twinfop.containsKey(q.layer.getValue())) {
@@ -1975,6 +2327,23 @@ public class XOSM2 extends UI {
 									twinfop.put(q.layer.getValue(), current);
 								}
 							}
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "users") {
+								type ="users";
+								tk++;
+								tweets = sobjects.item(ch).getChildNodes();
+								if (twinfop.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfop.get(q.layer.getValue());
+									current.add(tweets);
+									twinfop.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(tweets);
+									twinfop.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
 						}
 
 						if ((!(node.getAttributes().getNamedItem("lat").getNodeValue().equals("")))
@@ -1994,7 +2363,8 @@ public class XOSM2 extends UI {
 								@Override
 								public void onClick(LeafletClickEvent event) {
 									in.setInfo(twp.get(q.layer.getValue()).get(j));
-									in.setInfoTwitter(twinfop.get(q.layer.getValue()).get(s));
+									if (type=="tweets") {in.setInfoTwitterTweets(twinfop.get(q.layer.getValue()).get(s));}
+									else {in.setInfoTwitterUsers(twinfop.get(q.layer.getValue()).get(s));}
 									accordion2.setSplitPosition(65);
 									accordion.setSplitPosition(0);
 								}
@@ -2060,9 +2430,10 @@ public class XOSM2 extends UI {
 								}
 							}
 							
+							 
 							
 							if (sobjects.item(ch).getNodeName() == "tweets") {
-								 
+								type = "tweets";
 								tweets = sobjects.item(ch).getChildNodes();
 								if (twinfow.containsKey(q.layer.getValue())) {
 									List<NodeList> current = twinfow.get(q.layer.getValue());
@@ -2074,6 +2445,22 @@ public class XOSM2 extends UI {
 									twinfow.put(q.layer.getValue(), current);
 								}
 							}
+							//CHANGES
+							if (sobjects.item(ch).getNodeName() == "users") {
+								type = "users";
+								tweets = sobjects.item(ch).getChildNodes();
+								if (twinfow.containsKey(q.layer.getValue())) {
+									List<NodeList> current = twinfow.get(q.layer.getValue());
+									current.add(tweets);
+									twinfow.put(q.layer.getValue(), current);
+								} else {
+									List<NodeList> current = new ArrayList<NodeList>();
+									current.add(tweets);
+									twinfow.put(q.layer.getValue(), current);
+								}
+							}
+							//
+							
 						}
 						if ((!(node.getAttributes().getNamedItem("lat").getNodeValue().equals("")))
 								& (!(node.getAttributes().getNamedItem("lon").getNodeValue().equals("")))) {
@@ -2093,7 +2480,8 @@ public class XOSM2 extends UI {
 								@Override
 								public void onClick(LeafletClickEvent event) {								 
 									in.setInfo(tww.get(q.layer.getValue()).get(r));
-									in.setInfoTwitter(twinfow.get(q.layer.getValue()).get(r));
+									if (type=="tweets") {in.setInfoTwitterTweets(twinfow.get(q.layer.getValue()).get(r));}
+									else {in.setInfoTwitterUsers(twinfow.get(q.layer.getValue()).get(r));}
 									accordion2.setSplitPosition(65);
 									accordion.setSplitPosition(0);
 								}
@@ -2124,9 +2512,7 @@ public class XOSM2 extends UI {
 					List<Point> p = new ArrayList<Point>();
 					NodeList lat2 = null;
 					NodeList lon2 = null;
-					/*
-					 * String lat2 = ""; String lon2 = "";
-					 */
+					 
 					for (int j = 0; j < children.getLength(); j++) {
 						if (children.item(j).getNodeName() == "nd") {
 							try {
@@ -2137,11 +2523,7 @@ public class XOSM2 extends UI {
 							} catch (XPathExpressionException e) {
 								e.printStackTrace();
 							}
-							/*
-							 * lat2 =
-							 * lat_position_node(children,children.item(j).getAttributes().getNamedItem(
-							 * "ref") .getNodeValue());
-							 */
+							 
 							try {
 								lon2 = (NodeList) xPath.compile("/social/twitter/oneway/node[@id="
 										+ children.item(j).getAttributes().getNamedItem("ref").getNodeValue()
@@ -2149,20 +2531,14 @@ public class XOSM2 extends UI {
 							} catch (XPathExpressionException e) {
 								e.printStackTrace();
 							}
-							/*
-							 * lon2 =
-							 * lon_position_node(children,children.item(j).getAttributes().getNamedItem(
-							 * "ref") .getNodeValue());
-							 */
+							 
 							try {
 								p.add(new Point(Double.parseDouble(lat2.item(0).getNodeValue()),
 										Double.parseDouble(lon2.item(0).getNodeValue())));
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							/*
-							 * p.add(new Point(Double.parseDouble(lat2), Double.parseDouble(lon2)));
-							 */
+							 
 						}
 					}
 					Point[] points = p.toArray(new Point[p.size()]);
@@ -2180,11 +2556,13 @@ public class XOSM2 extends UI {
 			}
 		}
 	}
-
+	
+	
+	
 	public String api(Double minLon, Double minLat, Double maxLon, Double maxLat, String query) {
 		String xml = "";
 
-		String call_query = 
+		String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" +
 				"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
 				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
 				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
