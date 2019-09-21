@@ -93,7 +93,9 @@ public class Query extends VerticalLayout {
 		editor.setSizeFull();
 		editor.setShowInvisibles(false);
 		editor.setShowGutter(false);
+		 
 		editor.setUseSoftTabs(false);
+		editor.setWordWrap(false);
 		editor.addValueChangeListener(new com.vaadin.data.HasValue.ValueChangeListener<String>() {
 			@Override
 			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {
@@ -367,7 +369,7 @@ public class Query extends VerticalLayout {
 				save_layer.setEnabled(false);
 				delete_layer.setEnabled(true);
 				//main.api_post(address, layer.getValue());
-				Notification("Info","Layer "+ layer.getValue() + " Stored Successfully");
+				Notification("Info","Layer "+ layer.getValue() + " stored successfully");
 				}
 			}}
 		});
@@ -383,8 +385,11 @@ public class Query extends VerticalLayout {
 				else {
 				save_layer.setEnabled(true);
 				delete_layer.setEnabled(false);
-				//main.api_delete(layer.getValue());
-				Notification("Info","Layer "+ layer.getValue() + " Deleted Successfully");
+				//Boolean result = main.api_delete(layer.getValue());
+				Boolean result = true;
+				if (result) {
+				Notification("Info","Layer "+ layer.getValue() + " deleted successfully");}
+				else {Notification("Error","Layer "+ layer.getValue() + " does not exist. Deletion failed. ");}
 				}
 			}
 		});

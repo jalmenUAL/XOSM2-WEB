@@ -75,6 +75,7 @@ public class Item_Youtube extends VerticalLayout {
 						video = true;
 					} 
 				}
+				if (!video) {sid = childs.item(i).getTextContent();}
 				 
 			}
 			if (childs.item(i).getNodeName() == "statistics") {
@@ -108,7 +109,7 @@ public class Item_Youtube extends VerticalLayout {
 					if (ch.item(j).getNodeName() == "publishedAt") {
 						spublishedAt = ch.item(j).getTextContent();
 					}
-					if (ch.item(j).getNodeName() == "channelId") {
+					/*if (ch.item(j).getNodeName() == "channelId") {
 						if (!video) {sid = ch.item(j).getTextContent();}
 					}
 					if (ch.item(j).getNodeName() == "thumbnails") {
@@ -129,7 +130,7 @@ public class Item_Youtube extends VerticalLayout {
 						
 					
 					}
-					}
+					}*/
 
 				}
 			}
@@ -140,7 +141,7 @@ public class Item_Youtube extends VerticalLayout {
 		//Embedded e = new Embedded();
 		Label e = new Label();
 		e.setWidth("100%");
-		if (video) {
+		//if (video) {
 			 
 			e = new Label("<iframe width=\"800px\" height=\"400px\"\r\n" + 
 					"src=\"https://www.youtube.com/embed/"+ sid +"\" allowfullscreen>\r\n" + 
@@ -153,12 +154,12 @@ public class Item_Youtube extends VerticalLayout {
 			//e.setWidth("100%");
 			//e.setHeight("265px");
 			
-		} else  
+		/*} else  
 			{link = new Label("<a href='http://youtube.com/channel/" + sid + "'target=\"_blank\">"
 					+"<img src='"+ sback  + "'" + "style=\"width:800px; height:400px\"" +">" + "</a></>", 
 					ContentMode.HTML);
 			
-			}
+			}*/
 			
 		 
 		
@@ -192,7 +193,8 @@ public class Item_Youtube extends VerticalLayout {
 		publishedAt.setWidth("100%");
 
 		content.addComponent(title);
-		if (video) {content.addComponent(e);} else {content.addComponent(link);}
+		//if (video) {content.addComponent(e);} else {content.addComponent(link);}
+		content.addComponent(e);
 		content.addComponent(description);
 		if (statistics)
 		{
