@@ -5,7 +5,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.FormLayout;
@@ -161,11 +163,11 @@ public class Info_Node extends VerticalLayout {
 		l.setHeight("100%");
 		l.setMargin(true);
 		if (n == null) {
-			Notification.show("This is an Empty Node. Information cannot be displayed.");
+			Notification("Error","This is an Empty Node. Information cannot be displayed.");
 		} else {
 			NodeList cs = n.getChildNodes();
 			if (cs == null) {
-				Notification.show("This is an Empty Node. Information cannot be displayed.");
+				Notification("Error","This is an Empty Node. Information cannot be displayed.");
 			} else {
 				for (int i = 0; i < cs.getLength(); i++) {
 					NamedNodeMap atts = cs.item(i).getAttributes();
@@ -202,5 +204,13 @@ public class Info_Node extends VerticalLayout {
 			}
 		}
 
+	}
+	void Notification(String Topic, String Message) {
+		Notification notif = new Notification(
+			    Topic,
+			    Message,Notification.Type.TRAY_NOTIFICATION, true);
+		notif.setDelayMsec(10000);
+		notif.setPosition(Position.MIDDLE_CENTER);
+		notif.show(Page.getCurrent());
 	}
 }

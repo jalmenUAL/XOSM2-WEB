@@ -62,6 +62,7 @@ import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
@@ -1655,7 +1656,7 @@ public class XOSM2 extends UI {
 			public void buttonClick(ClickEvent event) {
 
 				if (searchtf.getValue() == "") {
-					Notification.show("Address cannot be empty");
+					Notification("Warning","Address cannot be empty");
 				} else
 
 				{
@@ -1689,7 +1690,7 @@ public class XOSM2 extends UI {
 									XPathConstants.NODESET);
 
 							if (test.getLength() == 0) {
-								Notification.show("The address cannot be found");
+								Notification("Error","The address cannot be found");
 							} else {
 								Node lat = search.item(0).getAttributes().getNamedItem("lat");
 								Node lon = search.item(0).getAttributes().getNamedItem("lon");
@@ -2616,6 +2617,28 @@ public class XOSM2 extends UI {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void api_delete(String layer) {
+		
+		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+			 
+			HttpGet request = new HttpGet(" http://xosmtest.ual.es/xosmapiV2/getToken/layer/" + layer);
+			request.addHeader("content-type", "application/xml");
+			HttpResponse result = httpClient.execute(request);
+			String token = EntityUtils.toString(result.getEntity(), "UTF-8");
+			HttpGet request2 = new HttpGet("  http://xosmtest.ual.es/xosmapiV2/dropDatabase/"+layer+"/token/" + token);
+		} catch (IOException ex) {
+		}
+	}
+	
+	void Notification(String Topic, String Message) {
+		Notification notif = new Notification(
+			    Topic,
+			    Message,Notification.Type.TRAY_NOTIFICATION, true);
+		notif.setDelayMsec(10000);
+		notif.setPosition(Position.MIDDLE_CENTER);
+		notif.show(Page.getCurrent());
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "XOSM2Servlet", asyncSupported = true)

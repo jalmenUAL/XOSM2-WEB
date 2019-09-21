@@ -33,6 +33,7 @@ import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -67,6 +68,7 @@ public class Query extends VerticalLayout {
 	Button save_layer = new Button("Save Layer");
 	Button delete_layer = new Button("Delete Layer");
 	Set<String> layers = new HashSet<String>();
+	Boolean socialquery = false;
 
 	Query(XOSM2 m, String query) {
 		super();
@@ -171,7 +173,13 @@ public class Query extends VerticalLayout {
 		layer.setValue("default");
 		layer.setWidth("100%");
 		layer.addValueChangeListener(event -> {
-			save_layer.setEnabled(true);
+			if (layer.getValue().equals("postgres") || 
+					layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+			{
+			  
+			 Notification("Warning","Please select another name for the layer");
+			} else
+			{save_layer.setEnabled(true);}
 		});
 		ex.setStyleName(ValoTheme.BUTTON_DANGER);
 		ex.addClickListener(new Button.ClickListener() {
@@ -186,11 +194,11 @@ public class Query extends VerticalLayout {
 						|| main.twinfow.containsKey(layer.getValue())
 						|| main.twp.containsKey(layer.getValue())
 						|| main.tww.containsKey(layer.getValue())) {
-					Notification.show("Layer name already exists");
+					Notification("Warning","Layer name already exists. Please clear the map area.");
 				} else {
 					save_layer.setEnabled(true);
 					if (main.map.getZoomLevel() < 0) {
-						Notification.show("Please take an smaller area");
+						Notification("Warning","Please take an smaller area");
 					} else {
 						main.nelat = main.map.getBounds().getNorthEastLat();
 						main.nelon = main.map.getBounds().getNorthEastLon();
@@ -225,6 +233,7 @@ public class Query extends VerticalLayout {
 									XPathConstants.NODESET);
 							
 							if (twitter.getLength() > 0) {
+								socialquery = true;
 								Draw d = new Draw();
 								main.Draw_xml_twitter(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
 								NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node")
@@ -239,6 +248,7 @@ public class Query extends VerticalLayout {
 							
 							else {
 							if (youtube.getLength() > 0) {
+								socialquery = true;
 								Draw d = new Draw();
 								main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
 								NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
@@ -253,14 +263,14 @@ public class Query extends VerticalLayout {
 							
 							    else {
 							    	
-							    if (social.getLength()>0)	{Notification.show("The result of the query is empty");}
+							    if (social.getLength()>0)	{Notification("Successful Execution","The result of the query is empty");}
 							    else {
 								NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
 										XPathConstants.NODESET);
 
 								if (no_osm.getLength() == 0) // OSM Result
 								{
-									Notification.show("Click on items to see information");
+									Notification("Successful Execution","Click on items to see information");
 									Draw d = new Draw();
 									main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
 									NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
@@ -278,11 +288,11 @@ public class Query extends VerticalLayout {
 									if (text.getLength() > 0) {
 										if (text.item(0).getNodeValue().equals("No Result")) // Empty Result
 										{
-											Notification.show("The result of the query is empty");
+											Notification("Successful Execution","The result of the query is empty");
 										} else // Numeric Result
 										{
 											Notification
-													.show("The result of the query is " + text.item(0).getNodeValue());
+													("Successful Execution", "The result of the query is " + text.item(0).getNodeValue());
 										}
 									} else // Error Message
 									{
@@ -291,7 +301,7 @@ public class Query extends VerticalLayout {
 										NodeList errorDescription = (NodeList) xPath
 												.compile("/osm/errorDescription/text()")
 												.evaluate(xmlDocument, XPathConstants.NODESET);
-										Notification.show(errorType.item(0).getNodeValue() + " : "
+										Notification("Error", errorType.item(0).getNodeValue() + " : "
 												+ errorDescription.item(0).getNodeValue());
 									}
 								}
@@ -299,9 +309,9 @@ public class Query extends VerticalLayout {
 							}
 							}
 						} catch (SAXException | IOException e) {
-							Notification.show("The result of the query is non valid: " + address);
+							Notification("Error","The result of the query is non valid: " + address);
 						} catch (XPathExpressionException e) {
-							Notification.show("The result of the query is non valid");
+							Notification("Error","The result of the query is non valid");
 							e.printStackTrace();
 						}
 					}
@@ -345,18 +355,37 @@ public class Query extends VerticalLayout {
 		save_layer.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
+				
+				if (socialquery) {Notification("Error","Social network queries cannot be saved");}
+				else {
+				if (layer.getValue().equals("") || layer.getValue().equals("postgres") || 
+						layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+				{
+					Notification("Error","Please select another name for the layer");
+				}
+				else {
 				save_layer.setEnabled(false);
 				delete_layer.setEnabled(true);
-				main.api_post(address, layer.getValue());
-			}
+				//main.api_post(address, layer.getValue());
+				Notification("Info","Layer "+ layer.getValue() + " Stored Successfully");
+				}
+			}}
 		});
 
 		delete_layer.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
+				if (layer.getValue().equals("") || layer.getValue().equals("postgres") || 
+						layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+				{
+					Notification("Error","Please select another name for the layer");
+				}
+				else {
 				save_layer.setEnabled(true);
 				delete_layer.setEnabled(false);
-				System.out.println("Borrando");
+				//main.api_delete(layer.getValue());
+				Notification("Info","Layer "+ layer.getValue() + " Deleted Successfully");
+				}
 			}
 		});
 
@@ -429,5 +458,13 @@ public class Query extends VerticalLayout {
 				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
 				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n\n" + query);*/
 		editor.setValue(query);
+	}
+	void Notification(String Topic, String Message) {
+		Notification notif = new Notification(
+			    Topic,
+			    Message,Notification.Type.TRAY_NOTIFICATION, true);
+		notif.setDelayMsec(10000);
+		notif.setPosition(Position.MIDDLE_CENTER);
+		notif.show(Page.getCurrent());
 	}
 }
