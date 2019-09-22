@@ -245,7 +245,7 @@ public class Query extends VerticalLayout {
 												center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
 										Double.parseDouble(
 												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-								 
+								Notification("Successful Execution","Click on items to see information");
 							   } 
 							
 							else {
@@ -260,7 +260,8 @@ public class Query extends VerticalLayout {
 												center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
 										Double.parseDouble(
 												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-								 
+							
+								Notification("Successful Execution","Click on items to see information");
 							   } 
 							
 							    else {
@@ -273,6 +274,7 @@ public class Query extends VerticalLayout {
 								if (no_osm.getLength() == 0) // OSM Result
 								{
 									Notification("Successful Execution","Click on items to see information");
+									socialquery = false;
 									Draw d = new Draw();
 									main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
 									NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
@@ -285,6 +287,7 @@ public class Query extends VerticalLayout {
 									 
 								} else // Text message
 								{
+									socialquery = true;
 									NodeList text = (NodeList) xPath.compile("/osm/text/text()").evaluate(xmlDocument,
 											XPathConstants.NODESET);
 									if (text.getLength() > 0) {
@@ -298,12 +301,13 @@ public class Query extends VerticalLayout {
 										}
 									} else // Error Message
 									{
+										socialquery = true;
 										NodeList errorType = (NodeList) xPath.compile("/osm/errorType/text()")
 												.evaluate(xmlDocument, XPathConstants.NODESET);
 										NodeList errorDescription = (NodeList) xPath
 												.compile("/osm/errorDescription/text()")
 												.evaluate(xmlDocument, XPathConstants.NODESET);
-										Notification("Error", errorType.item(0).getNodeValue() + " : "
+										Notification("Error of Execution", errorType.item(0).getNodeValue() + " : "
 												+ errorDescription.item(0).getNodeValue());
 									}
 								}
@@ -358,7 +362,7 @@ public class Query extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				
-				if (socialquery) {Notification("Error","Social network queries cannot be saved");}
+				if (socialquery) {Notification("Error","Textual, social network and wrong queries cannot be saved");}
 				else {
 				if (layer.getValue().equals("") || layer.getValue().equals("postgres") || 
 						layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))

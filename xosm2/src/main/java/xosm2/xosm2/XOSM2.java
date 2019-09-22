@@ -203,6 +203,12 @@ public class XOSM2 extends UI {
 
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
+		
+		
+		
+		
+		
+		
 		this.addDetachListener(new DetachListener() {
 			public void detach(DetachEvent event) {
 				System.out.println("######### Detached ##########");
@@ -243,7 +249,10 @@ public class XOSM2 extends UI {
 		map.setSizeFull();
 		map.setCenter(41.90219, 12.49580);
 		map.setCenter(36.838030858833, -2.4522979583778);
+		
+		 
 		q = new Query(this, "xosm_pbd:getElementsByKeyword(.,\"shop\")");
+		 
 		
 		
 		 
@@ -2735,6 +2744,8 @@ public class XOSM2 extends UI {
 		notif.setPosition(Position.MIDDLE_CENTER);
 		notif.show(Page.getCurrent());
 	}
+	
+	 
 
 	@WebServlet(urlPatterns = "/*", name = "XOSM2Servlet", asyncSupported = true)
 	@VaadinServletConfiguration(ui = XOSM2.class, productionMode = false)
