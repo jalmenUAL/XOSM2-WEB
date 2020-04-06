@@ -48,6 +48,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 
+
+
 public class Query extends VerticalLayout {
 
 	XOSM2 main;
@@ -184,148 +186,13 @@ public class Query extends VerticalLayout {
 			{save_layer.setEnabled(true);}
 		});
 		ex.setStyleName(ValoTheme.BUTTON_DANGER);
-		ex.addClickListener(new Button.ClickListener() {
+		ex.addClickListener(new Button.ClickListener() {	
 			@Override
-			public void buttonClick(ClickEvent event) {
-				if (layer.getValue() == "") {
-					layer.setValue("default");
-				}
-				if (main.nodes.containsKey(layer.getValue()) 
-						|| main.way.containsKey(layer.getValue())
-						|| main.twinfop.containsKey(layer.getValue())
-						|| main.twinfow.containsKey(layer.getValue())
-						|| main.twp.containsKey(layer.getValue())
-						|| main.tww.containsKey(layer.getValue())) {
-					Notification("Warning","Layer name already exists. Please clear the map area.");
-				} else {
-					save_layer.setEnabled(true);
-					if (main.map.getZoomLevel() < 0) {
-						Notification("Warning","Please take an smaller area");
-					} else {
-						main.nelat = main.map.getBounds().getNorthEastLat();
-						main.nelon = main.map.getBounds().getNorthEastLon();
-						main.swlat = main.map.getBounds().getSouthWestLat();
-						main.swlon = main.map.getBounds().getSouthWestLon();
-						
-						address = main.api(main.swlon, main.swlat, main.nelon, main.nelat, editor.getValue());
-						DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-
-						DocumentBuilder builder = null;
-						try {
-							builder = builderFactory.newDocumentBuilder();
-						} catch (ParserConfigurationException e) {
-
-							e.printStackTrace();
-						}
-
-						Document xmlDocument = null;
-
-						try {
-							xmlDocument = builder.parse(new InputSource(new StringReader(address)));
-
-							XPath xPath = XPathFactory.newInstance().newXPath();
-
-							NodeList twitter = (NodeList) xPath.compile("/social/twitter").evaluate(xmlDocument,
-									XPathConstants.NODESET);
-
-							NodeList youtube = (NodeList) xPath.compile("/social/youtube").evaluate(xmlDocument,
-									XPathConstants.NODESET);
-							
-							NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument,
-									XPathConstants.NODESET);
-							
-							if (twitter.getLength() > 0) {
-								socialquery = true;
-								Draw d = new Draw();
-								main.Draw_xml_twitter(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-								NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node")
-										.evaluate(xmlDocument, XPathConstants.NODESET);
-								main.map.setCenter(
-										Double.parseDouble(
-												center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
-										Double.parseDouble(
-												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-								Notification("Successful Execution","Click on items to see information");
-							   } 
-							
-							else {
-							if (youtube.getLength() > 0) {
-								socialquery = true;
-								Draw d = new Draw();
-								main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-								NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
-										.evaluate(xmlDocument, XPathConstants.NODESET);
-								main.map.setCenter(
-										Double.parseDouble(
-												center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
-										Double.parseDouble(
-												center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-							
-								Notification("Successful Execution","Click on items to see information");
-							   } 
-							
-							    else {
-							    	
-							    if (social.getLength()>0)	{Notification("Successful Execution","The result of the query is empty");}
-							    else {
-								NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
-										XPathConstants.NODESET);
-
-								if (no_osm.getLength() == 0) // OSM Result
-								{
-									Notification("Successful Execution","Click on items to see information");
-									socialquery = false;
-									Draw d = new Draw();
-									main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-									NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
-											XPathConstants.NODESET);
-									main.map.setCenter(
-											Double.parseDouble(
-													center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
-											Double.parseDouble(
-													center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-									 
-								} else // Text message
-								{
-									socialquery = true;
-									NodeList text = (NodeList) xPath.compile("/osm/text/text()").evaluate(xmlDocument,
-											XPathConstants.NODESET);
-									if (text.getLength() > 0) {
-										if (text.item(0).getNodeValue().equals("No Result")) // Empty Result
-										{
-											Notification("Successful Execution","The result of the query is empty");
-										} else // Numeric Result
-										{
-											Notification
-													("Successful Execution", "The result of the query is " + text.item(0).getNodeValue());
-										}
-									} else // Error Message
-									{
-										socialquery = true;
-										NodeList errorType = (NodeList) xPath.compile("/osm/errorType/text()")
-												.evaluate(xmlDocument, XPathConstants.NODESET);
-										NodeList errorDescription = (NodeList) xPath
-												.compile("/osm/errorDescription/text()")
-												.evaluate(xmlDocument, XPathConstants.NODESET);
-										Notification("Error of Execution", errorType.item(0).getNodeValue() + " : "
-												+ errorDescription.item(0).getNodeValue());
-									}
-								}
-							}
-							}
-							}
-						} catch (SAXException | IOException e) {
-							Notification("Error","The result of the query is non valid: " + address);
-						} catch (XPathExpressionException e) {
-							Notification("Error","The result of the query is non valid");
-							e.printStackTrace();
-						}
-					}
-				}
-			
-		}
-
-		});
+			public void buttonClick(ClickEvent event) {		
+				 
+				run_query();
+				 
+		}});
 
 		api.setStyleName(ValoTheme.BUTTON_LINK);
 		api.setVisible(false);
@@ -459,6 +326,151 @@ public class Query extends VerticalLayout {
 		setSizeUndefined();
 	}
 
+	
+	public void run_query()
+	{
+		if (layer.getValue() == "") {
+			layer.setValue("default");
+		}
+		if (main.nodes.containsKey(layer.getValue()) 
+				|| main.way.containsKey(layer.getValue())
+				|| main.twinfop.containsKey(layer.getValue())
+				|| main.twinfow.containsKey(layer.getValue())
+				|| main.twp.containsKey(layer.getValue())
+				|| main.tww.containsKey(layer.getValue())) {
+			Notification("Warning","Layer name already exists. Please clear the map area.");
+		} else {
+			save_layer.setEnabled(true);
+			if (main.map.getZoomLevel() < 0) {
+				Notification("Warning","Please take an smaller area");
+			} else {
+				main.nelat = main.map.getBounds().getNorthEastLat();
+				main.nelon = main.map.getBounds().getNorthEastLon();
+				main.swlat = main.map.getBounds().getSouthWestLat();
+				main.swlon = main.map.getBounds().getSouthWestLon();
+				
+				address = main.api(main.swlon, main.swlat, main.nelon, main.nelat, editor.getValue());
+				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+
+				DocumentBuilder builder = null;
+				try {
+					builder = builderFactory.newDocumentBuilder();
+				} catch (ParserConfigurationException e) {
+
+					e.printStackTrace();
+				}
+
+				Document xmlDocument = null;
+
+				try {
+					xmlDocument = builder.parse(new InputSource(new StringReader(address)));
+
+					XPath xPath = XPathFactory.newInstance().newXPath();
+
+					NodeList twitter = (NodeList) xPath.compile("/social/twitter").evaluate(xmlDocument,
+							XPathConstants.NODESET);
+
+					NodeList youtube = (NodeList) xPath.compile("/social/youtube").evaluate(xmlDocument,
+							XPathConstants.NODESET);
+					
+					NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument,
+							XPathConstants.NODESET);
+					
+					if (twitter.getLength() > 0) {
+						socialquery = true;
+						Draw d = new Draw();
+						main.Draw_xml_twitter(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+						NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						main.map.setCenter(
+								Double.parseDouble(
+										center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+								Double.parseDouble(
+										center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+						Notification("Successful Execution","Click on items to see information");
+					   } 
+					
+					else {
+					if (youtube.getLength() > 0) {
+						socialquery = true;
+						Draw d = new Draw();
+						main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+						NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						main.map.setCenter(
+								Double.parseDouble(
+										center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+								Double.parseDouble(
+										center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+					
+						Notification("Successful Execution","Click on items to see information");
+					   } 
+					
+					    else {
+					    	
+					    if (social.getLength()>0)	{Notification("Successful Execution","The result of the query is empty");}
+					    else {
+						NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
+								XPathConstants.NODESET);
+
+						if (no_osm.getLength() == 0) // OSM Result
+						{
+							Notification("Successful Execution","Click on items to see information");
+							socialquery = false;
+							Draw d = new Draw();
+							main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+							NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
+									XPathConstants.NODESET);
+							main.map.setCenter(
+									Double.parseDouble(
+											center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+									Double.parseDouble(
+											center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+							 
+						} else // Text message
+						{
+							socialquery = true;
+							NodeList text = (NodeList) xPath.compile("/osm/text/text()").evaluate(xmlDocument,
+									XPathConstants.NODESET);
+							if (text.getLength() > 0) {
+								if (text.item(0).getNodeValue().equals("No Result")) // Empty Result
+								{
+									Notification("Successful Execution","The result of the query is empty");
+								} else // Numeric Result
+								{
+									Notification
+											("Successful Execution", "The result of the query is " + text.item(0).getNodeValue());
+								}
+							} else // Error Message
+							{
+								socialquery = true;
+								NodeList errorType = (NodeList) xPath.compile("/osm/errorType/text()")
+										.evaluate(xmlDocument, XPathConstants.NODESET);
+								NodeList errorDescription = (NodeList) xPath
+										.compile("/osm/errorDescription/text()")
+										.evaluate(xmlDocument, XPathConstants.NODESET);
+								Notification("Error of Execution", errorType.item(0).getNodeValue() + " : "
+										+ errorDescription.item(0).getNodeValue());
+							}
+						}
+					}
+					}
+					}
+				} catch (SAXException | IOException e) {
+					Notification("Error","The result of the query is non valid: " + address);
+				} catch (XPathExpressionException e) {
+					Notification("Error","The result of the query is non valid");
+					e.printStackTrace();
+				}
+			}
+		}
+	
+		
+		
+		
+		
+	};
+	
 	public void setQuery(String query) {
 		/*editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
 				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
