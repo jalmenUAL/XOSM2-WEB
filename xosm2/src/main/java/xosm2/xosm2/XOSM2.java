@@ -406,7 +406,7 @@ public class XOSM2 extends UI {
 		 
 		String q10 ="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q := (if (contains(data($hotel/@name), \"Hotel\"))\r\n"+ 
@@ -420,8 +420,8 @@ public class XOSM2 extends UI {
 				"let $tweets :=\r\n"
 				+"xosm_social:api\r\n(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n"
 				+"map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n"  
-				+"return xosm_social:twitterResult($hotel, \r\n"
-				+"$tweets, \"twitterSearchTweets\")\r\n" + 
+				+"return xosm_social:twitterSearchTweets($hotel, \r\n"
+				+"$tweets)\r\n" + 
 				"}</social>";
 		
 		String q11="<social>{\r\n" + 
@@ -432,8 +432,7 @@ public class XOSM2 extends UI {
 				"let $tweets := xosm_social:api\r\n(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n"
 				+ "map { 'q' : $q}, map { 'count' : 10,\r\n"
 				+ "'option' : 'hashtag' })/json/*\r\n" + 
-				"return xosm_social:twitterResult($museum, $tweets,\r\n"
-				+ "\"twitterSearchTweets\")\r\n" + 
+				"return xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + 
 				"else ()\r\n" + 
 				"}</social>";
 		
@@ -456,9 +455,7 @@ public class XOSM2 extends UI {
 				"let $users := xosm_social:api\r\n(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\",\r\n"
 				+ "map { 'q' : $q,  'city' : $city },\r\n"
 				+ "map { 'count' : 10 })/json/*\r\n" + 
-				"return xosm_social:twitterResult($hotel,"
-				+ "$users,\r\n"
-				+ "\"twitterSearchUser\")\r\n" + 
+				"return xosm_social:twitterSearchUser($hotel,$users)\r\n" + 
 				"}</social>";
 		
 		String q13="<social>{\r\n" + 
@@ -471,8 +468,7 @@ public class XOSM2 extends UI {
 				"let $tweets :=\r\n"
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
 				"map { 'q' : $q }, map { 'count' : 10, 'geocode' : $geocode})/json/*\r\n" + 
-				"return xosm_social:twitterResult($museum, $tweets,\r\n"
-				+ "\"twitterSearchTweets\") \r\n" + 
+				"return xosm_social:twitterSearchTweets($museum, $tweets)\r\n"+
 				"else ()\r\n" + 
 				"}</social>";
 		
@@ -484,8 +480,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
 				"map { 'q' : $q }, map { 'count' : 10 })/json/*\r\n" + 
 				"where $tweet/favorite__count > 2 return $tweet) \r\n" + 
-				"return xosm_social:twitterResult($museum, $tweets,\r\n"
-				+ "\"twitterSearchTweets\") \r\n" + 
+				"return xosm_social:twitterSearchTweets($museum, $tweets)\r\n"+
 				"else ()\r\n" + 
 				"}</social>";
 		
@@ -498,8 +493,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\", \r\n" + 
 				"map { 'q' : $q }, map { 'count' : 15})/json/* \r\n" + 
 				"where $tweet/user/friends__count > 100 return $tweet)\r\n" + 
-				"return xosm_social:twitterResult($restaurant, $tweets,\r\n"
-				+ "\"twitterSearchTweets\") \r\n" + 
+				"return xosm_social:twitterSearchTweets($restaurant, $tweets)\r\n"+
 				"}</social>";
 		
 		String q16="<social>{\r\n" + 
@@ -523,8 +517,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", \r\n" + 
 				"map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json\r\n" + 
 				"where $user/followers__count > 2000 return $user)\r\n" + 
-				"return xosm_social:twitterResult($hotel, $users,\r\n"
-				+ "\"twitterSearchUser\")\r\n" + 
+				"return xosm_social:twitterSearchUser($hotel, $users)"+
 				"}</social>";
 		
 		String q17="<social>{\r\n" + 
@@ -549,8 +542,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterUserTimeLine\",\r\n" + 
 				"map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/* \r\n" + 
 				"where $tweet/favorite__count > 5 return $tweet)\r\n" + 
-				"return xosm_social:twitterResult($hotel,  $tweets,\r\n"
-				+ "\"twitterUserTimeLine\")\r\n" + 
+				"return xosm_social:twitterUserTimeLine($hotel,  $tweets)\r\n"+
 				"}</social>";
 		
 		String q18="<social>{\r\n" + 
@@ -565,8 +557,7 @@ public class XOSM2 extends UI {
 				+ "map { 'count' : 1 })/json/screen__name)\r\n" + 
 				"let $tweets := xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n" + 
 				"map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + 
-				"return xosm_social:twitterResult($museum, $tweets,\r\n"
-				+ "\"twitterSearchTweets\")\r\n" + 
+				"return xosm_social:twitterSearchTweets($museum, $tweets)\r\n"+
 				"else ()\r\n" + 
 				"}</social>";
 		
@@ -595,8 +586,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n" + 
 				"map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + 
 				")\r\n" + 
-				"return xosm_social:twitterResult($hotel,$tweets,\r\n"
-				+ "\"twitterSearchTweets\")\r\n" + 
+				"return xosm_social:twitterSearchTweets($hotel,$tweets)\r\n"+
 				"}</social>";
 		
 		String q20="<social>{\r\n" + 
@@ -614,8 +604,7 @@ public class XOSM2 extends UI {
 				"let $videos:=\r\n"
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoSearch\",\r\n"
 				+ "map { 'q' : $q }, map { 'maxResults' : 5 })/json/_\r\n" + 
-				"return xosm_social:youtubeResult($hotel, $videos,\r\n"
-				+ "\"youtubeVideoSearch\")  \r\n" + 
+				"return xosm_social:youtubeVideoSearch($hotel, $videos)\r\n"+ 
 				"} </social>";
 		
 		String q21="<social>{\r\n" + 
@@ -625,8 +614,7 @@ public class XOSM2 extends UI {
 				"let $channels :=\r\n"
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelSearch\",\r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
-				"return xosm_social:youtubeResult($museum, $channels,\r\n"
-				+ "\"youtubeChannelSearch\") \r\n" + 
+				"return xosm_social:youtubeChannelSearch($museum, $channels)\r\n"+
 				"else () \r\n" + 
 				"} </social>";
 		
@@ -637,8 +625,7 @@ public class XOSM2 extends UI {
 				"let $playlists := \r\n" + 
 				"xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistSearch\",\r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
-				"return xosm_social:youtubeResult($museum, $playlists,\r\n"
-				+ "\"youtubePlaylistSearch\")\r\n" + 
+				"return xosm_social:youtubePlaylistSearch($museum, $playlists)\r\n"+
 				"else ()  \r\n" + 
 				"} </social>";
 		
@@ -662,8 +649,7 @@ public class XOSM2 extends UI {
 				"map { 'q' : $q }, map { })/json/_/id/videoId)\r\n" + 
 				"return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\", \r\n" + 
 				"map { 'id' : $id }, map { })/json/items/_[statistics/viewCount > 10])\r\n" + 
-				"return xosm_social:youtubeResult($hotel, $videos,\r\n"
-				+ "\"youtubeVideoInfo\")  \r\n" + 
+				"return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n"+
 				"} </social>";
 		
 		String q24="<social>{\r\n" + 
@@ -676,8 +662,7 @@ public class XOSM2 extends UI {
 				+ "map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId)\r\n" + 
 				"return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeChannelInfo\", \r\n" + 
 				"map {'id' : $id }, map {})/json/items/_[statistics/subscriberCount > 100])\r\n" + 
-				"return xosm_social:youtubeResult($museum, $channels,\r\n"
-				+ "\"youtubeChannelInfo\")\r\n" + 
+				"return xosm_social:youtubeChannelInfo($museum, $channels)\r\n"+
 				"else ()  \r\n" + 
 				"} </social>";
 		
@@ -692,8 +677,7 @@ public class XOSM2 extends UI {
 				"return\r\n"
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistInfo\", \r\n" + 
 				"map {'id' : $id }, map {})/json/items/_)\r\n" + 
-				"return xosm_social:youtubeResult($museum, $playlists,\r\n"
-				+ "\"youtubePlaylistInfo\")\r\n" + 
+				"return xosm_social:youtubePlaylistInfo($museum, $playlists)\r\n"+
 				"else ()  \r\n" + 
 				"} </social>";
 		
@@ -707,8 +691,7 @@ public class XOSM2 extends UI {
 				+ "map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + 
 				"return xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubePlaylistItems\",\r\n"
 				+ "map {'playlistId' : $id }, map {})/json/items/_)\r\n" + 
-				"return xosm_social:youtubeResult($museum, $playlists,\r\n"
-				+ "\"youtubePlaylistItems\")\r\n" + 
+				"return xosm_social:youtubePlaylistItems($museum, $playlists)\r\n"+
 				"else ()  \r\n" + 
 				"} </social>";
 		
@@ -738,8 +721,7 @@ public class XOSM2 extends UI {
 				+ "map { 'id' : $videoId}, \r\n" + 
 				"map { })/json/items/_\r\n" + 
 				")\r\n" + 
-				"return xosm_social:youtubeResult($hotel, $videos,\r\n"
-				+ "\"youtubeVideoInfo\")  \r\n" + 
+				"return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n"+
 				"} </social>";
 		
 		String q28="<social>{\r\n" + 
@@ -761,8 +743,7 @@ public class XOSM2 extends UI {
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\",\r\n" + 
 				"map { 'id' : $videoId}, map { })/json/items/_\r\n" + 
 				")\r\n" + 
-				"return xosm_social:youtubeResult($museum, $videos,\r\n"
-				+ "\"youtubeVideoInfo\")\r\n" + 
+				"return xosm_social:youtubeVideoInfo($museum, $videos)\r\n"+
 				"else ()\r\n" + 
 				"} </social>";
 		
@@ -787,8 +768,7 @@ public class XOSM2 extends UI {
 				+ "map { 'id' : $videoId }, \r\n" + 
 				"map { })/json/items/_)\r\n" + 
 				"return \r\n" + 
-				"xosm_social:youtubeResult($museum,$videos,\r\n"
-				+ "\"youtubeVideoInfo\") \r\n" + 
+				"xosm_social:youtubeVideoInfo($museum,$videos)\r\n"+
 				"else ()\r\n" + 
 				"}\r\n" + 
 				"</social> ";
