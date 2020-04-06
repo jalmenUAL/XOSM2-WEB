@@ -618,6 +618,7 @@ public class XOSM2 extends UI {
 				"else () \r\n" + 
 				"} </social>";
 		
+		
 		String q22="<social>{\r\n" + 
 				"for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
 				"let $q := $museum/@name\r\n" + 
