@@ -18,7 +18,7 @@ public LoadingIndicatorWindow(String text) {
     setDraggable(false);
     setModal(true);
     setClosable(false);
-    setCaption("Loading...");
+    setCaption("XOSM Querying...");
      
     VerticalLayout layout = new VerticalLayout();
     layout.setMargin(true);

@@ -50,6 +50,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 
 
+
 public class Query extends VerticalLayout {
 
 	XOSM2 main;
@@ -59,7 +60,7 @@ public class Query extends VerticalLayout {
 	String nccolor;
 	String ccolor;
 	String cfill;
-	String icon = "i1007.png";
+	String icon = "i1082.png";
 	Button ex = new Button("Run");
 	TextField layer = new TextField();
 	AceEditor editor = new AceEditor();
@@ -71,6 +72,28 @@ public class Query extends VerticalLayout {
 	Button delete_layer = new Button("Delete Layer");
 	Set<String> layers = new HashSet<String>();
 	Boolean socialquery = false;
+	LoadingIndicatorWindow li = new LoadingIndicatorWindow("Please wait! Running in progress...");
+
+	
+	class Loader implements Runnable {
+
+
+		@Override
+		public void run() {
+			
+			main.access(new Runnable() {
+				@Override
+				public void run() {
+
+					run_query();
+					
+					main.removeWindow(li);
+
+					main.setPollInterval(-1);
+				}
+			});	
+		}
+	}
 
 	Query(XOSM2 m, String query) {
 		super();
@@ -190,7 +213,9 @@ public class Query extends VerticalLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {		
 				 
-				run_query();
+				main.addWindow(li);
+				main.setPollInterval(1000);
+				new Thread(new Loader()).start();
 				 
 		}});
 
@@ -480,10 +505,12 @@ public class Query extends VerticalLayout {
 				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n\n" + query);*/
 		editor.setValue(query);
 	}
+	
+	 
 	void Notification(String Topic, String Message) {
 		Notification notif = new Notification(
 			    Topic,
-			    Message,Notification.Type.TRAY_NOTIFICATION, true);
+			    Message,Notification.Type.ERROR_MESSAGE);
 		notif.setDelayMsec(10000);
 		notif.setPosition(Position.MIDDLE_CENTER);
 		notif.show(Page.getCurrent());

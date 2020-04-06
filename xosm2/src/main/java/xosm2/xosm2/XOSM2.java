@@ -83,6 +83,9 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 import elemental.json.JsonArray;
 
+//DELETE
+//AYUDA
+
 @Theme("mytheme")
 public class XOSM2 extends UI {
 
@@ -2720,11 +2723,11 @@ public class XOSM2 extends UI {
 		
 		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
 			 
-			HttpGet request = new HttpGet(" http://xosmtest.ual.es/xosmapiV2/getToken/layer/" + layer);
+			HttpGet request = new HttpGet(" http://xosm.ual.es/xosmapiV2/getToken/layer/" + layer);
 			request.addHeader("content-type", "application/xml");
 			HttpResponse result = httpClient.execute(request);
 			String token = EntityUtils.toString(result.getEntity(), "UTF-8");
-			HttpGet request2 = new HttpGet("  http://xosmtest.ual.es/xosmapiV2/dropDatabase/"+layer+"/token/" + token);
+			HttpGet request2 = new HttpGet("  http://xosm.ual.es/xosmapiV2/dropDatabase/"+layer+"/token/" + token);
 		} catch (IOException ex) {
 		}
 		return true;
