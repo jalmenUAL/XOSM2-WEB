@@ -276,12 +276,16 @@ public class XOSM2 extends UI {
 
 		String exq7 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,\"Carrera de los Limoneros\",100)\r\n"
 				+ "return\r\n" + "for $node in $layer[@type=\"point\"]\r\n"
-				+ "return xosm_item:point(xosm_item:name($node),xosm_item:lon($node),xosm_item:lat($node),xosm_item:tags($node))";
+				+ "return xosm_item:point(xosm_item:name($node),\r\n"
+				+ "xosm_item:lon($node),xosm_item:lat($node),"
+				+ "xosm_item:tags($node))\r\n";
 
 		String exq8 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(. ,\"Carrera de los Limoneros\",100)\r\n"
 				+ "return\r\n" + "for $node in $layer[@type=\"way\"]\r\n" + "let $nodes := xosm_item:nodes($node)\r\n"
 				+ "for $t in xosm_item:segments($node)\r\n"
-				+ "return xosm_item:way(xosm_item:name($node),xosm_item:segment(xosm_item:id($t),xosm_item:refs($t),xosm_item:tags($t)),$nodes)";
+				+ "return xosm_item:way(xosm_item:name($node),\r\n"
+				+ "xosm_item:segment(xosm_item:id($t),\r\n"
+				+ "xosm_item:refs($t),xosm_item:tags($t)),$nodes)";
 
 		// SPATIAL
 
@@ -316,34 +320,43 @@ public class XOSM2 extends UI {
 
 		String exq16 = "let $layer :=\r\n" + "xosm_pbd:getLayerByBB(.)\r\n"
 				+ "let $e := xosm_pbd:getElementByName(.,'Calle Calzada de Castro')\r\n"
-				+ "return xosm_ag:topologicalCountG($layer,$e,function($x,$y){xosm_sp:crossing($x,$y)})";
+				+ "return xosm_ag:topologicalCount($layer,$e,\r\n"
+				+ "function($x,$y){xosm_sp:crossing($x,$y)})";
 
 		String exq17 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
 				+ "let $buildings := fn:filter($layer,xosm_kw:searchKeyword(?,'building'))\r\n"
-				+ "return xosm_ag:metricMaxG($buildings,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricMax($buildings,\r\n"
+				+ "function($x){xosm_item:area($x)})";
 
 		String exq18 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
 				+ "let $buildings := fn:filter($layer,xosm_kw:searchKeyword(?,'highway'))\r\n"
-				+ "return xosm_ag:metricSumG($buildings,function($x){xosm_item:length($x)})";
+				+ "return xosm_ag:metricSum($buildings,\r\n"
+				+ "function($x){xosm_item:length($x)})";
 
 		String exq19 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
 				+ "let $buildings := fn:filter($layer,xosm_kw:searchKeyword(?,'building'))\r\n"
-				+ "return xosm_ag:metricAvgG($buildings,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricAvg($buildings,\r\n"
+				+ "function($x){xosm_item:area($x)})";
 
 		String exq20 = "let $layer :=\r\n" + "xosm_pbd:getLayerByBB(.)\r\n"
-				+ "return xosm_ag:metricTopCountG($layer,function($x){xosm_item:area($x)},5)";
+				+ "return xosm_ag:metricTopCount($layer,\r\n"
+				+ "function($x){xosm_item:area($x)},5)";
 
 		String exq21 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
-				+ "return xosm_ag:metricMedianG($layer[@type=\"way\"],function($x){xosm_item:length($x)})";
+				+ "return xosm_ag:metricMedian($layer[@type=\"way\"],\r\n"
+				+ "function($x){xosm_item:length($x)})";
 
 		String exq22 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
-				+ "return xosm_ag:metricRangeG($layer,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricRange($layer,\r\n"
+				+ "function($x){xosm_item:area($x)})";
 
 		String exq23 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
-				+ "return xosm_ag:metricRankG($layer,function($x){xosm_item:area($x)},1)";
+				+ "return xosm_ag:metricRank($layer,\r\n"
+				+ "function($x){xosm_item:area($x)},1)";
 
 		String exq24 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro',500)\r\n"
-				+ "return xosm_ag:metricRangeG($layer,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricRange($layer,\r\n"
+				+ "function($x){xosm_item:area($x)})";
 
 		// OPEN DATA
 
@@ -382,7 +395,7 @@ public class XOSM2 extends UI {
 
 		String q5 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Karl-Liebknecht-Straße' ,500)\r\n"
 				+ "let $buildings := fn:filter($layer,\r\n" + "xosm_kw:searchKeyword(?,'building'))\r\n"
-				+ "return xosm_ag:metricSumG($buildings,function($x){xosm_item:area($x)})";
+				+ "return xosm_ag:metricSum($buildings,function($x){xosm_item:area($x)})";
 
 		String q6 = "let $layer := xosm_pbd:getLayerByName(.,'Piazza del Duomo',1500)\r\n" + "return\r\n"
 				+ "xosm_ag:metricMaxG(\r\n"
