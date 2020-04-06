@@ -364,11 +364,11 @@ public class XOSM2 extends UI {
 				+ "\"https://opendata.paris.fr/explore/dataset/paris_taxis_stations/download/?format=geojson&amp;timezone=UTC\",\"\")";
 
 		String exq26 = "xosm_open:kml2osm(\r\n"
-				+ "\"http://geodata.vermont.gov/datasets/b1ae7b7b110447c3b452d9cacffeed36_174.kml\",\r\n"
+				+ "\"https://opendata.arcgis.com/datasets/7232e84f53494f5e9b131b81f92534b8_0.kml\",\r\n"
 				+ "\"SiteName\")";
 
-		String exq27 = "xosm_open:csv2osm(\"http://geodata.vermont.gov/datasets/b1ae7b7b110447c3b452d9cacffeed36_174.csv\",\r\n"
-				+ "\"SiteName\",\"X\",\"Y\") ";
+		//String exq27 = "xosm_open:csv2osm(\"http://geodata.vermont.gov/datasets/b1ae7b7b110447c3b452d9cacffeed36_174.csv\",\r\n"
+		//		+ "\"SiteName\",\"X\",\"Y\") ";
 
 		String exq28 = "xosm_open:wikipediaName2osm(\"Almeria\")";
 
@@ -398,7 +398,7 @@ public class XOSM2 extends UI {
 				+ "return xosm_ag:metricSum($buildings,function($x){xosm_item:area($x)})";
 
 		String q6 = "let $layer := xosm_pbd:getLayerByName(.,'Piazza del Duomo',1500)\r\n" + "return\r\n"
-				+ "xosm_ag:metricMaxG(\r\n"
+				+ "xosm_ag:metricMax(\r\n"
 				+ "filter($layer,xosm_kw:searchKeyword(?,'church')),function($x){xosm_item:area($x)})\r\n";
 
 		String q7 = "let $open :=\r\n" + 
@@ -451,7 +451,7 @@ public class XOSM2 extends UI {
 		
 		String q12="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q := (if ($hotel//tag[@k=\"operator\"])\r\n"
@@ -499,7 +499,7 @@ public class XOSM2 extends UI {
 		
 		String q15="<social>{\r\n" + 
 				"let $restaurants := xosm_pbd:getElementsByKV(., \"amenity\", \"restaurant\") \r\n" + 
-				"let $city := xosm_social:city($restaurants)\r\n" + 
+				"let $city := xosm_social:city($restaurants[1])\r\n" + 
 				"for $restaurant in $restaurants\r\n" + 
 				"let $q := data($restaurant/@name) || \" \" || $city\r\n" + 
 				"let $tweets :=\r\n(for $tweet in\r\n"
@@ -511,7 +511,7 @@ public class XOSM2 extends UI {
 		
 		String q16="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q :=\r\n(if ($hotel//tag[@k=\"operator\"])\r\n"
@@ -525,7 +525,7 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + 
 				"then data($hotel/@name)\r\n" + 
 				"else \"Hotel \" || data($hotel/@name))\r\n" + 
-				"let $user :=\r\n"
+				"let $users :=\r\n"
 				+ "(for $user in\r\n"
 				+ "xosm_social:api(\"http://minerva.ual.es:8080/api.social/twitterSearchUser\", \r\n" + 
 				"map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json\r\n" + 
@@ -535,7 +535,7 @@ public class XOSM2 extends UI {
 		
 		String q17="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels) \r\n" + 
+				"let $city := xosm_social:city($hotels[1]) \r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $q := (if ($hotel//tag[@k=\"operator\"])\r\n"
 				+ "then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + 
@@ -560,7 +560,7 @@ public class XOSM2 extends UI {
 		
 		String q18="<social>{\r\n" + 
 				"let $museums := xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $city := xosm_social:city($museums) \r\n" + 
+				"let $city := xosm_social:city($museums[1]) \r\n" + 
 				"for $museum in $museums\r\n" + 
 				"let $mention := data($museum/@name)\r\n" + 
 				"return if (string-length($mention) > 0) then\r\n" + 
@@ -576,7 +576,7 @@ public class XOSM2 extends UI {
 		
 		String q19="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q :=\r\n"
@@ -604,7 +604,7 @@ public class XOSM2 extends UI {
 		
 		String q20="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q := (if (contains(data($hotel/@name), \"Hotel\")) then data($hotel/@name)\r\n" + 
@@ -645,7 +645,7 @@ public class XOSM2 extends UI {
 		
 		String q23="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q :=\r\n"
@@ -711,7 +711,7 @@ public class XOSM2 extends UI {
 		
 		String q27="<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getElementsByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
+				"let $city := xosm_social:city($hotels[1])\r\n" + 
 				"for $hotel in $hotels\r\n" + 
 				"let $name := data($hotel/@name)\r\n" + 
 				"let $q :=\r\n"
@@ -1178,7 +1178,7 @@ public class XOSM2 extends UI {
 
 		};
 
-		MenuBar.Command cop3 = new MenuBar.Command() {
+		/*MenuBar.Command cop3 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
@@ -1192,7 +1192,7 @@ public class XOSM2 extends UI {
 				 
 			}
 
-		};
+		};*/
 
 		MenuBar.Command cop4 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
@@ -1725,7 +1725,7 @@ public class XOSM2 extends UI {
 		//MenuItem agg9 = aggregation.addItem("Retrieve the range of area of elements close (500m) to an street", null, cagg9);
 		MenuItem op1 = open.addItem("Import geojson data", null, cop1);
 		MenuItem op2 = open.addItem("Import kml data", null, cop2);
-		MenuItem op3 = open.addItem("Import csv data", null, cop3);
+		//MenuItem op3 = open.addItem("Import csv data", null, cop3);
 		MenuItem op4 = open.addItem("Wikipedia information", null, cop4);
 		 
 
