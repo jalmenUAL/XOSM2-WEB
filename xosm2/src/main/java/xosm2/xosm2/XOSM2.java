@@ -57,6 +57,8 @@ import org.xml.sax.SAXException;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.View;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
@@ -84,10 +86,11 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import elemental.json.JsonArray;
 
 //AYUDA
-//LINK
+//CORTAR EJEMPLOS
+
 
 @Theme("mytheme")
-public class XOSM2 extends UI   {
+public class XOSM2 extends UI  {
 
 	String type ="";
 	String type2 = "";
@@ -95,7 +98,10 @@ public class XOSM2 extends UI   {
 	HorizontalSplitPanel accordion2 = new HorizontalSplitPanel();
 	Twitter popup = new Twitter();
 	Youtube popup2 = new Youtube();
-
+	Navigator navigator = new Navigator(this,this);
+	 
+	
+ 
 	Query q = null;
 	Info_Node in = new Info_Node(this);
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
@@ -207,6 +213,8 @@ public class XOSM2 extends UI   {
 	@Override
 	protected void init(VaadinRequest vaadinRequest) {
 		
+		 
+
 		
 		/*this.addDetachListener(new DetachListener() {
 			public void detach(DetachEvent event) {
@@ -282,13 +290,14 @@ public class XOSM2 extends UI   {
 		 
 		q = new Query(this, "xosm_pbd:getElementsByKeyword(.,\"shop\")");
 		
+		
 		}
 		
-		else { q = new Query(this,query);}
-		 
+		else { q = new Query(this,query);} 
 		
 		
-		 
+		
+		
 
 		// INDEXING
 
@@ -822,6 +831,11 @@ public class XOSM2 extends UI   {
 		
 		MenuBar.Command cind1 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
+				
+				
+				
+				 
+				
 				map.setCenter(41.90219, 12.49580);
 				map.setCenter(36.838030858833, -2.4522979583778);
 				map.setZoomLevel(18);
@@ -1914,8 +1928,11 @@ public class XOSM2 extends UI   {
 		accordion.setSplitPosition(35);
 		accordion.setFirstComponent(q);
 		accordion.setSecondComponent(accordion2);
-		setContent(accordion);
+	    MainView mv = new MainView(navigator,accordion);
+	    setContent(mv);
 		setStyleName("layout-with-border3");
+		
+		
 	}
 
 	public String search(String address) {

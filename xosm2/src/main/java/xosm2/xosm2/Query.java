@@ -405,6 +405,7 @@ public class Query extends VerticalLayout {
 	
 	public void run_query()
 	{
+		
 		if (layer.getValue() == "") {
 			layer.setValue("default");
 		}
