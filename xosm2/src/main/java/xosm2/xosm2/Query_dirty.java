@@ -39,6 +39,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.FormLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
@@ -50,7 +52,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 
 
-public class Query extends VerticalLayout {
+public class Query_dirty extends VerticalLayout {
 
 	XOSM2 main;
 	String address;
@@ -68,34 +70,48 @@ public class Query extends VerticalLayout {
 	List<NameValuePair> params2 = new ArrayList<NameValuePair>();
 	List<NameValuePair> params3 = new ArrayList<NameValuePair>();
 	Button see_link = new Button("Get API Rest Link");
+	//Button save_layer = new Button("Save Layer");
+	//Button delete_layer = new Button("Delete Layer");
 	Set<String> layers = new HashSet<String>();
 	Boolean socialquery = false;
 	LoadingIndicatorWindow li = new LoadingIndicatorWindow("Please wait! Running in progress...");
 
 	
 	class Loader implements Runnable {
+
+
 		@Override
 		public void run() {
 			
 			main.access(new Runnable() {
 				@Override
 				public void run() {
+
 					run_query();
+					
 					main.removeWindow(li);
+
 					main.setPollInterval(-1);
 				}
 			});	
 		}
 	}
 
-	Query(XOSM2 m, String query) {
+	Query_dirty(XOSM2 m, String query) {
 		super();
 		main = m;
 		editor.setTheme(AceTheme.textmate);
 		editor.setHeight(150, Unit.PIXELS);
 		editor.setWordWrap(true);
+		/*editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
+				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
+				"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
+				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
+				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" + query);*/
 		editor.setValue(query);
-		editor.setFontSize("13pt");
+
+		editor.setFontSize("14pt");
 		editor.setShowPrintMargin(false);
 		editor.setMode(AceMode.xquery);
 		editor.setTheme(AceTheme.textmate);
@@ -103,12 +119,14 @@ public class Query extends VerticalLayout {
 		editor.setReadOnly(false);
 		editor.setSizeFull();
 		editor.setShowInvisibles(false);
-		editor.setShowGutter(false);		 
+		editor.setShowGutter(false);
+		 
 		editor.setUseSoftTabs(false);
 		editor.setWordWrap(true);
 		editor.addValueChangeListener(new com.vaadin.data.HasValue.ValueChangeListener<String>() {
 			@Override
-			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {				
+			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {
+				
 				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" + 		
 						"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
 								"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
@@ -181,7 +199,18 @@ public class Query extends VerticalLayout {
 		eidos.addValueChangeListener(event -> {
 			icon = "i" + Integer.toString(1000 + eidos.getValue()) + ".png";
 		});
+		//layer.setValue("default");
+		//layer.setCaption("Layer Name");
 		layer.setWidth("100%");
+		/*layer.addValueChangeListener(event -> {
+			if (layer.getValue().equals("postgres") || 
+					layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+			{
+			  
+			 Notification("Warning","Please select another name for the layer");
+			} else
+			{save_layer.setEnabled(true);}
+		});*/
 		ex.setStyleName(ValoTheme.BUTTON_DANGER);
 		ex.addClickListener(new Button.ClickListener() {	
 			@Override
@@ -220,7 +249,98 @@ public class Query extends VerticalLayout {
 				api.setVisible(true);
 			}
 		});
-		 
+		//delete_layer.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		//save_layer.setEnabled(false);
+		//delete_layer.setEnabled(false);
+		
+		/*
+		save_layer.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				
+				if (socialquery) {Notification("Error","Textual, social network and wrong queries cannot be saved");}
+				else {
+				if (layer.getValue().equals("") || layer.getValue().equals("postgres") || 
+						layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+				{
+					Notification("Error","Please select another name for the layer");
+				}
+				else {
+				save_layer.setEnabled(false);
+				delete_layer.setEnabled(true);
+				main.api_post(address, layer.getValue());
+				Notification("Info","Layer "+ layer.getValue() + " stored successfully");
+				}
+			}}
+		});*/
+
+		/*
+		delete_layer.addClickListener(new Button.ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				if (layer.getValue().equals("") || layer.getValue().equals("postgres") || 
+						layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
+				{
+					Notification("Error","Please select another name for the layer");
+				}
+				else {
+				save_layer.setEnabled(true);
+				delete_layer.setEnabled(false);
+					
+				String address = main.api_delete(layer.getValue());
+				
+				Notification.show(address);
+				if (address.equals("202")) { Notification("Info","Layer "+ layer.getValue() + " deleted successfully");}
+				else
+			    if (address.equals("error")) {Notification("Deletion","Layer "+ layer.getValue() + " cannot be deleted");}
+				else {
+				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+
+				DocumentBuilder builder = null;
+				try {
+					builder = builderFactory.newDocumentBuilder();
+				} catch (ParserConfigurationException e) {
+
+					e.printStackTrace();
+				}
+
+				Document xmlDocument = null;
+
+				try {
+					 
+					
+					xmlDocument = builder.parse(new InputSource(new StringReader(address)));
+
+					XPath xPath = XPathFactory.newInstance().newXPath();
+
+					NodeList errorType;
+					
+					try {
+						errorType = (NodeList) xPath.compile("/osm/errorType/text()")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						
+						 
+						NodeList errorDescription = (NodeList) xPath
+								.compile("/osm/errorDescription/text()")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						Notification("Deletion:", errorType.item(0).getNodeValue() + " : "
+								+ errorDescription.item(0).getNodeValue());
+						
+						
+					} catch (XPathExpressionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				} catch (SAXException | IOException e) {
+
+					e.printStackTrace();
+				}
+				}
+				}
+			}
+		});*/
+
 		params.clear();
 		params.add(new BasicNameValuePair("query", editor.getValue()));
 		api.setCaption("API Restful Link");
@@ -235,42 +355,53 @@ public class Query extends VerticalLayout {
 		optionslayout.setWidth("100%");
 		optionslayout.setMargin(false);
 		optionslayout.setSpacing(false);
-		
 		optionslayout.addComponent(ex);
 		ex.setWidth("100%");
 		ex.setIcon(VaadinIcons.PLAY);
-		
 		optionslayout.addComponent(see_link);
 		see_link.setWidth("100%");
 		see_link.setIcon(VaadinIcons.LINK);
-		
 		optionslayout.addComponent(api);
 		api.setWidth("100%");
 		
 		
+		//Button lb = new Button("Select name for the layer");
+		//lb.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+		//lb.setEnabled(false);
+		//lb.setWidth("100%");
+		//optionslayout.addComponent(lb);
+		//layer.setHeight("100%");
+		//layer.setWidth("100%");
 		layer.setPlaceholder("Type the name of the layer");
+		//optionslayout.setSpacing(true);
+		//optionslayout.setMargin(false);
 		optionslayout.addComponent(layer);
+		
+		
+		//optionslayout.addComponent(save_layer);
+		//save_layer.setWidth("100%");
+		//save_layer.setIcon(VaadinIcons.ARCHIVE);
+		//optionslayout.addComponent(delete_layer);
+		//delete_layer.setWidth("100%");
+		//delete_layer.setIcon(VaadinIcons.CROSS_CUTLERY);
 		
 		
 		optionslayout.addComponent(eidos);
 		eidos.setWidth("100%");
-		
 	    optionslayout.addComponent(ncpicker);
 		ncpicker.setWidth("100%");
-		
 		optionslayout.addComponent(cpicker);
 		cpicker.setWidth("100%");
-		
 		optionslayout.addComponent(cfpicker);
 		cfpicker.setWidth("100%");
 
-		Label title = new Label("XOSM2: XQuery-based Query Language for OpenStreetMap. Version 2. University of Almería. 2020.<br>"
-				+ "Jesús M. Almendros-Jiménez, Antonio Becerra-Terón and Manuel Torres.<br>",
+		/*Label title = new Label("XOSM: XQuery-based query language for OSM. Version 2."
+				+ "Jesús M. Almendros-Jiménez, Antonio Becerra-Terón and Manuel Torres."
+				+ "University of Almería. 2019. "
+				+ "<a href='http://indalog.ual.es/WWW_pages/JesusAlmendros/Publications.html'>Information Systems Group Publications</a>",
 				ContentMode.HTML);
 		title.setWidth("100%");
-		title.setStyleName(ValoTheme.LABEL_COLORED);
-		
-		optionslayout.addComponent(title);
+		title.setStyleName(ValoTheme.LABEL_COLORED);*/
 		
 		
 		VerticalSplitPanel split = new VerticalSplitPanel();
@@ -431,6 +562,12 @@ public class Query extends VerticalLayout {
 	};
 	
 	public void setQuery(String query) {
+		/*editor.setValue("import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
+				"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
+				"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
+				"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
+				"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
+				"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n\n" + query);*/
 		editor.setValue(query);
 	}
 	
