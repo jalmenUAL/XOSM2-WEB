@@ -83,11 +83,11 @@ import com.vaadin.ui.MenuBar.MenuItem;
 
 import elemental.json.JsonArray;
 
-//DELETE
 //AYUDA
+//LINK
 
 @Theme("mytheme")
-public class XOSM2 extends UI {
+public class XOSM2 extends UI   {
 
 	String type ="";
 	String type2 = "";
@@ -208,11 +208,7 @@ public class XOSM2 extends UI {
 	protected void init(VaadinRequest vaadinRequest) {
 		
 		
-		
-		
-		
-		
-		this.addDetachListener(new DetachListener() {
+		/*this.addDetachListener(new DetachListener() {
 			public void detach(DetachEvent event) {
 				System.out.println("######### Detached ##########");
 			}
@@ -225,7 +221,7 @@ public class XOSM2 extends UI {
 		});
 		Page.getCurrent().getJavaScript().execute(
 				"window.onbeforeunload = function (e) " + "{ var e = e || window.event; aboutToClose(); return; };");
-
+        */
 		LTileLayer osmTiles = new LOpenStreetMapLayer();
 		osmTiles.setAttributionString("© OpenStreetMap Contributors");
 		map.addBaseLayer(osmTiles, "OSM");
@@ -251,10 +247,44 @@ public class XOSM2 extends UI {
 		});
 		map.setSizeFull();
 		map.setCenter(41.90219, 12.49580);
-		map.setCenter(36.838030858833, -2.4522979583778);
 		
+		
+		String lat = vaadinRequest.getParameter("lat");
+		String lon = vaadinRequest.getParameter("lon");
+		
+		if (!(lat==null) && !(lon==null)) {
+			
+			Boolean error = false;
+			try {
+				 Double.parseDouble(lat);
+			
+			} catch (NumberFormatException e)
+			{ map.setCenter(36.838030858833, -2.4522979583778); 
+			  error = true;}
+			try {
+				Double.parseDouble(lon);
+			
+			} catch (NumberFormatException e)
+			{ map.setCenter(36.838030858833, -2.4522979583778); 
+			  error = true;}
+			
+			if (!error) {map.setCenter(Double.parseDouble(lat), Double.parseDouble(lon));}
+			else {map.setCenter(36.838030858833, -2.4522979583778);}
+			
+		}
+		else
+		{map.setCenter(36.838030858833, -2.4522979583778);}
+		
+		
+		String query = vaadinRequest.getParameter("query");
+		
+		if (query==null) {
 		 
 		q = new Query(this, "xosm_pbd:getElementsByKeyword(.,\"shop\")");
+		
+		}
+		
+		else { q = new Query(this,query);}
 		 
 		
 		
@@ -2698,6 +2728,7 @@ public class XOSM2 extends UI {
 		return xml;
 	}
 
+	/*
 	public void api_post(String xml, String layer) {
 		try {
 			String XMLData = xml;
@@ -2717,21 +2748,27 @@ public class XOSM2 extends UI {
 			e.printStackTrace();
 		}
 
-	}
+	}*/
 	
-	public Boolean api_delete(String layer) {
+	/*public String api_delete(String layer) {
 		
-		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
-			 
-			HttpGet request = new HttpGet(" http://xosm.ual.es/xosmapiV2/getToken/layer/" + layer);
+		try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {		 
+			HttpGet request = new HttpGet("http://xosm.ual.es/xosmapiV2/getToken/layer/" + layer);
 			request.addHeader("content-type", "application/xml");
 			HttpResponse result = httpClient.execute(request);
 			String token = EntityUtils.toString(result.getEntity(), "UTF-8");
-			HttpGet request2 = new HttpGet("  http://xosm.ual.es/xosmapiV2/dropDatabase/"+layer+"/token/" + token);
+			System.out.println(token);
+			HttpGet request2 = new HttpGet("http://xosm.ual.es/xosmapiV2/dropDatabase/"+layer+"/token/" + token);
+			request2.addHeader("content-type", "application/xml");
+			HttpResponse result2 = httpClient.execute(request2);
+			String token2 = EntityUtils.toString(result2.getEntity(), "UTF-8");	
+			System.out.println(token2);
+			return token2;
 		} catch (IOException ex) {
+		return "error";
 		}
-		return true;
-	}
+		
+	}*/
 	
 	void Notification(String Topic, String Message) {
 		Notification notif = new Notification(

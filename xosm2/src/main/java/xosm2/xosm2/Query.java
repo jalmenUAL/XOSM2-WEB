@@ -68,8 +68,8 @@ public class Query extends VerticalLayout {
 	List<NameValuePair> params2 = new ArrayList<NameValuePair>();
 	List<NameValuePair> params3 = new ArrayList<NameValuePair>();
 	Button see_link = new Button("Get API Rest Link");
-	Button save_layer = new Button("Save Layer");
-	Button delete_layer = new Button("Delete Layer");
+	//Button save_layer = new Button("Save Layer");
+	//Button delete_layer = new Button("Delete Layer");
 	Set<String> layers = new HashSet<String>();
 	Boolean socialquery = false;
 	LoadingIndicatorWindow li = new LoadingIndicatorWindow("Please wait! Running in progress...");
@@ -199,7 +199,7 @@ public class Query extends VerticalLayout {
 		});
 		layer.setValue("default");
 		layer.setWidth("100%");
-		layer.addValueChangeListener(event -> {
+		/*layer.addValueChangeListener(event -> {
 			if (layer.getValue().equals("postgres") || 
 					layer.getValue().equals("planet") || layer.getValue().equals("europe") || layer.getValue().equals("aux"))
 			{
@@ -207,7 +207,7 @@ public class Query extends VerticalLayout {
 			 Notification("Warning","Please select another name for the layer");
 			} else
 			{save_layer.setEnabled(true);}
-		});
+		});*/
 		ex.setStyleName(ValoTheme.BUTTON_DANGER);
 		ex.addClickListener(new Button.ClickListener() {	
 			@Override
@@ -246,10 +246,11 @@ public class Query extends VerticalLayout {
 				api.setVisible(true);
 			}
 		});
-		save_layer.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		delete_layer.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		save_layer.setEnabled(false);
-		delete_layer.setEnabled(false);
+		//delete_layer.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		//save_layer.setEnabled(false);
+		//delete_layer.setEnabled(false);
+		
+		/*
 		save_layer.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -264,12 +265,13 @@ public class Query extends VerticalLayout {
 				else {
 				save_layer.setEnabled(false);
 				delete_layer.setEnabled(true);
-				//main.api_post(address, layer.getValue());
+				main.api_post(address, layer.getValue());
 				Notification("Info","Layer "+ layer.getValue() + " stored successfully");
 				}
 			}}
-		});
+		});*/
 
+		/*
 		delete_layer.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -281,14 +283,60 @@ public class Query extends VerticalLayout {
 				else {
 				save_layer.setEnabled(true);
 				delete_layer.setEnabled(false);
-				//Boolean result = main.api_delete(layer.getValue());
-				Boolean result = true;
-				if (result) {
-				Notification("Info","Layer "+ layer.getValue() + " deleted successfully");}
-				else {Notification("Error","Layer "+ layer.getValue() + " does not exist. Deletion failed. ");}
+					
+				String address = main.api_delete(layer.getValue());
+				
+				Notification.show(address);
+				if (address.equals("202")) { Notification("Info","Layer "+ layer.getValue() + " deleted successfully");}
+				else
+			    if (address.equals("error")) {Notification("Deletion","Layer "+ layer.getValue() + " cannot be deleted");}
+				else {
+				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+
+				DocumentBuilder builder = null;
+				try {
+					builder = builderFactory.newDocumentBuilder();
+				} catch (ParserConfigurationException e) {
+
+					e.printStackTrace();
+				}
+
+				Document xmlDocument = null;
+
+				try {
+					 
+					
+					xmlDocument = builder.parse(new InputSource(new StringReader(address)));
+
+					XPath xPath = XPathFactory.newInstance().newXPath();
+
+					NodeList errorType;
+					
+					try {
+						errorType = (NodeList) xPath.compile("/osm/errorType/text()")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						
+						 
+						NodeList errorDescription = (NodeList) xPath
+								.compile("/osm/errorDescription/text()")
+								.evaluate(xmlDocument, XPathConstants.NODESET);
+						Notification("Deletion:", errorType.item(0).getNodeValue() + " : "
+								+ errorDescription.item(0).getNodeValue());
+						
+						
+					} catch (XPathExpressionException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				} catch (SAXException | IOException e) {
+
+					e.printStackTrace();
+				}
+				}
 				}
 			}
-		});
+		});*/
 
 		params.clear();
 		params.add(new BasicNameValuePair("query", editor.getValue()));
@@ -314,12 +362,14 @@ public class Query extends VerticalLayout {
 		lb.setWidth("100%");
 		optionslayout.addComponent(lb);
 		optionslayout.addComponent(layer);
-		optionslayout.addComponent(save_layer);
-		save_layer.setWidth("100%");
-		save_layer.setIcon(VaadinIcons.ARCHIVE);
-		optionslayout.addComponent(delete_layer);
-		delete_layer.setWidth("100%");
-		delete_layer.setIcon(VaadinIcons.CROSS_CUTLERY);
+		
+		//optionslayout.addComponent(save_layer);
+		//save_layer.setWidth("100%");
+		//save_layer.setIcon(VaadinIcons.ARCHIVE);
+		//optionslayout.addComponent(delete_layer);
+		//delete_layer.setWidth("100%");
+		//delete_layer.setIcon(VaadinIcons.CROSS_CUTLERY);
+		
 		optionslayout.setHeight("100%");
 		optionslayout.setWidth("100%");
 		optionslayout.setSpacing(false);
@@ -340,6 +390,7 @@ public class Query extends VerticalLayout {
 				ContentMode.HTML);
 		title.setWidth("100%");
 		title.setStyleName(ValoTheme.LABEL_COLORED);*/
+		
 		optionslayout.setSpacing(false);
 		VerticalSplitPanel split = new VerticalSplitPanel();
 		split.setHeight("100%");
@@ -365,7 +416,7 @@ public class Query extends VerticalLayout {
 				|| main.tww.containsKey(layer.getValue())) {
 			Notification("Warning","Layer name already exists. Please clear the map area.");
 		} else {
-			save_layer.setEnabled(true);
+			//save_layer.setEnabled(true);
 			if (main.map.getZoomLevel() < 0) {
 				Notification("Warning","Please take an smaller area");
 			} else {
