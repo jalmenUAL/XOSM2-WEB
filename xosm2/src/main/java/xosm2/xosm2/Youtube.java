@@ -15,13 +15,13 @@ public class Youtube extends Window {
 
 	public void showInfoYoutubeVideos(NodeList Tweets) {
 		this.setWidth("800px");
-		 
+
 		VerticalLayout vl = new VerticalLayout();
 		vl.setWidth("100%");
 		vl.setStyleName("youtube");
 		HorizontalLayout images = new HorizontalLayout();
 		images.setMargin(false);
-        images.setWidth("100%");
+		images.setWidth("100%");
 		Image twitter = new Image();
 		twitter.setSource(new ThemeResource("youtube.png"));
 		twitter.setWidth("100%");
@@ -34,21 +34,20 @@ public class Youtube extends Window {
 		images.addComponent(image);
 		Label head = new Label("Videos");
 		head.setStyleName(ValoTheme.LABEL_BOLD);
-		//vl.setHeightUndefined();
+		// vl.setHeightUndefined();
 		vl.setWidthUndefined();
 		this.setHeightUndefined();
-		//this.setWidthUndefined();
+		// this.setWidthUndefined();
 		vl.addComponent(images);
 		vl.addComponents(head);
 		if (Tweets == null) {
 		} else {
 			for (int i = 0; i < Tweets.getLength(); i++) {
-				
-				
+
 				if (Tweets.item(i).hasChildNodes()) {
-					 
-					Item_Youtube t = new Item_Youtube(Tweets.item(i),"videos");
-					//if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
+
+					Item_Youtube t = new Item_Youtube(Tweets.item(i), "videos");
+					// if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
 					t.setHeightUndefined();
 					t.setWidthUndefined();
 					t.setSpacing(false);
@@ -60,15 +59,16 @@ public class Youtube extends Window {
 		setContent(vl);
 		center();
 	}
+
 	public void showInfoYoutubePlayLists(NodeList Tweets) {
 		this.setWidth("800px");
-		 
+
 		VerticalLayout vl = new VerticalLayout();
 		vl.setWidth("100%");
 		vl.setStyleName("youtube");
 		HorizontalLayout images = new HorizontalLayout();
 		images.setMargin(false);
-        images.setWidth("100%");
+		images.setWidth("100%");
 		Image twitter = new Image();
 		twitter.setSource(new ThemeResource("youtube.png"));
 		twitter.setWidth("100%");
@@ -81,21 +81,20 @@ public class Youtube extends Window {
 		images.addComponent(image);
 		Label head = new Label("PlayLists");
 		head.setStyleName(ValoTheme.LABEL_BOLD);
-		//vl.setHeightUndefined();
+		// vl.setHeightUndefined();
 		vl.setWidthUndefined();
 		this.setHeightUndefined();
-		//this.setWidthUndefined();
+		// this.setWidthUndefined();
 		vl.addComponent(images);
 		vl.addComponents(head);
 		if (Tweets == null) {
 		} else {
 			for (int i = 0; i < Tweets.getLength(); i++) {
-				
-				
+
 				if (Tweets.item(i).hasChildNodes()) {
-					 
-					Item_Youtube t = new Item_Youtube(Tweets.item(i),"playlists");
-					//if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
+
+					Item_Youtube t = new Item_Youtube(Tweets.item(i), "playlists");
+					// if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
 					t.setHeightUndefined();
 					t.setWidthUndefined();
 					t.setSpacing(false);
@@ -107,15 +106,16 @@ public class Youtube extends Window {
 		setContent(vl);
 		center();
 	}
+
 	public void showInfoYoutubeChannels(NodeList Tweets) {
 		this.setWidth("800px");
-		 
+
 		VerticalLayout vl = new VerticalLayout();
 		vl.setWidth("100%");
 		vl.setStyleName("youtube");
 		HorizontalLayout images = new HorizontalLayout();
 		images.setMargin(false);
-        images.setWidth("100%");
+		images.setWidth("100%");
 		Image twitter = new Image();
 		twitter.setSource(new ThemeResource("youtube.png"));
 		twitter.setWidth("100%");
@@ -128,21 +128,20 @@ public class Youtube extends Window {
 		images.addComponent(image);
 		Label head = new Label("Channels");
 		head.setStyleName(ValoTheme.LABEL_BOLD);
-		//vl.setHeightUndefined();
+		// vl.setHeightUndefined();
 		vl.setWidthUndefined();
 		this.setHeightUndefined();
-		//this.setWidthUndefined();
+		// this.setWidthUndefined();
 		vl.addComponent(images);
 		vl.addComponents(head);
 		if (Tweets == null) {
 		} else {
 			for (int i = 0; i < Tweets.getLength(); i++) {
-				
-				
+
 				if (Tweets.item(i).hasChildNodes()) {
-					 
-					Item_Youtube t = new Item_Youtube(Tweets.item(i),"channels");
-					//if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
+
+					Item_Youtube t = new Item_Youtube(Tweets.item(i), "channels");
+					// if (t.video) { this.setWidth("800px");} else {this.setWidth("400px");}
 					t.setHeightUndefined();
 					t.setWidthUndefined();
 					t.setSpacing(false);

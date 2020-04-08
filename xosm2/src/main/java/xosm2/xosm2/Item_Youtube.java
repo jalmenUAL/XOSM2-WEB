@@ -47,7 +47,7 @@ public class Item_Youtube extends VerticalLayout {
 
 		l.setWidth("100%");
 		l.setHeightUndefined();
-		
+
 		HorizontalLayout tweet = new HorizontalLayout();
 		tweet.setWidth("100%");
 
@@ -57,26 +57,28 @@ public class Item_Youtube extends VerticalLayout {
 		String stitle = "";
 		String spublishedAt = "";
 		String sid = "";
-		String slikeCount ="";
-		String sdislikeCount ="";
+		String slikeCount = "";
+		String sdislikeCount = "";
 		String sviewCount = "";
-		String sback ="";
+		String sback = "";
 
-		//Boolean video = false;
+		// Boolean video = false;
 		Boolean statistics = false;
 		for (int i = 0; i < childs.getLength(); i++) {
 
 			if (childs.item(i).getNodeName() == "id") {
 				NodeList ch = childs.item(i).getChildNodes();
-				 
+
 				for (int j = 0; j < ch.getLength(); j++) {
 					if (ch.item(j).getNodeName() == "videoId") {
 						sid = ch.item(j).getTextContent();
 						video = true;
-					} 
+					}
 				}
-				if (!video) {sid = childs.item(i).getTextContent();}
-				 
+				if (!video) {
+					sid = childs.item(i).getTextContent();
+				}
+
 			}
 			if (childs.item(i).getNodeName() == "statistics") {
 				NodeList ch = childs.item(i).getChildNodes();
@@ -84,18 +86,18 @@ public class Item_Youtube extends VerticalLayout {
 				for (int j = 0; j < ch.getLength(); j++) {
 					if (ch.item(j).getNodeName() == "dislikeCount") {
 						sdislikeCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "likeCount") {
 						slikeCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "viewCount") {
 						sviewCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 				}
-				 
+
 			}
 			if (childs.item(i).getNodeName() == "snippet") {
 				NodeList ch = childs.item(i).getChildNodes();
@@ -109,66 +111,58 @@ public class Item_Youtube extends VerticalLayout {
 					if (ch.item(j).getNodeName() == "publishedAt") {
 						spublishedAt = ch.item(j).getTextContent();
 					}
-					/*if (ch.item(j).getNodeName() == "channelId") {
-						if (!video) {sid = ch.item(j).getTextContent();}
-					}
-					if (ch.item(j).getNodeName() == "thumbnails") {
-							 
-						NodeList tum = ch.item(j).getChildNodes();
-						for (int k = 0; k < tum.getLength(); k++) {
-							if (tum.item(k).getNodeName() == "high") {
-								NodeList hg = tum.item(k).getChildNodes();
-								for (int l=0;  l < hg.getLength(); l++)
-								{
-									if (hg.item(l).getNodeName() == "url") {
-										sback = hg.item(l).getTextContent();
-										//iback.setSource(new ExternalResource(sback));
-									}
-								}
-							}
-							
-						
-					
-					}
-					}*/
+					/*
+					 * if (ch.item(j).getNodeName() == "channelId") { if (!video) {sid =
+					 * ch.item(j).getTextContent();} } if (ch.item(j).getNodeName() == "thumbnails")
+					 * {
+					 * 
+					 * NodeList tum = ch.item(j).getChildNodes(); for (int k = 0; k <
+					 * tum.getLength(); k++) { if (tum.item(k).getNodeName() == "high") { NodeList
+					 * hg = tum.item(k).getChildNodes(); for (int l=0; l < hg.getLength(); l++) { if
+					 * (hg.item(l).getNodeName() == "url") { sback = hg.item(l).getTextContent();
+					 * //iback.setSource(new ExternalResource(sback)); } } }
+					 * 
+					 * 
+					 * 
+					 * } }
+					 */
 
 				}
 			}
-			
+
 		}
-		
+
 		Label link = new Label();
-		//Embedded e = new Embedded();
+		// Embedded e = new Embedded();
 		Label e = new Label();
 		e.setWidth("100%");
-		//if (video) {
-			 
-			e = new Label("<iframe width=\"800px\" height=\"400px\"\r\n" + 
-					"src=\"https://www.youtube.com/embed/"+ sid +"\" allowfullscreen>\r\n" + 
-					"</iframe>",ContentMode.HTML);
-			
-			//e = new Embedded(null, new ExternalResource("http://www.youtube.com/v/" + sid));
+		// if (video) {
 
-			//e.setMimeType("application/x-shockwave-flash");
-			//e.setParameter("allowFullScreen", "true");
-			//e.setWidth("100%");
-			//e.setHeight("265px");
-			
-		/*} else  
-			{link = new Label("<a href='http://youtube.com/channel/" + sid + "'target=\"_blank\">"
-					+"<img src='"+ sback  + "'" + "style=\"width:800px; height:400px\"" +">" + "</a></>", 
-					ContentMode.HTML);
-			
-			}*/
-			
-		 
-		
-        Label nlikeCount = new Label();
-        Label llikeCount = new Label();
-        Label ndislikeCount = new Label();
-        Label ldislikeCount = new Label();
-        Label nviewCount = new Label();
-        Label lviewCount = new Label();
+		e = new Label("<iframe width=\"800px\" height=\"400px\"\r\n" + "src=\"https://www.youtube.com/embed/" + sid
+				+ "\" allowfullscreen>\r\n" + "</iframe>", ContentMode.HTML);
+
+		// e = new Embedded(null, new ExternalResource("http://www.youtube.com/v/" +
+		// sid));
+
+		// e.setMimeType("application/x-shockwave-flash");
+		// e.setParameter("allowFullScreen", "true");
+		// e.setWidth("100%");
+		// e.setHeight("265px");
+
+		/*
+		 * } else {link = new Label("<a href='http://youtube.com/channel/" + sid +
+		 * "'target=\"_blank\">" +"<img src='"+ sback + "'" +
+		 * "style=\"width:800px; height:400px\"" +">" + "</a></>", ContentMode.HTML);
+		 * 
+		 * }
+		 */
+
+		Label nlikeCount = new Label();
+		Label llikeCount = new Label();
+		Label ndislikeCount = new Label();
+		Label ldislikeCount = new Label();
+		Label nviewCount = new Label();
+		Label lviewCount = new Label();
 		if (statistics) {
 			nlikeCount = new Label(slikeCount);
 			llikeCount = new Label();
@@ -193,27 +187,25 @@ public class Item_Youtube extends VerticalLayout {
 		publishedAt.setWidth("100%");
 
 		content.addComponent(title);
-		//if (video) {content.addComponent(e);} else {content.addComponent(link);}
+		// if (video) {content.addComponent(e);} else {content.addComponent(link);}
 		content.addComponent(e);
 		content.addComponent(description);
-		if (statistics)
-		{
+		if (statistics) {
 			HorizontalLayout lstatistics = new HorizontalLayout();
 			lstatistics.addComponent(lviewCount);
 			lstatistics.addComponent(nviewCount);
 			lstatistics.addComponent(llikeCount);
-			lstatistics.addComponent(nlikeCount);	
+			lstatistics.addComponent(nlikeCount);
 			lstatistics.addComponent(ldislikeCount);
 			lstatistics.addComponent(ndislikeCount);
 			content.addComponent(lstatistics);
 
 		}
-		//content.addComponent(publishedAt);
+		// content.addComponent(publishedAt);
 
 		content.setMargin(false);
 		content.setWidth("100%");
 		content.setHeightUndefined();
-
 
 		tweet.addComponent(content);
 		setHeight("100%");
@@ -221,7 +213,7 @@ public class Item_Youtube extends VerticalLayout {
 		l.addComponent(tweet);
 		l.setSpacing(false);
 		l.setMargin(false);
- 		addComponent(l);
+		addComponent(l);
 	}
 
 	void Item_Youtube_Playlists(Node n) {
@@ -237,16 +229,16 @@ public class Item_Youtube extends VerticalLayout {
 		String stitle = "";
 		String spublishedAt = "";
 		String sid = "";
-		String ssubscriberCount ="";
-		String svideoCount ="";
+		String ssubscriberCount = "";
+		String svideoCount = "";
 		String sviewCount = "";
-		String sback ="";
+		String sback = "";
 
 		Boolean play = false;
 		Boolean statistics = false;
 
 		for (int i = 0; i < childs.getLength(); i++) {
-			
+
 			if (childs.item(i).getNodeName() == "id") {
 				NodeList ch = childs.item(i).getChildNodes();
 				for (int j = 0; j < ch.getLength(); j++) {
@@ -257,25 +249,25 @@ public class Item_Youtube extends VerticalLayout {
 
 				}
 			}
-			
+
 			if (childs.item(i).getNodeName() == "statistics") {
 				NodeList ch = childs.item(i).getChildNodes();
 				statistics = true;
 				for (int j = 0; j < ch.getLength(); j++) {
 					if (ch.item(j).getNodeName() == "subscriberCount") {
 						ssubscriberCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "videoCount") {
 						svideoCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "viewCount") {
 						sviewCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 				}
-				 
+
 			}
 
 			if (childs.item(i).getNodeName() == "snippet") {
@@ -291,47 +283,42 @@ public class Item_Youtube extends VerticalLayout {
 						spublishedAt = ch.item(j).getTextContent();
 					}
 					if (ch.item(j).getNodeName() == "channelId") {
-						if (!play) {sid = ch.item(j).getTextContent();}
-						 
+						if (!play) {
+							sid = ch.item(j).getTextContent();
+						}
+
 					}
 					if (ch.item(j).getNodeName() == "thumbnails") {
-						 
+
 						NodeList tum = ch.item(j).getChildNodes();
 						for (int k = 0; k < tum.getLength(); k++) {
 							if (tum.item(k).getNodeName() == "high") {
 								NodeList hg = tum.item(k).getChildNodes();
-								for (int l=0;  l < hg.getLength(); l++)
-								{
+								for (int l = 0; l < hg.getLength(); l++) {
 									if (hg.item(l).getNodeName() == "url") {
 										sback = hg.item(l).getTextContent();
-										//iback.setSource(new ExternalResource(sback));
+										// iback.setSource(new ExternalResource(sback));
 									}
 								}
 							}
-							
+
 						}
 
+					}
+
 				}
-			
-			
 			}
-			}
-			
-				 
+
 		}
 
 		Label link = new Label();
 		if (play) {
-			link = new Label("<a href='http://youtube.com/playlist?list=" + sid + "' target=\"_blank\">"
-					+"<img src='"+ sback  + "'" + "style=\"width:800px; height:400px\"" +">" + "</a></>", 
-							ContentMode.HTML);
-			 
-		} else 
-			link = new Label("<a href='http://youtube.com/channel/" + sid + "'target=\"_blank\">"
-					+"<img src='"+ sback  + "'" + "style=\"width:800px; height:400px\"" +">" + "</a></>", 
-							ContentMode.HTML);
-			 
-		
+			link = new Label("<a href='http://youtube.com/playlist?list=" + sid + "' target=\"_blank\">" + "<img src='"
+					+ sback + "'" + "style=\"width:800px; height:400px\"" + ">" + "</a></>", ContentMode.HTML);
+
+		} else
+			link = new Label("<a href='http://youtube.com/channel/" + sid + "'target=\"_blank\">" + "<img src='" + sback
+					+ "'" + "style=\"width:800px; height:400px\"" + ">" + "</a></>", ContentMode.HTML);
 
 		VerticalLayout content = new VerticalLayout();
 		String etitle = parse(stitle);
@@ -347,11 +334,11 @@ public class Item_Youtube extends VerticalLayout {
 		content.addComponent(title);
 		content.addComponent(link);
 		Label nsubscriberCount = new Label();
-        Label lsubscriberCount = new Label();
-        Label nvideoCount = new Label();
-        Label lvideoCount = new Label();
-        Label nviewCount = new Label();
-        Label lviewCount = new Label();
+		Label lsubscriberCount = new Label();
+		Label nvideoCount = new Label();
+		Label lvideoCount = new Label();
+		Label nviewCount = new Label();
+		Label lviewCount = new Label();
 		if (statistics) {
 			nsubscriberCount = new Label(ssubscriberCount);
 			lsubscriberCount = new Label();
@@ -363,10 +350,9 @@ public class Item_Youtube extends VerticalLayout {
 			lviewCount = new Label();
 			lviewCount.setIcon(VaadinIcons.EYE);
 		}
-		
+
 		content.addComponent(description);
-		if (statistics)
-		{
+		if (statistics) {
 			HorizontalLayout lstatistics = new HorizontalLayout();
 			lstatistics.addComponent(lsubscriberCount);
 			lstatistics.addComponent(nsubscriberCount);
@@ -377,12 +363,11 @@ public class Item_Youtube extends VerticalLayout {
 			content.addComponent(lstatistics);
 
 		}
-		//content.addComponent(publishedAt);
+		// content.addComponent(publishedAt);
 
 		content.setMargin(false);
 		content.setWidth("100%");
 		content.setHeightUndefined();
-
 
 		tweet.addComponent(content);
 		setHeight("100%");
@@ -390,7 +375,7 @@ public class Item_Youtube extends VerticalLayout {
 		l.addComponent(tweet);
 		l.setSpacing(false);
 		l.setMargin(false);
- 		addComponent(l);
+		addComponent(l);
 	}
 
 	void Item_Youtube_Channels(Node n) {
@@ -406,45 +391,46 @@ public class Item_Youtube extends VerticalLayout {
 		String stitle = "";
 		String spublishedAt = "";
 		String sid = "";
-		String ssubscriberCount ="";
-		String svideoCount ="";
+		String ssubscriberCount = "";
+		String svideoCount = "";
 		String sviewCount = "";
-		String sback ="";
+		String sback = "";
 		Boolean statistics = false;
-		 
+
 		for (int i = 0; i < childs.getLength(); i++) {
 
 			if (childs.item(i).getNodeName() == "id") {
-				
-				NodeList ch = childs.item(i).getChildNodes();
-				if (ch.getLength()>0) {
-				for (int j = 0; j < ch.getLength(); j++) {
-					if (ch.item(j).getNodeName() == "channelId") {
-						sid = ch.item(j).getTextContent();
- 					}
 
-				}
-				} else  sid = childs.item(i).getTextContent();	
+				NodeList ch = childs.item(i).getChildNodes();
+				if (ch.getLength() > 0) {
+					for (int j = 0; j < ch.getLength(); j++) {
+						if (ch.item(j).getNodeName() == "channelId") {
+							sid = ch.item(j).getTextContent();
+						}
+
+					}
+				} else
+					sid = childs.item(i).getTextContent();
 			}
-			
+
 			if (childs.item(i).getNodeName() == "statistics") {
 				NodeList ch = childs.item(i).getChildNodes();
 				statistics = true;
 				for (int j = 0; j < ch.getLength(); j++) {
 					if (ch.item(j).getNodeName() == "subscriberCount") {
 						ssubscriberCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "videoCount") {
 						svideoCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 					if (ch.item(j).getNodeName() == "viewCount") {
 						sviewCount = ch.item(j).getTextContent();
-						 
-					} 
+
+					}
 				}
-				 
+
 			}
 			if (childs.item(i).getNodeName() == "snippet") {
 				NodeList ch = childs.item(i).getChildNodes();
@@ -459,33 +445,30 @@ public class Item_Youtube extends VerticalLayout {
 						spublishedAt = ch.item(j).getTextContent();
 					}
 					if (ch.item(j).getNodeName() == "thumbnails") {
-						 
+
 						NodeList tum = ch.item(j).getChildNodes();
 						for (int k = 0; k < tum.getLength(); k++) {
 							if (tum.item(k).getNodeName() == "high") {
 								NodeList hg = tum.item(k).getChildNodes();
-								for (int l=0;  l < hg.getLength(); l++)
-								{
+								for (int l = 0; l < hg.getLength(); l++) {
 									if (hg.item(l).getNodeName() == "url") {
 										sback = hg.item(l).getTextContent();
-										//iback.setSource(new ExternalResource(sback));
+										// iback.setSource(new ExternalResource(sback));
 									}
 								}
 							}
 						}
-						}
+					}
 
 				}
 			}
-			
-			 
 
 		}
 
 		Label link = new Label("<a href='http://youtube.com/channel/" + sid + "' target=\"_blank\">"
-				
-				+ "<img src='"+ sback  + "'" + "style=\"width:800px; height:400px\"" +">" + "</a></>", 
-						ContentMode.HTML);
+
+				+ "<img src='" + sback + "'" + "style=\"width:800px; height:400px\"" + ">" + "</a></>",
+				ContentMode.HTML);
 
 		VerticalLayout content = new VerticalLayout();
 		String etitle = parse(stitle);
@@ -501,11 +484,11 @@ public class Item_Youtube extends VerticalLayout {
 		content.addComponent(title);
 		content.addComponent(link);
 		Label nsubscriberCount = new Label();
-        Label lsubscriberCount = new Label();
-        Label nvideoCount = new Label();
-        Label lvideoCount = new Label();
-        Label nviewCount = new Label();
-        Label lviewCount = new Label();
+		Label lsubscriberCount = new Label();
+		Label nvideoCount = new Label();
+		Label lvideoCount = new Label();
+		Label nviewCount = new Label();
+		Label lviewCount = new Label();
 		if (statistics) {
 			nsubscriberCount = new Label(ssubscriberCount);
 			lsubscriberCount = new Label();
@@ -518,8 +501,7 @@ public class Item_Youtube extends VerticalLayout {
 			lviewCount.setIcon(VaadinIcons.EYE);
 		}
 		content.addComponent(description);
-		if (statistics)
-		{
+		if (statistics) {
 			HorizontalLayout lstatistics = new HorizontalLayout();
 			lstatistics.addComponent(lsubscriberCount);
 			lstatistics.addComponent(nsubscriberCount);
@@ -530,7 +512,7 @@ public class Item_Youtube extends VerticalLayout {
 			content.addComponent(lstatistics);
 
 		}
-		//content.addComponent(publishedAt);
+		// content.addComponent(publishedAt);
 
 		content.setMargin(false);
 		content.setWidth("100%");
@@ -542,7 +524,7 @@ public class Item_Youtube extends VerticalLayout {
 		l.addComponent(tweet);
 		l.setSpacing(false);
 		l.setMargin(false);
-		 
+
 		addComponent(l);
 	}
 

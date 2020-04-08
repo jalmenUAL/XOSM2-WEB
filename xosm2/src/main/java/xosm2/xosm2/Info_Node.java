@@ -37,14 +37,14 @@ public class Info_Node extends VerticalLayout {
 		b.setIcon(VaadinIcons.CLOSE);
 		t.setWidth("100%");
 		t.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		 
+
 		addComponent(b);
 		addComponent(t);
 		addComponent(l);
 		b.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//main.accordion2.setSplitPosition(100);
+				// main.accordion2.setSplitPosition(100);
 				main.in.setVisible(false);
 				main.accordion.setSplitPosition(35);
 				t.setEnabled(false);
@@ -59,97 +59,97 @@ public class Info_Node extends VerticalLayout {
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 				if (!_main.popup.isAttached()) {
 					_main.addWindow(_main.popup);
 					_main.popup.center();
-					
-				}	
-				
+
+				}
+
 				_main.popup.showInfoTwitterTweets(Tweets);
-				
+
 			}
 		});
 	}
-	
+
 	public void setInfoTwitterUsers(NodeList Tweets) {
 		t.setEnabled(true);
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 				if (!_main.popup.isAttached()) {
 					_main.addWindow(_main.popup);
 					_main.popup.center();
-					
-				}	
-				
+
+				}
+
 				_main.popup.showInfoTwitterUsers(Tweets);
-				
+
 			}
 		});
 	}
-	
+
 	public void setInfoYoutubeVideos(NodeList Tweets) {
 		t.setEnabled(true);
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 				if (!_main.popup2.isAttached()) {
 					_main.addWindow(_main.popup2);
 					_main.popup2.center();
-					
-				}	
-				
+
+				}
+
 				_main.popup2.showInfoYoutubeVideos(Tweets);
-				
+
 			}
 		});
 	}
-	
+
 	public void setInfoYoutubePlayLists(NodeList Tweets) {
 		t.setEnabled(true);
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 				if (!_main.popup2.isAttached()) {
 					_main.addWindow(_main.popup2);
 					_main.popup2.center();
-					
-				}	
-				
+
+				}
+
 				_main.popup2.showInfoYoutubePlayLists(Tweets);
-				
+
 			}
 		});
 	}
-	
+
 	public void setInfoYoutubeChannels(NodeList Tweets) {
 		t.setEnabled(true);
 		t.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				
+
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 				if (!_main.popup2.isAttached()) {
 					_main.addWindow(_main.popup2);
 					_main.popup2.center();
-					
-				}	
-				
+
+				}
+
 				_main.popup2.showInfoYoutubeChannels(Tweets);
-				
+
 			}
 		});
 	}
@@ -164,11 +164,11 @@ public class Info_Node extends VerticalLayout {
 		l.setHeight("100%");
 		l.setMargin(true);
 		if (n == null) {
-			Notification("Error","This is an Empty Node. Information cannot be displayed.");
+			Notification("Error", "This is an Empty Node. Information cannot be displayed.");
 		} else {
 			NodeList cs = n.getChildNodes();
 			if (cs == null) {
-				Notification("Error","This is an Empty Node. Information cannot be displayed.");
+				Notification("Error", "This is an Empty Node. Information cannot be displayed.");
 			} else {
 				for (int i = 0; i < cs.getLength(); i++) {
 					NamedNodeMap atts = cs.item(i).getAttributes();
@@ -206,10 +206,9 @@ public class Info_Node extends VerticalLayout {
 		}
 
 	}
+
 	void Notification(String Topic, String Message) {
-		Notification notif = new Notification(
-			    Topic,
-			    Message,Notification.Type.TRAY_NOTIFICATION, true);
+		Notification notif = new Notification(Topic, Message, Notification.Type.TRAY_NOTIFICATION, true);
 		notif.setDelayMsec(10000);
 		notif.setPosition(Position.MIDDLE_CENTER);
 		notif.show(Page.getCurrent());

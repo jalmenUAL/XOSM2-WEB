@@ -47,9 +47,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.themes.ValoTheme;
 
-
-
-
 public class Query extends VerticalLayout {
 
 	XOSM2 main;
@@ -61,7 +58,7 @@ public class Query extends VerticalLayout {
 	String cfill;
 	String icon = "i1082.png";
 	Button ex = new Button("Run");
-	
+
 	TextField layer = new TextField();
 	AceEditor editor = new AceEditor();
 	List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -72,11 +69,10 @@ public class Query extends VerticalLayout {
 	Boolean socialquery = false;
 	LoadingIndicatorWindow li = new LoadingIndicatorWindow("Please wait! Running in progress...");
 
-	
 	class Loader implements Runnable {
 		@Override
 		public void run() {
-			
+
 			main.access(new Runnable() {
 				@Override
 				public void run() {
@@ -84,7 +80,7 @@ public class Query extends VerticalLayout {
 					main.removeWindow(li);
 					main.setPollInterval(-1);
 				}
-			});	
+			});
 		}
 	}
 
@@ -103,20 +99,20 @@ public class Query extends VerticalLayout {
 		editor.setReadOnly(false);
 		editor.setSizeFull();
 		editor.setShowInvisibles(false);
-		editor.setShowGutter(false);		 
+		editor.setShowGutter(false);
 		editor.setUseSoftTabs(false);
 		editor.setWordWrap(true);
 		editor.addValueChangeListener(new com.vaadin.data.HasValue.ValueChangeListener<String>() {
 			@Override
-			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {				
-				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" + 		
-						"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
-								"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
-								"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
-								"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
-								"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
-								"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" +
-						editor.getValue();
+			public void valueChange(com.vaadin.data.HasValue.ValueChangeEvent<String> event) {
+				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n"
+						+ "import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n"
+						+ "import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n"
+						+ "import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n"
+						+ "import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n"
+						+ "import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n"
+						+ "import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n"
+						+ editor.getValue();
 				api.setVisible(false);
 				see_link.setVisible(true);
 				main.nelat = main.map.getBounds().getNorthEastLat();
@@ -171,7 +167,7 @@ public class Query extends VerticalLayout {
 		});
 		ComboBox<Integer> eidos = new ComboBox<Integer>();
 		eidos.setPlaceholder("Select the Icon for Nodes");
-		
+
 		eidos.setWidth("100%");
 		eidos.setItemCaptionGenerator(item -> "");
 		eidos.setItems(IntStream.range(0, 383).boxed().collect(Collectors.toList()));
@@ -183,15 +179,16 @@ public class Query extends VerticalLayout {
 		});
 		layer.setWidth("100%");
 		ex.setStyleName(ValoTheme.BUTTON_DANGER);
-		ex.addClickListener(new Button.ClickListener() {	
+		ex.addClickListener(new Button.ClickListener() {
 			@Override
-			public void buttonClick(ClickEvent event) {		
-				 
+			public void buttonClick(ClickEvent event) {
+
 				main.addWindow(li);
 				main.setPollInterval(1000);
 				new Thread(new Loader()).start();
-				 
-		}});
+
+			}
+		});
 
 		api.setStyleName(ValoTheme.BUTTON_LINK);
 		api.setVisible(false);
@@ -199,14 +196,14 @@ public class Query extends VerticalLayout {
 		see_link.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n" + 		
-						"import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n" + 
-								"import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n" + 
-								"import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n" + 
-								"import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n" + 
-								"import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n" + 
-								"import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n" +
-						editor.getValue();
+				String call_query = "import module namespace xosm_social = \"xosm_social\" at \"XOSMSocial.xqy\";\r\n"
+						+ "import module namespace xosm_item = \"xosm_item\" at \"XOSMItem.xqy\";\r\n"
+						+ "import module namespace xosm_sp = \"xosm_sp\" at \"XOSMSpatial.xqy\";\r\n"
+						+ "import module namespace xosm_kw = \"xosm_kw\" at \"XOSMKeyword.xqy\";\r\n"
+						+ "import module namespace xosm_ag = \"xosm_ag\" at \"XOSMAggregation.xqy\";\r\n"
+						+ "import module namespace xosm_open = \"xosm_open\" at \"XOSMOpenData.xqy\";\r\n"
+						+ "import module namespace xosm_pbd = \"xosm_pbd\" at \"XOSMPostGIS.xqy\";\r\n\n"
+						+ editor.getValue();
 				params3.clear();
 				params3.add(new BasicNameValuePair("query", call_query));
 				api.setCaption("API Restful Link");
@@ -220,7 +217,7 @@ public class Query extends VerticalLayout {
 				api.setVisible(true);
 			}
 		});
-		 
+
 		params.clear();
 		params.add(new BasicNameValuePair("query", editor.getValue()));
 		api.setCaption("API Restful Link");
@@ -235,79 +232,72 @@ public class Query extends VerticalLayout {
 		optionslayout.setWidth("100%");
 		optionslayout.setMargin(false);
 		optionslayout.setSpacing(false);
-		
+
 		optionslayout.addComponent(ex);
 		ex.setWidth("100%");
 		ex.setIcon(VaadinIcons.PLAY);
-		
+
 		optionslayout.addComponent(see_link);
 		see_link.setWidth("100%");
 		see_link.setIcon(VaadinIcons.LINK);
-		
+
 		optionslayout.addComponent(api);
 		api.setWidth("100%");
-		
-		
+
 		layer.setPlaceholder("Type the name of the layer");
 		optionslayout.addComponent(layer);
-		
-		
+
 		optionslayout.addComponent(eidos);
 		eidos.setWidth("100%");
-		
-	    optionslayout.addComponent(ncpicker);
+
+		optionslayout.addComponent(ncpicker);
 		ncpicker.setWidth("100%");
-		
+
 		optionslayout.addComponent(cpicker);
 		cpicker.setWidth("100%");
-		
+
 		optionslayout.addComponent(cfpicker);
 		cfpicker.setWidth("100%");
 
-		Label title = new Label("XOSM2: XQuery-based Query Language for OpenStreetMap. Version 2. University of Almería. 2020.<br>"
-				+ "Jesús M. Almendros-Jiménez, Antonio Becerra-Terón and Manuel Torres.<br>",
+		Label title = new Label(
+				"XOSM2: XQuery-based Query Language for OpenStreetMap. Version 2. University of Almería. 2020.<br>"
+						+ "Jesús M. Almendros-Jiménez, Antonio Becerra-Terón and Manuel Torres.<br>",
 				ContentMode.HTML);
 		title.setWidth("100%");
 		title.setStyleName(ValoTheme.LABEL_COLORED);
-		
+
 		optionslayout.addComponent(title);
-		
-		
+
 		VerticalSplitPanel split = new VerticalSplitPanel();
 		split.setHeight("100%");
 		split.setWidth("100%");
 		split.setSplitPosition(50);
 		split.setFirstComponent(editor);
 		split.setSecondComponent(optionslayout);
-		 
+
 		addComponent(split);
 		setSizeUndefined();
 	}
 
-	
-	public void run_query()
-	{
-		
+	public void run_query() {
+
 		if (layer.getValue() == "") {
 			layer.setValue("default");
 		}
-		if (main.nodes.containsKey(layer.getValue()) 
-				|| main.way.containsKey(layer.getValue())
-				|| main.twinfop.containsKey(layer.getValue())
-				|| main.twinfow.containsKey(layer.getValue())
-				|| main.twp.containsKey(layer.getValue())
-				|| main.tww.containsKey(layer.getValue())) {
-			Notification("Warning","Layer name already exists. Please clear the map area.");
+		if (main.nodes.containsKey(layer.getValue()) || main.way.containsKey(layer.getValue())
+				|| main.twinfop.containsKey(layer.getValue()) || main.twinfow.containsKey(layer.getValue())
+				|| main.twp.containsKey(layer.getValue()) || main.tww.containsKey(layer.getValue())) {
+			Notification("Warning", "Layer name already exists. Please clear the map area.");
 		} else {
-			//save_layer.setEnabled(true);
+			// save_layer.setEnabled(true);
 			if (main.map.getZoomLevel() < 0) {
-				Notification("Warning","Please take an smaller area");
+				Notification("Warning", "Please take an smaller area");
 			} else {
 				main.nelat = main.map.getBounds().getNorthEastLat();
 				main.nelon = main.map.getBounds().getNorthEastLon();
 				main.swlat = main.map.getBounds().getSouthWestLat();
 				main.swlon = main.map.getBounds().getSouthWestLon();
-				
+
 				address = main.api(main.swlon, main.swlat, main.nelon, main.nelat, editor.getValue());
 				DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 
@@ -331,114 +321,105 @@ public class Query extends VerticalLayout {
 
 					NodeList youtube = (NodeList) xPath.compile("/social/youtube").evaluate(xmlDocument,
 							XPathConstants.NODESET);
-					
-					NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument,
-							XPathConstants.NODESET);
-					
+
+					NodeList social = (NodeList) xPath.compile("/social").evaluate(xmlDocument, XPathConstants.NODESET);
+
 					if (twitter.getLength() > 0) {
 						socialquery = true;
 						Draw d = new Draw();
 						main.Draw_xml_twitter(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-						NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node")
-								.evaluate(xmlDocument, XPathConstants.NODESET);
-						main.map.setCenter(
-								Double.parseDouble(
-										center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
-								Double.parseDouble(
-										center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-						Notification("Successful Execution","Click on items to see information");
-					   } 
-					
-					else {
-					if (youtube.getLength() > 0) {
-						socialquery = true;
-						Draw d = new Draw();
-						main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-						NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
-								.evaluate(xmlDocument, XPathConstants.NODESET);
-						main.map.setCenter(
-								Double.parseDouble(
-										center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
-								Double.parseDouble(
-										center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-					
-						Notification("Successful Execution","Click on items to see information");
-					   } 
-					
-					    else {
-					    	
-					    if (social.getLength()>0)	{Notification("Successful Execution","The result of the query is empty");}
-					    else {
-						NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
+						NodeList center = (NodeList) xPath.compile("/social/twitter/oneway/node").evaluate(xmlDocument,
 								XPathConstants.NODESET);
+						main.map.setCenter(
+								Double.parseDouble(center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+								Double.parseDouble(center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+						Notification("Successful Execution", "Click on items to see information");
+					}
 
-						if (no_osm.getLength() == 0) // OSM Result
-						{
-							Notification("Successful Execution","Click on items to see information");
-							socialquery = false;
+					else {
+						if (youtube.getLength() > 0) {
+							socialquery = true;
 							Draw d = new Draw();
-							main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
-							NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
-									XPathConstants.NODESET);
+							main.Draw_xml_youtube(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+							NodeList center = (NodeList) xPath.compile("/social/youtube/oneway/node")
+									.evaluate(xmlDocument, XPathConstants.NODESET);
 							main.map.setCenter(
 									Double.parseDouble(
 											center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
 									Double.parseDouble(
 											center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
-							 
-						} else // Text message
-						{
-							socialquery = true;
-							NodeList text = (NodeList) xPath.compile("/osm/text/text()").evaluate(xmlDocument,
-									XPathConstants.NODESET);
-							if (text.getLength() > 0) {
-								if (text.item(0).getNodeValue().equals("No Result")) // Empty Result
+
+							Notification("Successful Execution", "Click on items to see information");
+						}
+
+						else {
+
+							if (social.getLength() > 0) {
+								Notification("Successful Execution", "The result of the query is empty");
+							} else {
+								NodeList no_osm = (NodeList) xPath.compile("/osm/text").evaluate(xmlDocument,
+										XPathConstants.NODESET);
+
+								if (no_osm.getLength() == 0) // OSM Result
 								{
-									Notification("Successful Execution","The result of the query is empty");
-								} else // Numeric Result
+									Notification("Successful Execution", "Click on items to see information");
+									socialquery = false;
+									Draw d = new Draw();
+									main.Draw_xml(d, xPath, main.map, xmlDocument, nccolor, ccolor, cfill, icon);
+									NodeList center = (NodeList) xPath.compile("/osm/node").evaluate(xmlDocument,
+											XPathConstants.NODESET);
+									main.map.setCenter(
+											Double.parseDouble(
+													center.item(0).getAttributes().getNamedItem("lat").getNodeValue()),
+											Double.parseDouble(
+													center.item(0).getAttributes().getNamedItem("lon").getNodeValue()));
+
+								} else // Text message
 								{
-									Notification
-											("Successful Execution", "The result of the query is " + text.item(0).getNodeValue());
+									socialquery = true;
+									NodeList text = (NodeList) xPath.compile("/osm/text/text()").evaluate(xmlDocument,
+											XPathConstants.NODESET);
+									if (text.getLength() > 0) {
+										if (text.item(0).getNodeValue().equals("No Result")) // Empty Result
+										{
+											Notification("Successful Execution", "The result of the query is empty");
+										} else // Numeric Result
+										{
+											Notification("Successful Execution",
+													"The result of the query is " + text.item(0).getNodeValue());
+										}
+									} else // Error Message
+									{
+										socialquery = true;
+										NodeList errorType = (NodeList) xPath.compile("/osm/errorType/text()")
+												.evaluate(xmlDocument, XPathConstants.NODESET);
+										NodeList errorDescription = (NodeList) xPath
+												.compile("/osm/errorDescription/text()")
+												.evaluate(xmlDocument, XPathConstants.NODESET);
+										Notification("Error of Execution", errorType.item(0).getNodeValue() + " : "
+												+ errorDescription.item(0).getNodeValue());
+									}
 								}
-							} else // Error Message
-							{
-								socialquery = true;
-								NodeList errorType = (NodeList) xPath.compile("/osm/errorType/text()")
-										.evaluate(xmlDocument, XPathConstants.NODESET);
-								NodeList errorDescription = (NodeList) xPath
-										.compile("/osm/errorDescription/text()")
-										.evaluate(xmlDocument, XPathConstants.NODESET);
-								Notification("Error of Execution", errorType.item(0).getNodeValue() + " : "
-										+ errorDescription.item(0).getNodeValue());
 							}
 						}
 					}
-					}
-					}
 				} catch (SAXException | IOException e) {
-					Notification("Error","The result of the query is non valid: " + address);
+					Notification("Error", "The result of the query is non valid: " + address);
 				} catch (XPathExpressionException e) {
-					Notification("Error","The result of the query is non valid");
+					Notification("Error", "The result of the query is non valid");
 					e.printStackTrace();
 				}
 			}
 		}
-	
-		
-		
-		
-		
+
 	};
-	
+
 	public void setQuery(String query) {
 		editor.setValue(query);
 	}
-	
-	 
+
 	void Notification(String Topic, String Message) {
-		Notification notif = new Notification(
-			    Topic,
-			    Message,Notification.Type.ERROR_MESSAGE);
+		Notification notif = new Notification(Topic, Message, Notification.Type.ERROR_MESSAGE);
 		notif.setDelayMsec(10000);
 		notif.setPosition(Position.MIDDLE_CENTER);
 		notif.show(Page.getCurrent());

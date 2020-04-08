@@ -38,11 +38,10 @@ public class Twitter extends Window {
 		if (Tweets == null) {
 		} else {
 			for (int i = 0; i < Tweets.getLength(); i++) {
-				
-				
+
 				if (Tweets.item(i).hasChildNodes()) {
-					 
-					Item_Twitter t = new Item_Twitter(Tweets.item(i),"tweets");
+
+					Item_Twitter t = new Item_Twitter(Tweets.item(i), "tweets");
 					t.setHeightUndefined();
 					t.setWidthUndefined();
 					t.setSpacing(false);
@@ -54,6 +53,7 @@ public class Twitter extends Window {
 		setContent(vl);
 		center();
 	}
+
 	public void showInfoTwitterUsers(NodeList Tweets) {
 		VerticalLayout vl = new VerticalLayout();
 		vl.setStyleName("twitter");
@@ -80,11 +80,10 @@ public class Twitter extends Window {
 		if (Tweets == null) {
 		} else {
 			for (int i = 0; i < Tweets.getLength(); i++) {
-				
-				
+
 				if (Tweets.item(i).hasChildNodes()) {
-					 
-					Item_Twitter t = new Item_Twitter(Tweets.item(i),"users");
+
+					Item_Twitter t = new Item_Twitter(Tweets.item(i), "users");
 					t.setHeightUndefined();
 					t.setWidthUndefined();
 					t.setSpacing(false);
