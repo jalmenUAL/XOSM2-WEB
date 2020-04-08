@@ -65,8 +65,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
-//AYUDA
-//CORTAR EJEMPLOS
+ 
 
 
 @Theme("mytheme")
@@ -75,7 +74,7 @@ public class XOSM2 extends UI  {
 	String type ="";
 	String type2 = "";
 	HorizontalSplitPanel accordion = new HorizontalSplitPanel();
-	HorizontalSplitPanel accordion2 = new HorizontalSplitPanel();
+	HorizontalLayout accordion_right = new HorizontalLayout();
 	Twitter popup = new Twitter();
 	Youtube popup2 = new Youtube();
 	 
@@ -84,99 +83,154 @@ public class XOSM2 extends UI  {
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
 	XOSM2 this_ = this;
 	String osm_team = "<h1 style=\"color:DodgerBlue;\">Aim of the Project</h1>"
-			+ "<p>Volunteered geographic information (VGI) makes available a very large resource of geographic data.</p>"
-			+ "<p>The exploitation of data coming from such resources requires an additional effort in the form of tools</p>"
-			+ "<p>and effective processing techniques. One of the most established VGI is OpenStreetMap (OSM)</p>"
-			+ "<p>offering data of urban and rural maps from the earth. XOSM (XQuery for OpenStreetMap),</p>"
-			+ "<p>is a tool for the processing of geospatial queries on OSM. The tool is equipped with a</p>"
-			+ "<p>rich query language based on a set of operators defined for OSM which have been implemented</p>"
-			+ "<p>as a library of the XML query language XQuery. The library provides a rich repertoire of</p>"
-			+ "<p>spatial, keyword and aggregation based functions, which act on the XML representation of</p>"
-			+ "<p>an OSM layer. The use of the higher order facilities of XQuery makes possible the</p>"
-			+ "<p>definition of complex geospatial queries involving spatial relations, keyword searching</p>"
-			+ "<p>and aggregation functions. XOSM indexes OSM data enabling efficient retrieval of answers.</p>"
-			+ "<p>The XOSM library also enables the definition of queries combining OSM layers and layers</p>"
-			+ "<p>created from Linked Open Data resources (KML, GeoJSON, JSON, CSV and RDF)</p>"
-			+ "<p>and Social Networks.The tool also provides an API to execute XQuery queries using the library.</p>"
+			+ "<p>XOSM is a Web tool and Query Language for OpenStreetMap.</p>"
+			+ "<p>Using XQuery as language for queries definition</p>"
+			+ "<p>and PostGis as data storing and indexing,</p>"
+			+ "<p>XOMS is able to handle a wide style of queries:</p>"
+			+ "<p>From layer retrieval using distance and key-value pairs</p>"
+			+ "<p>to more complex queries</p>"
+			+ "<p>involving spatial and aggregation operators.</p>"
+			+ "<p>XOSM also makes possible to query Linked Open Data</p>"
+			+ "<p>and Social Networks.</p>"
+			+ "<p>XOSM is also equipped with an API Rest.</p>"
+			+ "<p>XOSM is specially suitable for querying urban maps</p>"
+			+ "<p>enabling the retrieval of POIs and streets</p>"
+			+ "<p>providing rich information extracted from</p>"
+			+ "<p>OpenStreetMap, Linked Open Data and Social Networks.</p>"
+			+ "<p>Publications about XOSM can be found in</p>"
+			+ "<a href=\"http://indalog.ual.es/WWW_pages/JesusAlmendros/Publications.html\">this link</a>"
 			+ "<p style=\"color:Red;\">XOSM Team</p>"
 			+ "<p style=\"color:Blue;\">Jesús Manuel Almendros-Jimenez jalmen@ual.es</p>"
 			+ "<p style=\"color:Blue;\">Antonio Becerra-Terón abecerra@ual.es</p>"
 			+ "<p style=\"color:Blue;\">Manuel Torres mtorres@ual.es</p>"
-			+ "<p style=\"color:Green;\">Departamento de Informatica (University of Almería)</p>"
+			+ "<p style=\"color:Green;\">Department of Informatics (University of Almería)</p>"
 			+ "<p style=\"color:Green;\">04120 Almería (Spain)</p>";
 
 	Info_Tool info_team = new Info_Tool(osm_team);
-	String indexing = "PostGIS-indexed functions for elements retrieval\n" + "xosm_pbd:getLayerByBB(.):layer\n"
-			+ "xosm_pbd:getLayerByName(.,name,distance):layer\n" + "xosm_pbd:getElementsByKeyword(.,keyword):layer\n"
-			+ "xosm_pbd:getLayerByElement(.,element,distance):layer\n" + "xosm_pbd:getElementByName(.,name):layer\n";
+	String indexing = "PostGIS-indexed functions for layer retrieval\n" 
+			+ "xosm_pbd:getLayerByBB(.):layer\n"
+			+ "xosm_pbd:getLayerByName(.,name,distance):layer\n" 
+			+ "xosm_pbd:getElementsByKeyword(.,keyword):layer\n"
+			+ "xosm_pbd:getLayerByElement(.,element,distance):layer\n" 
+			+ "xosm_pbd:getElementByName(.,name):layer\n";
 
-	String data = "OSM element creation\n" + "xosm_item:point(name,lat,lon,tags):node\n"
-			+ "xosm_item:way(name,segments):way\n" + "xosm_item:segment(id,refs,tags):segment\n"
-			+ "xosm_item:ref(id,lon,lat):nd\n" + "xosm_item:tag(k,v):tag\n\n" + "OSM element manipulation\n"
-			+ "element[@type=\"point\"]:Boolean\n" + "element[@type=\"way\"]:Boolean\n"
-			+ "element[@type=\"polygon\"]:Boolean\n" + "xosm_item:lon(node):Double\n" + "xosm_item:lat(node):Double\n"
-			+ "xosm_item:name(way):String\n" + "xosm_item:refs(way):Sequence of nd\n"
-			+ "xosm_item:tags(element): Sequence of tag\n" + "xosm_item:segments(way): Sequence of segment\n"
-			+ "xosm_item:id(element): String\n" + "xosm_item:length(element): Double\n"
-			+ "xosm_item:area(element): Double\n" + "xosm_item:distance(element,element): Double\n";
+	String data = "OSM element creation\n" 
+			+ "xosm_item:point(name,lat,lon,tags):node\n"
+			+ "xosm_item:way(name,segments):way\n" 
+			+ "xosm_item:segment(id,refs,tags):segment\n"
+			+ "xosm_item:ref(id,lon,lat):nd\n" 
+			+ "xosm_item:tag(k,v):tag\n\n" 
+			+ "OSM element manipulation\n"
+			+ "element[@type=\"point\"]:Boolean\n" 
+			+ "element[@type=\"way\"]:Boolean\n"
+			+ "element[@type=\"polygon\"]:Boolean\n" 
+			+ "xosm_item:lon(node):Double\n" 
+			+ "xosm_item:lat(node):Double\n"
+			+ "xosm_item:name(way):String\n" 
+			+ "xosm_item:refs(way):Sequence of nd\n"
+			+ "xosm_item:tags(element): Sequence of tag\n" 
+			+ "xosm_item:segments(way): Sequence of segment\n"
+			+ "xosm_item:id(element): String\n" 
+			+ "xosm_item:length(element): Double\n"
+			+ "xosm_item:area(element): Double\n" 
+			+ "xosm_item:distance(element,element): Double\n";
 
-	String spatial = "Coordinate based OSM Operators\n\n" + "Based on Distance\n"
+	String spatial = "Coordinate based OSM Operators\n\n" 
+			+ "Based on Distance\n"
 			+ "xosm_sp:DWithIn(element1,element2,d):Boolean\n\n"
 			+ "Based on Latitude and Longitude (p1,p2: node, w1,w2: way)\n"
-			+ "xosm_sp:furtherNorthPoints(p1,p2):Boolean,\n" + "xosm_sp:furtherSouthPoints(p1,p2):Boolean,\n"
-			+ "xosm_sp:furtherEastPoints(p1,p2):Boolean,\n" + "xosm_sp:furtherWestPoints(p1,p2):Boolean,\n"
-			+ "xosm_sp:furtherNorthWays(w1,w2):Boolean,\n" + "xosm_sp:furtherSouthWays(w1,w2):Boolean,\n"
-			+ "xosm_sp:furtherEastWays(w1,w2):Boolean,\n" + "xosm_sp:furtherWestWays(w1,w2):Boolean\n" + "\n"
-			+ "Clementini based OSM Operators\n" + "xosm_sp:intersectionPoints(w1,w2):layer,\n"
-			+ "xosm_sp:crossing(element1,element2):Boolean,\n" + "xosm_sp:nonCrossing(element1,element2):Boolean,\n"
-			+ "xosm_sp:touching(element1,element2):Boolean,\n" + "xosm_sp:nonTouching(element1,element2):Boolean,\n"
+			+ "xosm_sp:furtherNorthPoints(p1,p2):Boolean,\n" 
+			+ "xosm_sp:furtherSouthPoints(p1,p2):Boolean,\n"
+			+ "xosm_sp:furtherEastPoints(p1,p2):Boolean,\n" 
+			+ "xosm_sp:furtherWestPoints(p1,p2):Boolean,\n"
+			+ "xosm_sp:furtherNorthWays(w1,w2):Boolean,\n" 
+			+ "xosm_sp:furtherSouthWays(w1,w2):Boolean,\n"
+			+ "xosm_sp:furtherEastWays(w1,w2):Boolean,\n" 
+			+ "xosm_sp:furtherWestWays(w1,w2):Boolean\n" + "\n"
+			+ "Clementini based OSM Operators\n" 
+			+ "xosm_sp:intersectionPoints(w1,w2):layer,\n"
+			+ "xosm_sp:crossing(element1,element2):Boolean,\n" 
+			+ "xosm_sp:nonCrossing(element1,element2):Boolean,\n"
+			+ "xosm_sp:touching(element1,element2):Boolean,\n" 
+			+ "xosm_sp:nonTouching(element1,element2):Boolean,\n"
 			+ "xosm_sp:intersecting(element1,element2):Boolean,\n"
 			+ "xosm_sp:nonIntersecting(element1,element2):Boolean,\n"
-			+ "xosm_sp:containing(element1,element2):Boolean,\n" + "xosm_sp:nonContaining(element1,element2):Boolean,\n"
-			+ "xosm_sp:within(element1,element2):Boolean,\n" + "xosm_sp:nonWithin(element1,element2):Boolean,\n"
+			+ "xosm_sp:containing(element1,element2):Boolean,\n" 
+			+ "xosm_sp:nonContaining(element1,element2):Boolean,\n"
+			+ "xosm_sp:within(element1,element2):Boolean,\n" 
+			+ "xosm_sp:nonWithin(element1,element2):Boolean,\n"
 			+ "xosm_sp:overlapping(element1,element2): Boolean,\n"
-			+ "xosm_sp:nonOverlapping(element1,element2):Boolean,\n" + "xosm_sp:disjoint(element1,element2):Boolean,\n"
+			+ "xosm_sp:nonOverlapping(element1,element2):Boolean,\n" 
+			+ "xosm_sp:disjoint(element1,element2):Boolean,\n"
 			+ "xosm_sp:nonDisjoint(element1,element2):Boolean\n";
 
-	String keyword = "Keyword Operators (element: node/way)\n" + "xosm_kw:searchKeyword(element,keyword):Boolean\r\n"
+	String keyword = "Keyword Operators (element: node/way)\n" 
+			+ "xosm_kw:searchKeyword(element,keyword):Boolean\r\n"
 			+ "xosm_kw:searchKeywordSet(element,(keyword1,...., keywordn)):Boolean\r\n"
-			+ "xosm_kw:searchTag(element,k,v):Boolean\r\n" + "xosm_kw:getTagValue(element,k):Boolean\r\n";
+			+ "xosm_kw:searchTag(element,k,v):Boolean\r\n" 
+			+ "xosm_kw:getTagValue(element,k):Boolean\r\n";
 
-	String aggregation = "Distributive Operators\r\n"
+	String aggregation = "Aggregation Operators\r\n"
 			+ "xosm_ag:topologicalCount(layer,element,topologicalRelation):Integer\r\n"
-			+ "xosm_ag:metricMin(layer,metricOperator):layer\r\n" + "xosm_ag:metricMax(layer,metricOperator):layer\r\n"
-			+ "xosm_ag:min(layer,metricOperator):Double\r\n" + "xosm_ag:max(layer,metricOperator):Double\r\n"
-			+ "xosm_ag:metricSum(layer,metricOperator):Double\r\n" + "Algebraic Operators\r\n"
+			+ "xosm_ag:metricMin(layer,metricOperator):layer\r\n" 
+			+ "xosm_ag:metricMax(layer,metricOperator):layer\r\n"
+			+ "xosm_ag:min(layer,metricOperator):Double\r\n" 
+			+ "xosm_ag:max(layer,metricOperator):Double\r\n"
+			+ "xosm_ag:metricSum(layer,metricOperator):Double\r\n" 
 			+ "xosm_ag:metricAvg(layer,metricOperator):Double\r\n"
 			+ "xosm_ag:metricTopCount(layer,metricOperator,k):layer\r\n"
-			+ "xosm_ag:metricBottomCount(layer,metricOperator,k):layer\r\n" + "Holistic Operators\r\n"
+			+ "xosm_ag:metricBottomCount(layer,metricOperator,k):layer\r\n" 
 			+ "xosm_ag:metricRank(layer,metricOperator,k):element\r\n"
 			+ "xosm_ag:metricMedian(layer,metricOperator):Double\r\n"
 			+ "xosm_ag:metricMode(layer,metricOperator):Double\r\n"
 			+ "xosm_ag:metricRange(layer,metricOperator):Double\r\n";
 
 	String lod = "JSON, GEOJSON, CSV, KML and WIKIPEDIA operators\n"
-			+ "xosm_open:json2osm(url,path,name,id,lat,lon):layer\r\n" + "xosm_open:geojson2osm(url,name):layer\r\n"
-			+ "xosm_open:csv2osm(url,name,lon,lat):layer\r\n" + "xosm_open:kml2osm(url,name):layer\r\n"
-			+ "xosm_open:wikipediaElement2osm(node):layer\r\n" + "xosm_open:wikipediaCoordinates2osm(lon,lat):layer\r\n"
+			+ "xosm_open:json2osm(url,path,name,id,lat,lon):layer\r\n" 
+			+ "xosm_open:geojson2osm(url,name):layer\r\n"
+			+ "xosm_open:csv2osm(url,name,lon,lat):layer\r\n" 
+			+ "xosm_open:kml2osm(url,name):layer\r\n"
+			+ "xosm_open:wikipediaElement2osm(node):layer\r\n" 
+			+ "xosm_open:wikipediaCoordinates2osm(lon,lat):layer\r\n"
 			+ "xosm_open:wikipediaName2osm(address):layer\r\n";
+	
+	String social = "Social Network operators\n"
+			+ "xosm_social:city(elements)\r\n"  
+			+ "xosm_social:api(apiCall,required,optional)\r\n" 
+			+ "xosm_social:twitterSearchTweets(element,twitterResults)\r\n" 
+			+ "xosm_social:twitterSearchUser(element,twitterResults)\r\n" 
+			+ "xosm_social:twitterUserTimeLine(element,twitterResults)\r\n" 
+			+ "xosm_social:twitterShowUser(element,twitterResults)\r\n" 
+			+ "xosm_social:youtubeChannelSearch(element,youtubeResults)\r\n" 
+			+ "xosm_social:youtubePlaylistSearch(element,youtubeResults)\r\n"
+			+ "xosm_social:youtubeVideoSearch(element,youtubeResults)\r\n"
+			+ "xosm_social:youtubeChannelInfo(element,youtubeResults)\r\n" 
+			+ "xosm_social:youtubePlaylistInfo(element,youtubeResults)\r\n" 
+			+ "xosm_social:youtubePlaylistItems(element,youtubeResults)\r\n" 
+			+ "xosm_social:youtubeVideoInfo(element,youtubeResults)\r\n" 
+			+ "xosm_social:youtubeVideoComments(element,youtubeResults)";
 
-	String api =
-			"GetLayerByName\r\n" + "http://xosm.ual.es/xosmapi/getLayerByName/minLon/{minLon}/minLat/{minLat}\n"
-					+ "/maxLon/{maxLon}/maxLat/{maxLat}/name/{name}/distance/{distance}\r\n" + "GetLayerByElement\r\n"
+	String api =    "API Rest\n"
+					+ "GetLayerByName\r\n" 
+					+ "http://xosm.ual.es/xosmapi/getLayerByName/minLon/{minLon}/minLat/{minLat}\n"
+					+ "/maxLon/{maxLon}/maxLat/{maxLat}/name/{name}/distance/{distance}\r\n" 
+					+ "GetLayerByElement\r\n"
 					+ "http://xosm.ual.es/xosmapi/getLayerByElement/minLon/{minLon}/minLat/{minLat}\n"
 					+ "/maxLon/{maxLon}/maxLat/{maxLat}/lon/{lon}/lat/{lat}/distance/{distance}\r\n"
 					+ "GetElementByName\r\n"
 					+ "http://xosm.ual.es/xosmapi/getElementByName/minLon/{minLon}/minLat/{minLat}\n"
-					+ "/maxLon/{maxLon}/maxLat/{maxLat}/name/{name}\r\n" + "GetElementsByKeyword\r\n"
+					+ "/maxLon/{maxLon}/maxLat/{maxLat}/name/{name}\r\n" 
+					+ "GetElementsByKeyword\r\n"
 					+ "http://xosm.ual.es/xosmapi/getElementsByKeyword/minLon/{minLon}/minLat/{minLat}\n"
-					+ "/maxLon/{maxLon}/maxLat/{maxLat}/keyword/{keyword}\r\n" + "GetLayerByBB\r\n"
+					+ "/maxLon/{maxLon}/maxLat/{maxLat}/keyword/{keyword}\r\n" 
+					+ "GetLayerByBB\r\n"
 					+ "http://xosm.ual.es/xosmapi/getLayerByBB/minLon/{minLon}/minLat/{minLat}\n"
-					+ "/maxLon/{maxLon}/maxLat/{maxLat}\r\n" + "Query\r\n"
+					+ "/maxLon/{maxLon}/maxLat/{maxLat}\r\n" 
+					+ "Query\r\n"
 					+ "http://xosm.ual.es/xosmapi/XOSMQuery/minLon/{minLon}/minLat/{minLat}\n"
 					+ "/maxLon/{maxLon}/maxLat/{maxLat}?query={query}\r\n";
 
-	Help_Tool info_tool = new Help_Tool(indexing, data, spatial, keyword, aggregation, lod, api);
+	Help_Tool info_tool = new Help_Tool(indexing, data, spatial, keyword, aggregation, lod, social, api);
 
 	LMap map = new LMap();
 	Map<String, NodeList> nodes = new HashMap<String, NodeList>();
@@ -686,8 +740,7 @@ public class XOSM2 extends UI  {
 				"return\r\n"
 				+ "xosm_social:api(\r\n"
 				+ "\"http://minerva.ual.es:8080/api.social/twitterSearchTweets\",\r\n" + 
-				"map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + 
-				")\r\n" + 
+				"map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/*)\r\n" + 
 				"return\r\n"
 				+ "xosm_social:twitterSearchTweets($hotel,$tweets)\r\n"+
 				"}</social>";
@@ -865,8 +918,7 @@ public class XOSM2 extends UI  {
 				"return\r\n"
 				+ "xosm_social:api(\r\n"
 				+ "\"http://minerva.ual.es:8080/api.social/youtubeVideoInfo\",\r\n"
-				+ "map { 'id' : $videoId},map { })/json/items/_\r\n" + 
-				")\r\n" + 
+				+ "map { 'id' : $videoId},map { })/json/items/_)\r\n" + 
 				"return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n"+
 				"} </social>";
 		
@@ -1942,7 +1994,8 @@ public class XOSM2 extends UI  {
 		restart.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				accordion2.setSplitPosition(100);
+				//accordion_right.setSplitPosition(100);
+				in.setVisible(false);
 				accordion.setSplitPosition(40);
 				nodes.clear();
 				way.clear();
@@ -1961,7 +2014,8 @@ public class XOSM2 extends UI  {
 		MenuBar.Command chelp = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_tool);
-				accordion2.setSplitPosition(100);
+				//accordion_right.setSplitPosition(100);
+				in.setVisible(false);
 				accordion.setSplitPosition(40);
 				info_tool.setWidth("40%");
 				addWindow(info_tool);
@@ -1972,7 +2026,8 @@ public class XOSM2 extends UI  {
 		MenuBar.Command cinfo = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_team);
-				accordion2.setSplitPosition(100);
+				//accordion_right.setSplitPosition(100);
+				in.setVisible(false);
 				accordion.setSplitPosition(40);
 				info_team.setSizeUndefined();
 				addWindow(info_team);
@@ -2001,15 +2056,18 @@ public class XOSM2 extends UI  {
 		vl.setMargin(false);
 		q.setSizeFull();
 		q.setStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-		accordion2.setSizeFull();
-		accordion2.setSplitPosition(100);
-		accordion2.setFirstComponent(vl);
 		in.setWidth("100%");
-		accordion2.setSecondComponent(in);
+		accordion_right.setSizeFull();
+		//accordion_right.setSplitPosition(100);
+		accordion_right.addComponent(vl);
+		accordion_right.addComponent(in);
+		accordion_right.setExpandRatio(vl,0.7f);
+		accordion_right.setExpandRatio(in,0.3f);
+		in.setVisible(false);
 		accordion.setSizeFull();
 		accordion.setSplitPosition(40);
 		accordion.setFirstComponent(q);
-		accordion.setSecondComponent(accordion2);
+		accordion.setSecondComponent(accordion_right);
 	   	setContent(accordion);
 		setStyleName("layout-with-border3");
 	}
@@ -2071,7 +2129,8 @@ public class XOSM2 extends UI  {
 							@Override
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(nodes.get(q.layer.getValue()).item(j));
-								accordion2.setSplitPosition(65);
+								//accordion_right.setSplitPosition(65);
+								in.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -2143,7 +2202,8 @@ public class XOSM2 extends UI  {
 							@Override
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(way.get(q.layer.getValue()).item(j));
-								accordion2.setSplitPosition(65);
+								//accordion_right.setSplitPosition(65);
+								in.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -2155,7 +2215,8 @@ public class XOSM2 extends UI  {
 							@Override
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(way.get(q.layer.getValue()).item(j));
-								accordion2.setSplitPosition(65);
+								//accordion_right.setSplitPosition(65);
+								in.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -2290,7 +2351,8 @@ public class XOSM2 extends UI  {
 									else
 									if (type2=="playlists") {in.setInfoYoutubePlayLists(twinfop.get(q.layer.getValue()).get(s));}
 									else {in.setInfoYoutubeChannels(twinfop.get(q.layer.getValue()).get(s));}
-									accordion2.setSplitPosition(65);
+									//accordion_right.setSplitPosition(65);
+									in.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2424,7 +2486,8 @@ public class XOSM2 extends UI  {
 									if (type2=="videos") {in.setInfoYoutubeVideos(twinfow.get(q.layer.getValue()).get(r));}
 									else if (type2=="playlists") {in.setInfoYoutubePlayLists(twinfow.get(q.layer.getValue()).get(r));}
 									else {in.setInfoYoutubeChannels(twinfow.get(q.layer.getValue()).get(r));}
-									accordion2.setSplitPosition(65);
+									//accordion_right.setSplitPosition(65);
+									in.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2606,7 +2669,8 @@ public class XOSM2 extends UI  {
 									in.setInfo(twp.get(q.layer.getValue()).get(j));
 									if (type=="tweets") {in.setInfoTwitterTweets(twinfop.get(q.layer.getValue()).get(s));}
 									else {in.setInfoTwitterUsers(twinfop.get(q.layer.getValue()).get(s));}
-									accordion2.setSplitPosition(65);
+									//accordion_right.setSplitPosition(65);
+									in.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2723,7 +2787,8 @@ public class XOSM2 extends UI  {
 									in.setInfo(tww.get(q.layer.getValue()).get(r));
 									if (type=="tweets") {in.setInfoTwitterTweets(twinfow.get(q.layer.getValue()).get(r));}
 									else {in.setInfoTwitterUsers(twinfow.get(q.layer.getValue()).get(r));}
-									accordion2.setSplitPosition(65);
+									//accordion_right.setSplitPosition(65);
+									in.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});

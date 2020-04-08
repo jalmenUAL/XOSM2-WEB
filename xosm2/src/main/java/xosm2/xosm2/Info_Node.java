@@ -44,7 +44,8 @@ public class Info_Node extends VerticalLayout {
 		b.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				main.accordion2.setSplitPosition(100);
+				//main.accordion2.setSplitPosition(100);
+				main.in.setVisible(false);
 				main.accordion.setSplitPosition(35);
 				t.setEnabled(false);
 				_main.removeWindow(_main.popup);
