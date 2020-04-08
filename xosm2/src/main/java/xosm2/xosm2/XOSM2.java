@@ -61,8 +61,10 @@ import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("mytheme")
@@ -77,6 +79,7 @@ public class XOSM2 extends UI {
 
 	Query q = null;
 	Info_Node in = new Info_Node(this);
+Panel vinfo = new Panel();
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
 	XOSM2 this_ = this;
 	String osm_team = "<h1 style=\"color:DodgerRed;\">XOSM</h1>"
@@ -181,20 +184,20 @@ public class XOSM2 extends UI {
 					+ "http://xosm.ual.es/xosmapi/XOSMQuery/minLon/{minLon}/minLat/{minLat}\n"
 					+ "/maxLon/{maxLon}/maxLat/{maxLat}?query={query}\r\n";
 
-	String apisocial = "http://xosm.ual.es/api.social/youtubeChannelSearch/q/{q}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubePlaylistSearch/q/{q}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubeVideoSearch/q/{q}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubeChannelInfo/id/{id}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubePlaylistInfo/id/{id}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubePlaylistItems/playlistId/{playlistId}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubeVideoInfo/id/{id}\r\n"
-			+ "http://xosm.ual.es/api.social/youtubeVideoComments/videoId/videoId/{videoId}\r\n"
-			+ "http://xosm.ual.es/api.social/twitterSearchTweets/q/{q]\r\n"
-			+ "http://xosm.ual.es/api.social/twitterClosetTrends/lat/{lat}/long/{long}\r\n"
-			+ "http://xosm.ual.es/api.social/twitterSearchTrends/id/{id}\r\n"
-			+ "http://xosm.ual.es/api.social/twitterUserTimeLine/screen_name/{screen_name}\r\n"
-			+ "http://xosm.ual.es/api.social/twitterSearchUser/city/{city}/q/{q}\r\n"
-			+ "http://xosm.ual.es/api.social/twitterShowUser/screen_name/{screen_name}\r\n" + "";
+	String apisocial = "http://xosm.ual.es/social.api/youtubeChannelSearch/q/{q}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubePlaylistSearch/q/{q}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubeVideoSearch/q/{q}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubeChannelInfo/id/{id}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubePlaylistInfo/id/{id}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubePlaylistItems/playlistId/{playlistId}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubeVideoInfo/id/{id}\r\n"
+			+ "http://xosm.ual.es/social.api/youtubeVideoComments/videoId/videoId/{videoId}\r\n"
+			+ "http://xosm.ual.es/social.api/twitterSearchTweets/q/{q]\r\n"
+			+ "http://xosm.ual.es/social.api/twitterClosetTrends/lat/{lat}/long/{long}\r\n"
+			+ "http://xosm.ual.es/social.api/twitterSearchTrends/id/{id}\r\n"
+			+ "http://xosm.ual.es/social.api/twitterUserTimeLine/screen_name/{screen_name}\r\n"
+			+ "http://xosm.ual.es/social.api/twitterSearchUser/city/{city}/q/{q}\r\n"
+			+ "http://xosm.ual.es/social.api/twitterShowUser/screen_name/{screen_name}\r\n" + "";
 
 	Help_Tool info_tool = new Help_Tool(indexing, data, spatial, keyword, aggregation, lod, social, api, apisocial);
 
@@ -430,14 +433,14 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
 				+ "let $tweets :=\r\n" + "xosm_social:api\r\n"
-				+ "(\"http://xosm.ual.es/api.social/twitterSearchTweets\", \r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
 				+ "map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + "}</social>";
 
 		String q11 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $q := replace($q,\" \", \"\")\r\n" + "let $tweets :=\r\n" + "xosm_social:api\r\n"
-				+ "(\"http://xosm.ual.es/api.social/twitterSearchTweets\",\r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
 				+ "map { 'q' : $q}, map { 'count' : 10,'option' : 'hashtag' })/json/*\r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
@@ -449,7 +452,7 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Hostal\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $users :=\r\n" + "xosm_social:api\r\n"
-				+ "(\"http://xosm.ual.es/api.social/twitterSearchUser\",\r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n"
 				+ "map { 'q' : $q,  'city' : $city },map { 'count' : 10 })/json/*\r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchUser($hotel,$users)\r\n" + "}</social>";
 
@@ -457,14 +460,14 @@ public class XOSM2 extends UI {
 				+ "let $q := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $lon := data($museum/node[1]/@lon)\r\n" + "let $lat := data($museum/node[1]/@lat)\r\n"
 				+ "let $geocode := $lat ||  \",\" || $lon || \",\" || \"5km\" \r\n" + "let $tweets :=\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/twitterSearchTweets\", \r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
 				+ "map { 'q' : $q }, map { 'count' : 10, 'geocode' : $geocode})/json/*\r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
 		String q14 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $tweets :=\r\n" + "(for $tweet in\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterSearchTweets\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
 				+ "map { 'q' : $q }, map { 'count' : 10 })/json/*\r\n" + "where $tweet/favorite__count > 2\r\n"
 				+ "return $tweet) \r\n" + "return\r\n" + "xosm_social:twitterSearchTweets($museum, $tweets)\r\n"
 				+ "else ()\r\n" + "}</social>";
@@ -474,7 +477,7 @@ public class XOSM2 extends UI {
 				+ "let $city := xosm_social:city($restaurants[1])\r\n" + "for $restaurant in $restaurants\r\n"
 				+ "let $q := data($restaurant/@name) || \" \" || $city\r\n" + "let $tweets :=\r\n"
 				+ "(for $tweet in\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterSearchTweets\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
 				+ "map { 'q' : $q }, map { 'count' : 15})/json/* \r\n" + "where $tweet/user/friends__count > 100\r\n"
 				+ "return $tweet)\r\n" + "return\r\n" + "xosm_social:twitterSearchTweets($restaurant, $tweets)\r\n"
 				+ "}</social>";
@@ -487,7 +490,7 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $users :=\r\n" + "(for $user in\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/twitterSearchUser\", \r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
 				+ "map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json\r\n"
 				+ "where $user/followers__count > 2000\r\n" + "return $user)\r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchUser($hotel, $users)" + "}</social>";
@@ -500,10 +503,10 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $screen_name :=\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterSearchUser\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
 				+ "map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n"
 				+ "let $tweets :=\r\n" + "(for $tweet in\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterUserTimeLine\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterUserTimeLine\",\r\n"
 				+ "map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/* \r\n"
 				+ "where $tweet/favorite__count > 5\r\n" + "return $tweet)\r\n" + "return\r\n"
 				+ "xosm_social:twitterUserTimeLine($hotel,  $tweets)\r\n" + "}</social>";
@@ -512,10 +515,10 @@ public class XOSM2 extends UI {
 				+ "let $city := xosm_social:city($museums[1]) \r\n" + "for $museum in $museums\r\n"
 				+ "let $mention := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($mention) > 0)\r\n"
 				+ "then\r\n" + "let $screen__name :=\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterSearchUser\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n"
 				+ "map { 'q' : $mention,  'city' : $city },\r\n" + "map { 'count' : 1 })/json/screen__name)\r\n"
 				+ "let $tweets :=\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/twitterSearchTweets\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
 				+ "map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
@@ -527,9 +530,9 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $tweets :=  (\r\n" + "for $q in\r\n"
-				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/twitterSearchUser\", \r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
 				+ "map { 'q' :$q,  'city' : $city }, map { 'count' : 10 })/json/_/screen__name)\r\n" + "return\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/twitterSearchTweets\",\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
 				+ "map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/*)\r\n" + "return\r\n"
 				+ "xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + "}</social>";
 
@@ -541,21 +544,21 @@ public class XOSM2 extends UI {
 				+ "else\r\n" + "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city  \r\n"
 				+ "let $videos:=\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeVideoSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoSearch\",\r\n"
 				+ "map { 'q' : $q }, map { 'maxResults' : 5 })/json/_\r\n" + "return\r\n"
 				+ "xosm_social:youtubeVideoSearch($hotel, $videos)\r\n" + "} </social>";
 
 		String q21 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0) then\r\n"
 				+ "let $channels :=\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeChannelSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + "return\r\n"
 				+ "xosm_social:youtubeChannelSearch($museum, $channels)\r\n" + "else () \r\n" + "} </social>";
 
 		String q22 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $playlists := \r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + "return\r\n"
 				+ "xosm_social:youtubePlaylistSearch($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
@@ -567,36 +570,36 @@ public class XOSM2 extends UI {
 				+ "else\r\n" + "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
 				+ "let $videos :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeVideoSearch\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoSearch\", \r\n"
 				+ "map { 'q' : $q }, map { })/json/_/id/videoId)\r\n" + "return\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeVideoInfo\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoInfo\", \r\n"
 				+ "map { 'id' : $id }, map { })/json/items/_[statistics/viewCount > 10])\r\n" + "return\r\n"
 				+ "xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + "} </social>";
 
 		String q24 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $channels :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeChannelSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId)\r\n" + "return\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeChannelInfo\", \r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
 				+ "map {'id' : $id }, map {})/json/items/_[statistics/subscriberCount > 100])\r\n" + "return\r\n"
 				+ "xosm_social:youtubeChannelInfo($museum, $channels)\r\n" + "else ()  \r\n" + "} </social>";
 
 		String q25 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $playlists :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
 				+ "map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + "return\r\n" + "xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistInfo\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistInfo\", \r\n"
 				+ "map {'id' : $id }, map {})/json/items/_)\r\n" + "return\r\n"
 				+ "xosm_social:youtubePlaylistInfo($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
 		String q26 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $playlists :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
 				+ "map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + "return xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistItems\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistItems\",\r\n"
 				+ "map {'playlistId' : $id }, map {})/json/items/_)\r\n" + "return\r\n"
 				+ "xosm_social:youtubePlaylistItems($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
@@ -608,40 +611,40 @@ public class XOSM2 extends UI {
 				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then\r\n" + "data($hotel/@name)\r\n"
 				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
 				+ "let $videos := (\r\n" + "for $playId in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistSearch\",\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
 				+ "map { 'q' : $q}, map {  })/json/_/id/playlistId)\r\n" + "for $videoId in\r\n"
-				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubePlaylistItems\", \r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
 				+ "map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeVideoInfo\",\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
 				+ "map { 'id' : $videoId},map { })/json/items/_)\r\n"
 				+ "return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + "} </social>";
 
 		String q28 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\") \r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $channelId :=\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeChannelSearch\",\r\n" + "map { 'q' : $q}, \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n" + "map { 'q' : $q}, \r\n"
 				+ "map { 'maxResults' : 1})/json/_/id/channelId)\r\n" + "let $videos := (\r\n" + "let $playId :=\r\n"
-				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeChannelInfo\", \r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
 				+ "map {'id' : $channelId }, map {})/json/items/_/contentDetails/relatedPlaylists/uploads)\r\n"
 				+ "for $videoId in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubePlaylistItems\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
 				+ "map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeVideoInfo\",\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
 				+ "map { 'id' : $videoId}, map { })/json/items/_\r\n)" + "return\r\n"
 				+ "xosm_social:youtubeVideoInfo($museum, $videos)\r\n" + "else ()\r\n" + "} </social>";
 
 		String q29 = "<social>{\r\n" + "for $museum in xosm_pbd:getElementsByKV(., \"tourism\", \"museum\")\r\n"
 				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
 				+ "let $videos :=\r\n" + "(for $channelId in\r\n" + "data(xosm_social:api(\r\n"
-				+ "\"http://xosm.ual.es/api.social/youtubeChannelSearch\", \r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\", \r\n"
 				+ "map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId) \r\n" + "let $json :=\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeChannelInfo\", \r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
 				+ "map { 'id' : $channelId }, map { })\r\n"
 				+ "where $json/json/items/_/statistics/subscriberCount > 2000\r\n" + "for $playId in\r\n"
 				+ "data($json/json/items/_/contentDetails/relatedPlaylists/uploads) \r\n" + "for $videoId in\r\n"
-				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubePlaylistItems\", \r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
 				+ "map { 'playlistId' : $playId} , map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
-				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/api.social/youtubeVideoInfo\",\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
 				+ "map { 'id' : $videoId },map { })/json/items/_)\r\n" + "return \r\n"
 				+ "xosm_social:youtubeVideoInfo($museum,$videos)\r\n" + "else ()\r\n" + "}\r\n" + "</social> ";
 
@@ -1682,7 +1685,7 @@ public class XOSM2 extends UI {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				// accordion_right.setSplitPosition(100);
-				in.setVisible(false);
+				vinfo.setVisible(false);
 				accordion.setSplitPosition(40);
 				nodes.clear();
 				way.clear();
@@ -1702,7 +1705,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_tool);
 				// accordion_right.setSplitPosition(100);
-				in.setVisible(false);
+				vinfo.setVisible(false);
 				accordion.setSplitPosition(40);
 				info_tool.setWidth("55%");
 				// info_tool.center();
@@ -1715,7 +1718,7 @@ public class XOSM2 extends UI {
 			public void menuSelected(MenuItem selectedItem) {
 				removeWindow(info_team);
 				// accordion_right.setSplitPosition(100);
-				in.setVisible(false);
+				vinfo.setVisible(false);
 				accordion.setSplitPosition(40);
 				info_team.setWidth("25%");
 				// info_team.center();
@@ -1747,14 +1750,19 @@ public class XOSM2 extends UI {
 		vl.setMargin(false);
 		q.setSizeFull();
 		q.setStyleName(ValoTheme.FORMLAYOUT_LIGHT);
-		in.setWidth("100%");
+		
+		vinfo.setSizeFull();
+		vinfo.setContent(in);
+		vinfo.setVisible(false);
+		
 		accordion_right.setSizeFull();
-		// accordion_right.setSplitPosition(100);
 		accordion_right.addComponent(vl);
-		accordion_right.addComponent(in);
-		accordion_right.setExpandRatio(vl, 0.7f);
-		accordion_right.setExpandRatio(in, 0.3f);
-		in.setVisible(false);
+		accordion_right.addComponent(vinfo);
+		accordion_right.setExpandRatio(vl, 0.65f);
+		accordion_right.setExpandRatio(vinfo, 0.35f);
+		
+		
+		
 		accordion.setSizeFull();
 		accordion.setSplitPosition(40);
 		accordion.setFirstComponent(q);
@@ -1821,7 +1829,7 @@ public class XOSM2 extends UI {
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(nodes.get(q.layer.getValue()).item(j));
 								// accordion_right.setSplitPosition(65);
-								in.setVisible(true);
+								vinfo.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -1892,7 +1900,7 @@ public class XOSM2 extends UI {
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(way.get(q.layer.getValue()).item(j));
 								// accordion_right.setSplitPosition(65);
-								in.setVisible(true);
+								vinfo.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -1905,7 +1913,7 @@ public class XOSM2 extends UI {
 							public void onClick(LeafletClickEvent event) {
 								in.setInfo(way.get(q.layer.getValue()).item(j));
 								// accordion_right.setSplitPosition(65);
-								in.setVisible(true);
+								vinfo.setVisible(true);
 								accordion.setSplitPosition(0);
 							}
 						});
@@ -2042,7 +2050,7 @@ public class XOSM2 extends UI {
 										in.setInfoYoutubeChannels(twinfop.get(q.layer.getValue()).get(s));
 									}
 									// accordion_right.setSplitPosition(65);
-									in.setVisible(true);
+									vinfo.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2178,7 +2186,7 @@ public class XOSM2 extends UI {
 										in.setInfoYoutubeChannels(twinfow.get(q.layer.getValue()).get(r));
 									}
 									// accordion_right.setSplitPosition(65);
-									in.setVisible(true);
+									vinfo.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2362,7 +2370,7 @@ public class XOSM2 extends UI {
 										in.setInfoTwitterUsers(twinfop.get(q.layer.getValue()).get(s));
 									}
 									// accordion_right.setSplitPosition(65);
-									in.setVisible(true);
+									vinfo.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});
@@ -2480,7 +2488,7 @@ public class XOSM2 extends UI {
 										in.setInfoTwitterUsers(twinfow.get(q.layer.getValue()).get(r));
 									}
 									// accordion_right.setSplitPosition(65);
-									in.setVisible(true);
+									vinfo.setVisible(true);
 									accordion.setSplitPosition(0);
 								}
 							});

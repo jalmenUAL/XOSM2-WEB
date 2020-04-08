@@ -19,39 +19,46 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public class Info_Node extends VerticalLayout {
 
-	VerticalLayout l = new VerticalLayout();
+	//VerticalLayout l = new VerticalLayout();
+	FormLayout h = new FormLayout();
 	XOSM2 _main;
-	Button t = new Button("See Details");
+	Button t = new Button("See Social Network Details");
 
 	Info_Node(XOSM2 main) {
 		super();
+	    setWidth("100%");
+	    setHeightUndefined();
+	    setSpacing(false);
+	    h.setWidth("100%");
+	    h.setHeightUndefined();
+	    h.setSpacing(false);
 		t.setEnabled(false);
-		setWidth("100%");
 		_main = main;
-		l.setWidth("100%");
-		l.setHeight("100%");
-		l.setMargin(true);
 		Button b = new Button("Close and Return to Main Menu");
 		b.setWidth("100%");
 		b.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		b.setIcon(VaadinIcons.CLOSE);
 		t.setWidth("100%");
 		t.setStyleName(ValoTheme.BUTTON_PRIMARY);
-
+		Image lb = new Image();
+		lb.setWidth("100%");
+		lb.setSource(new ThemeResource("XOSM.png"));		
+		addComponent(lb);
 		addComponent(b);
 		addComponent(t);
-		addComponent(l);
+		addComponent(h);
 		b.addClickListener(new Button.ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				// main.accordion2.setSplitPosition(100);
-				main.in.setVisible(false);
+				main.vinfo.setVisible(false);
 				main.accordion.setSplitPosition(35);
 				t.setEnabled(false);
 				_main.removeWindow(_main.popup);
 				_main.removeWindow(_main.popup2);
 			}
 		});
+		
 	}
 
 	public void setInfoTwitterTweets(NodeList Tweets) {
@@ -155,14 +162,8 @@ public class Info_Node extends VerticalLayout {
 	}
 
 	public void setInfo(Node n) {
-		l.removeAllComponents();
-		setWidth("100%");
-		Image lb = new Image();
-		lb.setSource(new ThemeResource("XOSM.png"));
-		l.addComponent(lb);
-		l.setWidth("100%");
-		l.setHeight("100%");
-		l.setMargin(true);
+		h.removeAllComponents();
+		
 		if (n == null) {
 			Notification("Error", "This is an Empty Node. Information cannot be displayed.");
 		} else {
@@ -179,22 +180,21 @@ public class Info_Node extends VerticalLayout {
 							int k = j * 2;
 							if (atts.item(k).getNodeName() == "ref") {
 							} else {
-								FormLayout h = new FormLayout();
-								h.setSpacing(false);
+											
+								
 								String value = atts.item(k + 1).getNodeValue();
 								String htmlLink = value.replaceAll(
 										"(?:https|http)://([\\w/%.\\-?&=!_:()áéíóú#]+(?!.*\\[/))",
 										"<a href=\"$0\" target=\"_blank\">$1</a>");
 								TextField field = new TextField(atts.item(k).getNodeValue());
 								field.setValue(htmlLink);
-								field.setEnabled(false);
+								//field.setEnabled(false);
 								field.setStyleName("mytextfield");
 								field.setWidth("100%");
 								field.setHeight("100%");
 								h.addComponent(field);
-								h.setWidth("100%");
-								h.setHeight("100%");
-								l.addComponent(h);
+							    
+								 
 							}
 						}
 
