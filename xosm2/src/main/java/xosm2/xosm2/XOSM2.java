@@ -330,10 +330,10 @@ public class XOSM2 extends UI {
 				+ "filter($layer,xosm_kw:searchTag(?,\"tourism\",\"hotel\"))";
 
 		String exq14 = "let $layer:= xosm_pbd:getLayerByBB(.)\r\n" + "return\r\n"
-				+ "filter($layer,xosm_kw:searchKeyword(?,\"amenity\"))";
+				+ "filter($layer,xosm_kw:searchK(?,\"amenity\"))";
 
 		String exq15 = "let $layer:= xosm_pbd:getLayerByBB(.)\r\n" + "return\r\n" + "filter($layer,\r\n"
-				+ "xosm_kw:searchKeywordSet(?,(\"bar\",\"restaurant\")))";
+				+ "xosm_kw:searchVSet(?,(\"bar\",\"restaurant\")))";
 
 		// AGGREGATION
 
@@ -342,15 +342,15 @@ public class XOSM2 extends UI {
 				+ "return xosm_ag:topologicalCount($layer,$e,\r\n" + "function($x,$y){xosm_sp:crossing($x,$y)})";
 
 		String exq17 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
-				+ "let $buildings := \r\n" + "fn:filter($layer,xosm_kw:searchKeyword(?,'building'))\r\n"
+				+ "let $buildings := \r\n" + "fn:filter($layer,xosm_kw:searchK(?,'building'))\r\n"
 				+ "return xosm_ag:metricMax($buildings,\r\n" + "function($x){xosm_item:area($x)})";
 
 		String exq18 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
-				+ "let $buildings := \r\n" + "fn:filter($layer,xosm_kw:searchKeyword(?,'highway'))\r\n"
+				+ "let $buildings := \r\n" + "fn:filter($layer,xosm_kw:searchK(?,'highway'))\r\n"
 				+ "return xosm_ag:metricSum($buildings,\r\n" + "function($x){xosm_item:length($x)})";
 
 		String exq19 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Calle Calzada de Castro' ,500)\r\n"
-				+ "let $buildings :=\r\n" + "fn:filter($layer,xosm_kw:searchKeyword(?,'building'))\r\n"
+				+ "let $buildings :=\r\n" + "fn:filter($layer,xosm_kw:searchK(?,'building'))\r\n"
 				+ "return xosm_ag:metricAvg($buildings,\r\n" + "function($x){xosm_item:area($x)})";
 
 		String exq20 = "let $layer :=\r\n" + "xosm_pbd:getLayerByBB(.)\r\n"
@@ -389,16 +389,16 @@ public class XOSM2 extends UI {
 
 		String q2 = "let $hotel := xosm_pbd:getElementByName(.,'Hotel Miami')\r\n"
 				+ "let $layer := xosm_pbd:getLayerByBB(.)\r\n" + "return\r\n" + "fn:filter(\r\n"
-				+ "fn:filter($layer,xosm_kw:searchKeyword(?,'restaurant')),\r\n"
+				+ "fn:filter($layer,xosm_kw:searchV(?,'restaurant')),\r\n"
 				+ "xosm_sp:furtherNorthPoints($hotel,?)) ";
 
 		String q3 = "for $hotel in xosm_pbd:getLayerByKV(.,'tourism','hotel')\r\n"
 				+ "let $layer := xosm_pbd:getLayerByElement(., $hotel ,500)\r\n" + "where count(\r\n" + "fn:filter\r\n"
-				+ "($layer,\r\n" + "xosm_kw:searchKeywordSet(?,('bar','restaurant'))))>=10\r\n" + "return $hotel";
+				+ "($layer,\r\n" + "xosm_kw:searchVSet(?,('bar','restaurant'))))>=10\r\n" + "return $hotel";
 
 		String q4 = "let $hotel := xosm_pbd:getLayerByKV(.,'tourism','hotel')\r\n" + "let $f := function($hotel)\r\n"
 				+ "{-(count(\r\n" + "fn:filter(xosm_pbd:getLayerByElement(.,$hotel,500),\r\n"
-				+ "xosm_kw:searchKeyword(?,'church'))))}\r\n" + "return fn:sort($hotel,(),$f)[1]";
+				+ "xosm_kw:searchK(?,'church'))))}\r\n" + "return fn:sort($hotel,(),$f)[1]";
 
 		/*
 		 * String q5 = "let $layer :=\r\n" +
@@ -409,14 +409,14 @@ public class XOSM2 extends UI {
 		 */
 
 		String q6 = "let $layer :=\r\n" + "xosm_pbd:getLayerByName(.,'Piazza del Duomo',1500)\r\n" + "return\r\n"
-				+ "xosm_ag:metricMax(\r\n" + "filter($layer,xosm_kw:searchKeyword(?,'church')),\r\n"
+				+ "xosm_ag:metricMax(\r\n" + "filter($layer,xosm_kw:searchK(?,'church')),\r\n"
 				+ "function($x){xosm_item:area($x)})\r\n";
 
 		String q7 = "let $open :=\r\n"
 				+ "'https://opendata.bruxelles.be/explore/dataset/test-geojson-station-de-taxi/download/?format=geojson&amp;timezone=UTC'\r\n"
 				+ "let $taxis := xosm_open:geojson2osm($open,'')\r\n" + "let $building :=\r\n"
 				+ "xosm_pbd:getElementByName(. ,'Bruxelles-Central - Brussel-Centraal') \r\n"
-				+ "return fn:filter($taxis,xosm_sp:DWithIn($building,?,100))";
+				+ "return fn:filter($taxis,xosm_sp:DWithIn($building,?,300))";
 
 		String q8 = "let $open :=\r\n"
 				+ "'http://data2.esrism.opendata.arcgis.com/datasets/51900577e33a4ba4ab59a691247aeee9_0.geojson'\r\n"
@@ -532,11 +532,11 @@ public class XOSM2 extends UI {
 				"let $screen_name :=\r\n" + 
 				"data(xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n" + 
-				"map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
+				"map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/_/screen__name)\r\n" + 
 				"let $tweets :=\r\n" + 
 				"xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterUserTimeLine\",\r\n" + 
-				"map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/_[favorite__count > 5]\r\n" + 
+				"map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/_[favorite__count > 4]\r\n" + 
 				"return\r\n" + 
 				"xosm_social:twitterUserTimeLine($hotel,  $tweets)\r\n" + 
 				"}</social>\r\n" + 
@@ -550,14 +550,14 @@ public class XOSM2 extends UI {
 				"data(xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n" + 
 				"map { 'q' : data($museum/@name) ,  'city' : $city },\r\n" + 
-				"map { 'count' : 1 })/json/screen__name)\r\n" + 
+				"map { 'count' : 1 })/json/_/screen__name)\r\n" + 
 				"let $tweets :=\r\n" + 
 				"xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n" + 
 				"map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/_\r\n" + 
 				"return\r\n" + 
 				"xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + 
-				"}</social>\r\n" + 
+				"}</social>" + 
 				"";
 
 		String q19 = "<social>{\r\n" + 
@@ -568,15 +568,17 @@ public class XOSM2 extends UI {
 				"let $screen__name :=  \r\n" + 
 				"data(xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n" + 
-				"map { 'q' :$q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
+				"map { 'q' :$q,  'city' : $city }, map { 'count' : 1 })/json/_/screen__name)\r\n" + 
 				"let $tweets := \r\n" + 
 				"xosm_social:api(\r\n" + 
 				"\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n" + 
 				"map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/_\r\n" + 
 				"return\r\n" + 
 				"xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + 
-				"}</social>\r\n" + 
+				"}</social>" + 
 				"";
+		
+		//YOUTUBE
 
 		String q20 = "<social>{\r\n" + 
 				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
@@ -1659,7 +1661,7 @@ public class XOSM2 extends UI {
 		open.addItem("Import kml data", null, cop2);
 		// open.addItem("Import csv data", null, cop3);
 		open.addItem("Wikipedia information", null, cop4);
-		open.addItem("Request taxi stops close (100 m) to Bruxelles Central Station in Bruxelles", null, copen7);
+		open.addItem("Request taxi stops close (300 m) to Bruxelles Central Station in Bruxelles", null, copen7);
 		open.addItem("Retrieves free events of Madrid", null, copen8);
 		open.addItem(
 				"Retrieve Wikipedia information about places nearby to the intersection point of Calle Mayor and Calle de Esparteros in Madrid",
