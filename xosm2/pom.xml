@@ -51,21 +51,6 @@
 				<version>3.0.1</version>
 			</dependency>
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>2.9.8</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.9.8</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.8</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
 				<version>4.5.5</version>
@@ -80,6 +65,21 @@
    <artifactId>v-leaflet-markercluster</artifactId>
    <version>1.1.0</version>
 </dependency>
+            <dependency>
+            	<groupId>org.vaadin</groupId>
+            	<artifactId>viritin</artifactId>
+            	<version>1.47</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.vaadin.addons</groupId>
+            	<artifactId>aceeditor</artifactId>
+            	<version>0.8.15</version>
+            </dependency>
+            <dependency>
+            	<groupId>org.vaadin.addons</groupId>
+            	<artifactId>popupbutton</artifactId>
+            	<version>3.0.0</version>
+            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -110,18 +110,7 @@
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
 
-<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-			</dependency>
+ 
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
@@ -133,19 +122,16 @@
 			<dependency>
             <groupId>org.vaadin</groupId>
             <artifactId>viritin</artifactId>
-            <version>1.47</version>
             <type>jar</type>
         </dependency>
         <dependency>
    <groupId>org.vaadin.addons</groupId>
    <artifactId>aceeditor</artifactId>
-   <version>0.8.15</version>
 </dependency>
  
 <dependency>
    <groupId>org.vaadin.addons</groupId>
    <artifactId>popupbutton</artifactId>
-   <version>3.0.0</version>
 </dependency>
 	</dependencies>
 
