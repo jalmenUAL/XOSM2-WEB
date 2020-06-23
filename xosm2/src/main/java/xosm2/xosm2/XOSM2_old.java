@@ -68,7 +68,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 @Theme("mytheme")
-public class XOSM2 extends UI {
+public class XOSM2_old extends UI {
 
 	String type = "";
 	String type2 = "";
@@ -81,7 +81,7 @@ public class XOSM2 extends UI {
 	Info_Node in = new Info_Node(this);
 	Panel vinfo = new Panel();
 	Double swlat = 36.83645, swlon = -2.45516, nelat = 36.83912, nelon = -2.45007;
-	XOSM2 this_ = this;
+	XOSM2_old this_ = this;
 	String osm_team = "<h1 style=\"color:DodgerRed;\">XOSM</h1>"
 			+ "<p>XOSM is a Web tool and Query Language for <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a>.</p>"
 			+ "<p>Using <a href=\"https://www.w3.org/XML/Query/\">XQuery</a> as language for queries definition</p>"
@@ -429,337 +429,228 @@ public class XOSM2 extends UI {
 
 		// SOCIAL
 		
-		String q10 = "<social>{\r\n" + 
-				"let $ts := xosm_pbd:getLayerByK(., \"tourism\")\r\n" + 
-				"let $city := xosm_social:city($s)\r\n" + 
-				"for $t in $ts\r\n" + 
-				"let $q := data($t/@name) || \" \" || $city\r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api\r\n" + 
-				"(\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n" + 
-				"map { 'q' : $q }, map { 'count' : 10 })/json/_ \r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($t,$tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q10 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\")\r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n"
+				+ "(if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
+				+ "let $tweets :=\r\n" + "xosm_social:api\r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
+				+ "map { 'q' : $q }, map { 'count' : 5 })/json/* \r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + "}</social>";
 
-		String q11 = "<social>{\r\n" + 
-				"for $restaurant in xosm_pbd:getLayerByKV(., \"amenity\",\"restaurant\")\r\n" + 
-				"let $q := xosm_social:hashtag($restaurant/@name) \r\n" + 
-				"let $tweets := xosm_social:api(\r\n" + 
-				"    \"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n" + 
-				"    map { 'q' : $q},\r\n" + 
-				"    map { 'count' : 10, 'option' : 'hashtag' })/json/_\r\n" + 
-				"return xosm_social:twitterSearchTweets($restaurant, $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q11 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $q := replace($q,\" \", \"\")\r\n" + "let $tweets :=\r\n" + "xosm_social:api\r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
+				+ "map { 'q' : $q}, map { 'count' : 10,'option' : 'hashtag' })/json/*\r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
-		String q12 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name)\r\n" + 
-				"let $users :=\r\n" + 
-				"xosm_social:api\r\n" + 
-				"(\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n" + 
-				"map { 'q' : $q,  'city' : $city },map { 'count' : 10 })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchUser($hotel,$users)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q12 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n" + "(if ($hotel//tag[@k=\"operator\"])\r\n"
+				+ "then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $users :=\r\n" + "xosm_social:api\r\n"
+				+ "(\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n"
+				+ "map { 'q' : $q,  'city' : $city },map { 'count' : 10 })/json/*\r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchUser($hotel,$users)\r\n" + "}</social>";
 
-		String q13 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := data($museum/@name)\r\n" + 
-				"let $lon := data($museum/node[1]/@lon)\r\n" + 
-				"let $lat := data($museum/node[1]/@lat)\r\n" + 
-				"let $geocode := $lat ||  \",\" || $lon || \",\" || \"5km\" \r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n" + 
-				"map { 'q' : $q }, map { 'count' : 10, 'geocode' : $geocode})/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q13 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $lon := data($museum/node[1]/@lon)\r\n" + "let $lat := data($museum/node[1]/@lat)\r\n"
+				+ "let $geocode := $lat ||  \",\" || $lon || \",\" || \"5km\" \r\n" + "let $tweets :=\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
+				+ "map { 'q' : $q }, map { 'count' : 10, 'geocode' : $geocode})/json/*\r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
-		String q14 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := data($museum/@name)\r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n" + 
-				"map { 'q' : $q }, map { 'count' : 10 })/json/_[favorite__count > 2]\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q14 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $tweets :=\r\n" + "(for $tweet in\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
+				+ "map { 'q' : $q }, map { 'count' : 10 })/json/*\r\n" + "where $tweet/favorite__count > 2\r\n"
+				+ "return $tweet) \r\n" + "return\r\n" + "xosm_social:twitterSearchTweets($museum, $tweets)\r\n"
+				+ "else ()\r\n" + "}</social>";
 
-		String q15 = "<social>{\r\n" + 
-				"let $restaurants :=\r\n" + 
-				"xosm_pbd:getLayerByKV(., \"amenity\", \"restaurant\") \r\n" + 
-				"let $city := xosm_social:city($restaurants)\r\n" + 
-				"for $restaurant in $restaurants\r\n" + 
-				"let $q := data($restaurant/@name) || \" \" || $city\r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n" + 
-				"map { 'q' : $q }, map { 'count' : 15})/json/_ [user/friends__count > 100]\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($restaurant, $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q15 = "<social>{\r\n" + "let $restaurants :=\r\n"
+				+ "xosm_pbd:getLayerByKV(., \"amenity\", \"restaurant\") \r\n"
+				+ "let $city := xosm_social:city($restaurants[1])\r\n" + "for $restaurant in $restaurants\r\n"
+				+ "let $q := data($restaurant/@name) || \" \" || $city\r\n" + "let $tweets :=\r\n"
+				+ "(for $tweet in\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\", \r\n"
+				+ "map { 'q' : $q }, map { 'count' : 15})/json/* \r\n" + "where $tweet/user/friends__count > 100\r\n"
+				+ "return $tweet)\r\n" + "return\r\n" + "xosm_social:twitterSearchTweets($restaurant, $tweets)\r\n"
+				+ "}</social>";
 
-		String q16 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name)\r\n" + 
-				"let $users :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n" + 
-				"map { 'q' : $q,  'city' : $city }, "
-				+ "map { 'count' : 10 })/json/_[followers__count > 2000]\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchUser($hotel, $users)"
-				+"}</social>\r\n";
+		String q16 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n" + "(if ($hotel//tag[@k=\"operator\"])\r\n"
+				+ "then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + "else  \r\n"
+				+ "if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $users :=\r\n" + "(for $user in\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
+				+ "map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json\r\n"
+				+ "where $user/followers__count > 2000\r\n" + "return $user)\r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchUser($hotel, $users)" + "}</social>";
 
-		String q17 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name)\r\n" + 
-				"let $screen_name :=\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n" + 
-				"map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterUserTimeLine\",\r\n" + 
-				"map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/_[favorite__count > 5]\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterUserTimeLine($hotel,  $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q17 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\")\r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n" + "let $q :=\r\n"
+				+ "(if ($hotel//tag[@k=\"operator\"])\r\n"
+				+ "then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + "else  \r\n"
+				+ "if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $screen_name :=\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
+				+ "map { 'q' : $q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n"
+				+ "let $tweets :=\r\n" + "(for $tweet in\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterUserTimeLine\",\r\n"
+				+ "map { 'screen_name' : $screen_name }, map { 'count' : 10 })/json/* \r\n"
+				+ "where $tweet/favorite__count > 5\r\n" + "return $tweet)\r\n" + "return\r\n"
+				+ "xosm_social:twitterUserTimeLine($hotel,  $tweets)\r\n" + "}</social>";
 
-		String q18 = "<social>{\r\n" + 
-				"let $museums := xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $city := xosm_social:city($museums) \r\n" + 
-				"for $museum in $museums\r\n" + 
-				"let $screen__name :=\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n" + 
-				"map { 'q' : data($museum/@name) ,  'city' : $city },\r\n" + 
-				"map { 'count' : 1 })/json/screen__name)\r\n" + 
-				"let $tweets :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n" + 
-				"map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q18 = "<social>{\r\n" + "let $museums := xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $city := xosm_social:city($museums[1]) \r\n" + "for $museum in $museums\r\n"
+				+ "let $mention := data($museum/@name)\r\n" + "return\r\n" + "if (string-length($mention) > 0)\r\n"
+				+ "then\r\n" + "let $screen__name :=\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchUser\",\r\n"
+				+ "map { 'q' : $mention,  'city' : $city },\r\n" + "map { 'count' : 1 })/json/screen__name)\r\n"
+				+ "let $tweets :=\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
+				+ "map { 'q' : $screen__name}, map { 'count' : 10, 'option' : 'mention' })/json/* \r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchTweets($museum, $tweets)\r\n" + "else ()\r\n" + "}</social>";
 
-		String q19 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\")\r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name)\r\n" + 
-				"let $screen__name :=  \r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n" + 
-				"map { 'q' :$q,  'city' : $city }, map { 'count' : 1 })/json/screen__name)\r\n" + 
-				"let $tweets := \r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n" + 
-				"map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + 
-				"}</social>\r\n" + 
-				"";
+		String q19 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\")\r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n" + "(if ($hotel//tag[@k=\"operator\"])\r\n"
+				+ "then \"Operator \" || data($hotel//tag[@k=\"operator\"]/@v)\r\n" + "else  \r\n"
+				+ "if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $tweets :=  (\r\n" + "for $q in\r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchUser\", \r\n"
+				+ "map { 'q' :$q,  'city' : $city }, map { 'count' : 10 })/json/_/screen__name)\r\n" + "return\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/twitterSearchTweets\",\r\n"
+				+ "map { 'q' : $q}, map { 'count' : 10, 'option' : 'mention' })/json/*)\r\n" + "return\r\n"
+				+ "xosm_social:twitterSearchTweets($hotel,$tweets)\r\n" + "}</social>";
 
-		String q20 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name) || \" \" || $city  \r\n" + 
-				"let $videos:=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoSearch\",\r\n" + 
-				"map { 'q' : $q }, map { 'maxResults' : 5 })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubeVideoSearch($hotel, $videos)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q20 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n"
+				+ "(if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\"))\r\n" + "then \r\n" + "data($hotel/@name)\r\n"
+				+ "else\r\n" + "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city  \r\n"
+				+ "let $videos:=\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoSearch\",\r\n"
+				+ "map { 'q' : $q }, map { 'maxResults' : 5 })/json/_\r\n" + "return\r\n"
+				+ "xosm_social:youtubeVideoSearch($hotel, $videos)\r\n" + "} </social>";
 
-		String q21 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $channels :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n" + 
-				"map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubeChannelSearch($museum, $channels)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q21 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0) then\r\n"
+				+ "let $channels :=\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n"
+				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + "return\r\n"
+				+ "xosm_social:youtubeChannelSearch($museum, $channels)\r\n" + "else () \r\n" + "} </social>";
 
-		String q22 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $playlists := \r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n" + 
-				"map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubePlaylistSearch($museum, $playlists)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q22 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $playlists := \r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
+				+ "map { 'q' : $q}, map { 'maxResults' : 3 })/json/_\r\n" + "return\r\n"
+				+ "xosm_social:youtubePlaylistSearch($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
-		String q23 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name) || \" \" || $city\r\n" + 
-				"let $videos :=\r\n" + 
-				"(for $id in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoSearch\", \r\n" + 
-				"map { 'q' : $q }, map { })/json/_/id/videoId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoInfo\", \r\n" + 
-				"map { 'id' : $id }, map { })/json/items/_[statistics/viewCount > 10])\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q23 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n"
+				+ "(if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\"))\r\n" + "then \r\n" + "data($hotel/@name)\r\n"
+				+ "else\r\n" + "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
+				+ "let $videos :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoSearch\", \r\n"
+				+ "map { 'q' : $q }, map { })/json/_/id/videoId)\r\n" + "return\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeVideoInfo\", \r\n"
+				+ "map { 'id' : $id }, map { })/json/items/_[statistics/viewCount > 10])\r\n" + "return\r\n"
+				+ "xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + "} </social>";
 
-		String q24 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $channels :=\r\n" + 
-				"(for $id in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n" + 
-				"map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n" + 
-				"map {'id' : $id }, map {})/json/items/_[statistics/subscriberCount > 100])\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubeChannelInfo($museum, $channels)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q24 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $channels :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n"
+				+ "map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId)\r\n" + "return\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
+				+ "map {'id' : $id }, map {})/json/items/_[statistics/subscriberCount > 100])\r\n" + "return\r\n"
+				+ "xosm_social:youtubeChannelInfo($museum, $channels)\r\n" + "else ()  \r\n" + "} </social>";
 
-		String q25 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $playlists :=\r\n" + 
-				"(for $id in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n" + 
-				"map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistInfo\", \r\n" + 
-				"map {'id' : $id }, map {})/json/items/_)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubePlaylistInfo($museum, $playlists)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q25 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $playlists :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
+				+ "map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + "return\r\n" + "xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistInfo\", \r\n"
+				+ "map {'id' : $id }, map {})/json/items/_)\r\n" + "return\r\n"
+				+ "xosm_social:youtubePlaylistInfo($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
-		String q26 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $playlists :=\r\n" + 
-				"(for $id in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n" + 
-				"map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + 
-				"return xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistItems\",\r\n" + 
-				"map {'playlistId' : $id }, map {})/json/items/_)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:youtubePlaylistItems($museum, $playlists)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q26 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $playlists :=\r\n" + "(for $id in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
+				+ "map { 'q' : $q}, map { })/json/_/id/playlistId)\r\n" + "return xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistItems\",\r\n"
+				+ "map {'playlistId' : $id }, map {})/json/items/_)\r\n" + "return\r\n"
+				+ "xosm_social:youtubePlaylistItems($museum, $playlists)\r\n" + "else ()  \r\n" + "} </social>";
 
-		String q27 = "<social>{\r\n" + 
-				"let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n" + 
-				"let $city := xosm_social:city($hotels)\r\n" + 
-				"for $hotel in $hotels\r\n" + 
-				"let $q := \"Hotel\" || \" \" || data($hotel/@name) || \" \" || $city\r\n" + 
-				"let $videos := (\r\n" + 
-				"for $playId in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n" + 
-				"map { 'q' : $q}, map {  })/json/_/id/playlistId)\r\n" + 
-				"for $videoId in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n" + 
-				"map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n" + 
-				"map { 'id' : $videoId},map { })/json/items/_)\r\n" + 
-				"return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q27 = "<social>{\r\n" + "let $hotels := xosm_pbd:getLayerByKV(., \"tourism\", \"hotel\") \r\n"
+				+ "let $city := xosm_social:city($hotels[1])\r\n" + "for $hotel in $hotels\r\n"
+				+ "let $name := data($hotel/@name)\r\n" + "let $q :=\r\n"
+				+ "(if (contains(data($hotel/@name), \"Hotel\"))\r\n" + "then data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Hostal\")) then \r\n" + "data($hotel/@name)\r\n" + "else\r\n"
+				+ "if (contains(data($hotel/@name), \"Apartament\"))\r\n" + "then\r\n" + "data($hotel/@name)\r\n"
+				+ "else \"Hotel \" || data($hotel/@name))\r\n" + "let $q := $q || \" \" || $city\r\n"
+				+ "let $videos := (\r\n" + "for $playId in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistSearch\",\r\n"
+				+ "map { 'q' : $q}, map {  })/json/_/id/playlistId)\r\n" + "for $videoId in\r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
+				+ "map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
+				+ "map { 'id' : $videoId},map { })/json/items/_)\r\n"
+				+ "return xosm_social:youtubeVideoInfo($hotel, $videos)\r\n" + "} </social>";
 
-		String q28 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\") \r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $channelId :=\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n" + 
-				"map { 'q' : $q}, \r\n" + 
-				"map { 'maxResults' : 1})/json/_/id/channelId)\r\n" + 
-				"let $videos := (\r\n" + 
-				"let $playId :=\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n" + 
-				"map {'id' : $channelId }, map {})/json/items/_/contentDetails/relatedPlaylists/uploads)\r\n" + 
-				"for $videoId in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n" + 
-				"map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n" + 
-				"map { 'id' : $videoId}, map { })/json/items/_\r\n" + 
-				")return\r\n" + 
-				"xosm_social:youtubeVideoInfo($museum, $videos)\r\n" + 
-				"} </social>\r\n" + 
-				"";
+		String q28 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\") \r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $channelId :=\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\",\r\n" + "map { 'q' : $q}, \r\n"
+				+ "map { 'maxResults' : 1})/json/_/id/channelId)\r\n" + "let $videos := (\r\n" + "let $playId :=\r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
+				+ "map {'id' : $channelId }, map {})/json/items/_/contentDetails/relatedPlaylists/uploads)\r\n"
+				+ "for $videoId in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
+				+ "map { 'playlistId' : $playId}, map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
+				+ "map { 'id' : $videoId}, map { })/json/items/_\r\n)" + "return\r\n"
+				+ "xosm_social:youtubeVideoInfo($museum, $videos)\r\n" + "else ()\r\n" + "} </social>";
 
-		String q29 = "<social>{\r\n" + 
-				"for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n" + 
-				"let $q := $museum/@name\r\n" + 
-				"let $videos :=\r\n" + 
-				"(for $channelId in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelSearch\", \r\n" + 
-				"map { 'q' : $q}, map {})/json/_/id/channelId) \r\n" + 
-				"let $json :=\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n" + 
-				"map { 'id' : $channelId }, map { })[json/items/_/statistics/subscriberCount > 2000]\r\n" + 
-				"for $playId in\r\n" + 
-				"data($json/json/items/_/contentDetails/relatedPlaylists/uploads) \r\n" + 
-				"for $videoId in\r\n" + 
-				"data(xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n" + 
-				"map { 'playlistId' : $playId} , map { })/json/items/_/snippet/resourceId/videoId)\r\n" + 
-				"return\r\n" + 
-				"xosm_social:api(\r\n" + 
-				"\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n" + 
-				"map { 'id' : $videoId },map { })/json/items/_)\r\n" + 
-				"return \r\n" + 
-				"xosm_social:youtubeVideoInfo($museum,$videos)\r\n" + 
-				"}\r\n" + 
-				"</social> \r\n" + 
-				" ";
+		String q29 = "<social>{\r\n" + "for $museum in xosm_pbd:getLayerByKV(., \"tourism\", \"museum\")\r\n"
+				+ "let $q := $museum/@name\r\n" + "return\r\n" + "if (string-length($q) > 0)\r\n" + "then\r\n"
+				+ "let $videos :=\r\n" + "(for $channelId in\r\n" + "data(xosm_social:api(\r\n"
+				+ "\"http://xosm.ual.es/social.api/youtubeChannelSearch\", \r\n"
+				+ "map { 'q' : $q}, map { 'maxResults' : 3})/json/_/id/channelId) \r\n" + "let $json :=\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeChannelInfo\", \r\n"
+				+ "map { 'id' : $channelId }, map { })\r\n"
+				+ "where $json/json/items/_/statistics/subscriberCount > 2000\r\n" + "for $playId in\r\n"
+				+ "data($json/json/items/_/contentDetails/relatedPlaylists/uploads) \r\n" + "for $videoId in\r\n"
+				+ "data(xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubePlaylistItems\", \r\n"
+				+ "map { 'playlistId' : $playId} , map { })/json/items/_/snippet/resourceId/videoId)\r\n" + "return\r\n"
+				+ "xosm_social:api(\r\n" + "\"http://xosm.ual.es/social.api/youtubeVideoInfo\",\r\n"
+				+ "map { 'id' : $videoId },map { })/json/items/_)\r\n" + "return \r\n"
+				+ "xosm_social:youtubeVideoInfo($museum,$videos)\r\n" + "else ()\r\n" + "}\r\n" + "</social> ";
 
 		MenuBar.Command cind1 = new MenuBar.Command() {
 			public void menuSelected(MenuItem selectedItem) {
@@ -1673,59 +1564,54 @@ public class XOSM2 extends UI {
 		// mixed.addItem("Retrieve the size of buidings close (500 m) to
 		// Karl-Liebknecht-Straße in Berlin", null, copen5);
 		mixed.addItem("Retrieve the biggest churchs close (1500 m) to Piazza del Duomo in Milan", null, copen6);
-		
-		
-		
-		twitter.addItem("Get Top 10 tweets about touristic places", null, ctwitter1);
-		twitter.addItem("Get Top 10 tweets with hashtag the name of restaurants", null, ctwitter2);
-		twitter.addItem("Get Top 10 accounts about hotels", null,
+		twitter.addItem("Get tweets (max 5) about hotels around Fuente de Neptuno, Madrid", null, ctwitter1);
+		twitter.addItem("Get tweets (max 10) with #museum in Madrid cultural mile", null, ctwitter2);
+		twitter.addItem("Get relevant twitter accounts (max 10) for hotels around Fuente de Neptuno, Madrid", null,
 				ctwitter3);
-		twitter.addItem("Get Top 10 tweets within a radius of 5 km from museums",
+		twitter.addItem("Get tweets (max 10) about museums in Madrid cultural mile geolocated within a radius of 5 km",
 				null, ctwitter4);
-		twitter.addItem("Get Top 10 tweets about museums with more than 3 favorites", null,
+		twitter.addItem("Get tweets (max 10) about museums in Madrid cultural mile with more than 3 favorites", null,
 				ctwitter5);
 		twitter.addItem(
-				"Get tweets about restaurants posted by users with more than 100 friends from Top 15",
+				"Get tweets (max 15) about restaurants around Plaza de Castilla, Madrid where the tweet user has more than 100 friends",
 				null, ctwitter6);
 		twitter.addItem(
-				"Get accounts about hotels with more than 2000 followers from Top 10",
+				"Get the most relevant twitter account for hotels around Fuente de Neptuno, Madrid with more than 2000 followers",
 				null, ctwitter7);
 		twitter.addItem(
-				"Get tweets with more than 5 favorites from Top 10 of the Top account of hotels",
+				"Get tweets (max 10) from the most relevant twitter account of the hotels around Fuente de Neptuno, Madrid",
 				null, ctwitter8);
 		twitter.addItem(
-				"Get Top 10 tweets mentioning the Top account of musseums",
+				"Get twwets (max 10) which include mentions to the most relevant twitter account for the museums in Madrid cultural mile",
 				null, ctwitter9);
 		twitter.addItem(
-				"Get Top 10 tweets mentioning the Top account of hotels",
+				"Get twwets (max 10) which include mentions to the most relevant twitter accounts (max 10) for the hotels around Fuente Neptuno, Madrid",
 				null, ctwitter10);
-		
-		
-		youtube.addItem("Get Top 5 videos about hotels", null, cyoutube1);
-		youtube.addItem("Get Top 3 channels of museums", null,
+		youtube.addItem("Get yotube videos (max 5) about hotels around Fuente de Neptuno, Madrid", null, cyoutube1);
+		youtube.addItem("Get the three most relevant youtube channels for the museums in Madrid cultural mile", null,
 				cyoutube2);
-		youtube.addItem("Get Top 3 playlists of museums", null,
+		youtube.addItem("Get the three most relevant youtube playlists for the museums in Madrid cultural mile", null,
 				cyoutube3);
 		youtube.addItem(
-				"Get videos about hotels with more than 10 views",
+				"Get the youtube video information (max 5, default value) for the hotels around Fuente de Neptuno, Madrid with more than 10 visualizations",
 				null, cyoutube4);
 		youtube.addItem(
-				"Get channels about museums with more than 100 subscribers",
+				"Get the information for the three most relevant youtube channels for the museums in Madrid cultural mile with more than 100 subscribers",
 				null, cyoutube5);
 		youtube.addItem(
-				"Get info of playlists about museums",
+				"Get the information for the most relevant (max 5, default value) youtube playslists for the museums in Madrid cultural mile with more than 100 subscribers",
 				null, cyoutube6);
 		youtube.addItem(
-				"Get videos of playlists about museums",
+				"Get the youtube video list including in the most relevant youtube playlists (max 5) for the museums in Madrid cultural mile",
 				null, cyoutube7);
 		youtube.addItem(
-				"Get info of videos in playlists about hotels",
+				"Get the youtube video information for the videos including in the most relevant (max 5) youtube playlists for the hotels around Fuente de Neptuno, Madrid",
 				null, cyoutube8);
 		youtube.addItem(
-				"Get info of videos in the Top channel of hotels",
+				"Get the youtube video information for the videos uploading in the most relevant youtube channel for the museums in Madrir cultural mile ",
 				null, cyoutube9);
 		youtube.addItem(
-				"Get info of videos in channels of hotels with more than 2000 subscribers",
+				"Get the youtube video information for the videos uploading in the three most relevant youtube channels with more than 2000 subscribers for the museums in Madrir cultural mile",
 				null, cyoutube10);
 
 		Button searchb = new Button();
@@ -2712,7 +2598,7 @@ public class XOSM2 extends UI {
 	}
 
 	@WebServlet(urlPatterns = "/*", name = "XOSM2Servlet", asyncSupported = true)
-	@VaadinServletConfiguration(ui = XOSM2.class, productionMode = false)
+	@VaadinServletConfiguration(ui = XOSM2_old.class, productionMode = false)
 	public static class XOSM2Servlet extends VaadinServlet {
 	}
 }
