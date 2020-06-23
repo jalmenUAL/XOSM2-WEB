@@ -60,6 +60,11 @@
 				<artifactId>json-simple</artifactId>
 				<version>1.1.1</version>
 			</dependency>
+			<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>2.11.0</version>
+</dependency>
             <dependency>
    <groupId>org.vaadin.addons</groupId>
    <artifactId>v-leaflet-markercluster</artifactId>
