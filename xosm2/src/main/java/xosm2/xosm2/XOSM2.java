@@ -431,7 +431,7 @@ public class XOSM2 extends UI {
 		
 		String q10 = "<social>{\r\n" + 
 				"let $ts := xosm_pbd:getLayerByK(., \"tourism\")\r\n" + 
-				"let $city := xosm_social:city($s)\r\n" + 
+				"let $city := xosm_social:city($ts)\r\n" + 
 				"for $t in $ts\r\n" + 
 				"let $q := data($t/@name) || \" \" || $city\r\n" + 
 				"let $tweets :=\r\n" + 
